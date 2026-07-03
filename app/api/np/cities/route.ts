@@ -20,14 +20,14 @@ export async function POST(request: Request) {
         return NextResponse.json({ items: [] }, { status: 429 });
     }
 
-    let q = '';
+    let body: { q?: string };
     try {
-        ({ q } = (await request.json()) as { q?: string });
+        body = (await request.json()) as { q?: string };
     } catch {
         return NextResponse.json({ items: [] }, { status: 400 });
     }
 
-    const query = (q ?? '').trim().toLowerCase();
+    const query = (body.q ?? '').trim().toLowerCase();
     if (query.length < 2) return NextResponse.json({ items: [] });
 
     const cached = cache.get(query);

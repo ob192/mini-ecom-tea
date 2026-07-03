@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { useCart } from '@/context/CartContext';
-import { getProduct } from '@/lib/products';
+import { getProduct, priceFor } from '@/lib/products';
 import { uah } from '@/lib/format';
 import { checkoutSchema, type CheckoutValues } from '@/lib/checkout-schema';
 import { Header } from '@/components/Header';
@@ -123,16 +123,17 @@ export function CheckoutForm() {
                         {items.map((it) => {
                             const p = getProduct(it.slug);
                             if (!p) return null;
+                            const unitPrice = priceFor(p, it.weight) ?? 0;
                             return (
-                                <div key={it.slug} className="flex justify-between gap-2.5 py-1.5 text-[14.5px]">
+                                <div key={`${it.slug}|${it.weight}`} className="flex justify-between gap-2.5 py-1.5 text-[14.5px]">
                   <span className="text-ink-soft">
                     <span className="font-display font-semibold text-amber-deep mr-1.5">
                       {it.qty}×
                     </span>
-                      {p.name}
+                      {p.title}
                   </span>
                                     <span className="font-display font-semibold text-ink whitespace-nowrap">
-                    {uah(p.price * it.qty)}
+                    {uah(unitPrice * it.qty)}
                   </span>
                                 </div>
                             );

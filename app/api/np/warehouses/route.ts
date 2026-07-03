@@ -17,17 +17,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ items: [] }, { status: 429 });
     }
 
-    let cityRef = '';
-    let q = '';
+    let body: { cityRef?: string; q?: string };
     try {
-        ({ cityRef, q } = (await request.json()) as { cityRef?: string; q?: string });
+        body = (await request.json()) as { cityRef?: string; q?: string };
     } catch {
         return NextResponse.json({ items: [] }, { status: 400 });
     }
 
+    const cityRef = body.cityRef ?? '';
     if (!cityRef) return NextResponse.json({ items: [] });
 
-    const query = (q ?? '').trim().toLowerCase();
+    const query = (body.q ?? '').trim().toLowerCase();
     const cacheKey = `${cityRef}::${query}`;
 
     const cached = cache.get(cacheKey);
