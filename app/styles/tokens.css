@@ -1,0 +1,67 @@
+/*
+  tokens.css — the single source of design tokens.
+
+  Two layers live here:
+  1. Your brand palette (--paper, --ink, --green …) exactly as before.
+  2. The shadcn "bridge" tokens (--background, --foreground, --primary …),
+     mapped onto your brand colors so shadcn components inherit the TEA CHE
+     look instead of the default slate/zinc theme.
+
+  shadcn expects its tokens as HSL *channels* (e.g. "142 21% 23%"), because its
+  components write `hsl(var(--primary))`. We derive those from the brand hexes
+  once, here, so there is one place to retune the theme.
+*/
+
+:root {
+  /* ---- brand palette (unchanged) ---- */
+  --paper: #f3ecdd;
+  --paper-deep: #ebe1cd;
+  --card: #fcf8f0;
+  --ink: #232719;
+  --ink-soft: #5e6151;
+  --ink-faint: #908f7c;
+  --line: #e3d9c4;
+  --line-soft: #ede5d4;
+  --green: #2e4631;
+  --green-deep: #233726;
+  --green-600: #3e5a41;
+  --green-tint: #e4e9df;
+  --on-green: #f3ecdd;
+  --amber: #be8638;
+  --amber-deep: #a36f28;
+  --amber-tint: #f2e4c8;
+  --danger: #b0492f;
+  --danger-tint: #f3ddd3;
+  --ok: #3e7a4e;
+
+  /* ---- shadcn bridge tokens (HSL channels, mapped to brand) ---- */
+  --background: 43 39% 91%;        /* paper */
+  --foreground: 84 17% 12%;        /* ink */
+
+  --card: 43 60% 96%;              /* card */
+  --card-foreground: 84 17% 12%;   /* ink */
+
+  --popover: 43 60% 96%;
+  --popover-foreground: 84 17% 12%;
+
+  --primary: 132 21% 23%;          /* green */
+  --primary-foreground: 43 39% 91%;/* on-green */
+
+  --secondary: 44 47% 87%;         /* amber-tint */
+  --secondary-foreground: 84 17% 12%;
+
+  --muted: 43 39% 87%;             /* paper-deep */
+  --muted-foreground: 68 5% 56%;   /* ink-faint */
+
+  --accent: 108 11% 89%;           /* green-tint */
+  --accent-foreground: 132 22% 18%;/* green-deep */
+
+  --destructive: 12 58% 44%;       /* danger */
+  --destructive-foreground: 43 39% 91%;
+
+  --border: 41 42% 83%;            /* line */
+  --input: 41 42% 83%;             /* line */
+  --ring: 132 19% 30%;             /* green-600 */
+
+  --radius: 0.75rem;               /* ~12px; your lg radius stays 22px via Tailwind */
+}

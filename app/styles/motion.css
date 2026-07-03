@@ -1,0 +1,13 @@
+/*
+  motion.css — screen entrance animation accessibility guard.
+  The keyframe itself lives in tailwind.config.ts (animate-screenIn); this file
+  only owns the reduced-motion override, which must beat the utility, so it sits
+  in the utilities layer (later = wins on equal specificity).
+*/
+@layer utilities {
+  @media (prefers-reduced-motion: reduce) {
+    .animate-screenIn {
+      animation: none !important;
+    }
+  }
+}

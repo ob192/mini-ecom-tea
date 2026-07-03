@@ -1,0 +1,23 @@
+@layer components {
+  .sticky-bar {
+    position: sticky;
+    bottom: 12px;
+    background: var(--card);
+    border-radius: 22px;
+    box-shadow: 0 8px 28px rgba(45, 40, 20, 0.16);
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    margin: 0 -4px;
+    z-index: 40;
+  }
+
+  @media (min-width: 1024px) {
+    .sticky-bar {
+      position: static;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

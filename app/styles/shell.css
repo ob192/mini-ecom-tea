@@ -1,0 +1,40 @@
+/*
+  shell.css — the responsive site canvas.
+  @layer components so it overrides base but yields to Tailwind utilities.
+*/
+@layer components {
+  .app-shell {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    position: relative;
+    background: var(--paper);
+    box-shadow: 0 0 60px rgba(45, 40, 20, 0.06);
+  }
+
+  @media (min-width: 768px) {
+    .app-shell {
+      max-width: 720px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .app-shell {
+      max-width: 1240px;
+      box-shadow: none;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .app-shell {
+      box-shadow: 0 24px 70px rgba(45, 40, 20, 0.14);
+    }
+  }
+
+  /* Hide scrollbars on horizontal scrollers inside the shell. */
+  .app-shell ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
