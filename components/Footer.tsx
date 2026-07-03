@@ -43,15 +43,15 @@ export function Footer() {
           <div className={`${headCls} hidden lg:block`}>Контакти</div>
           <address className="not-italic flex flex-col gap-[7px] text-[13.5px] text-on-green/80">
             <span className="flex items-center gap-2">
-              <span className="text-amber"><PhoneIcon /></span>
+              <span className="text-amber"><PhoneIcon width={15} height={15} /></span>
               <a href="tel:+380971234567" className="hover:text-on-green">+38 (097) 123-45-67</a>
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-amber"><MailIcon /></span>
+              <span className="text-amber"><MailIcon width={15} height={15} /></span>
               <a href="mailto:hello@teache.ua" className="hover:text-on-green">hello@teache.ua</a>
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-amber"><PinIcon /></span>
+              <span className="text-amber"><PinIcon width={15} height={15} /></span>
               Київ, вул. Чайна, 7 · Пн–Сб 10:00–20:00
             </span>
           </address>

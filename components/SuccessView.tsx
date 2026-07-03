@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { CheckIcon, LeafIcon } from '@/components/Icons';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 export function SuccessView() {
   const id = useSearchParams().get('id');
@@ -26,7 +28,7 @@ export function SuccessView() {
         Наш менеджер зателефонує вам найближчим часом для підтвердження деталей і доставки.
       </p>
 
-      <div className="bg-card rounded-lg shadow-sh-1 w-full p-4 mt-[22px] text-left text-[14px] text-ink-soft leading-relaxed">
+      <Card className="w-full p-4 mt-[22px] text-left text-[14px] text-ink-soft leading-relaxed">
         Оплата — при отриманні або за реквізитами. Якщо у вас є запитання, напишіть нам на{' '}
         <a href="mailto:hello@teache.ua" className="text-green underline">
           hello@teache.ua
@@ -36,14 +38,13 @@ export function SuccessView() {
           +38 (097) 123-45-67
         </a>
         .
-      </div>
+      </Card>
 
-      <Link
-        href="/"
-        className="mt-7 w-full font-display font-medium text-[18px] rounded-full min-h-[52px] px-[22px] inline-flex items-center justify-center gap-2 bg-green text-on-green hover:bg-green-deep transition"
-      >
-        <LeafIcon width={18} height={18} /> Повернутись до каталогу
-      </Link>
+      <Button asChild variant="pill" size="xl" className="mt-7 w-full">
+        <Link href="/">
+          <LeafIcon width={18} height={18} /> Повернутись до каталогу
+        </Link>
+      </Button>
     </div>
   );
 }

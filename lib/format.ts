@@ -19,9 +19,7 @@ export function plural(n: number, one: string, few: string, many: string): strin
  */
 export function isValidUaPhone(raw: string): boolean {
   const digits = raw.replace(/\D/g, '');
-  // 380 + 9 digits  (e.g. 380971234567)
   if (/^380\d{9}$/.test(digits)) return true;
-  // 0 + 9 digits  (e.g. 0971234567)
   if (/^0\d{9}$/.test(digits)) return true;
   return false;
 }

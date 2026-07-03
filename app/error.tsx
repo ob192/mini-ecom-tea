@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function Error({
   error,
@@ -19,13 +20,9 @@ export default function Error({
       <p className="text-ink-soft text-[15px] max-w-[30ch]">
         Сталася помилка. Спробуйте оновити сторінку.
       </p>
-      <button
-        type="button"
-        onClick={reset}
-        className="mt-2 font-display font-medium text-[16px] rounded-full min-h-[48px] px-6 bg-green text-on-green hover:bg-green-deep transition"
-      >
+      <Button variant="pill" size="lg" className="mt-2" onClick={reset}>
         Спробувати ще раз
-      </button>
+      </Button>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
             aria-label="Назад"
             className="w-11 h-11 flex items-center justify-center rounded-full text-ink hover:bg-green-tint transition-colors"
           >
-            <ChevLeftIcon />
+            <ChevLeftIcon width={22} height={22} />
           </button>
         ) : (
           <Link href="/" aria-label="TEA CHE — на головну" className="flex items-center h-11 pr-1.5">
@@ -34,7 +34,6 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
           <h1 className="font-display font-semibold text-[18px] tracking-wide text-ink">{title}</h1>
         ) : null}
 
-        {/* desktop category nav — centered */}
         {showNav ? (
           <nav
             aria-label="Категорії"
@@ -63,7 +62,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
           aria-label={`Кошик${ready && count > 0 ? `, ${count} товарів` : ''}`}
           className="relative w-11 h-11 flex items-center justify-center rounded-full text-ink hover:bg-green-tint transition-colors"
         >
-          <CartIcon />
+          <CartIcon width={22} height={22} />
           {ready && count > 0 ? (
             <span className="absolute -top-[2px] -right-[1px] min-w-[19px] h-[19px] px-[5px] rounded-full bg-amber text-[#2A1E08] font-display font-semibold text-[11px] flex items-center justify-center shadow-[0_0_0_2px_var(--paper)]">
               {count}

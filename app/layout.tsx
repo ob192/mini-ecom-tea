@@ -3,6 +3,7 @@ import { Oswald, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { OrganizationJsonLd } from '@/components/JsonLd';
+import { Toaster } from '@/components/ui/sonner';
 import { siteUrl } from '@/lib/format';
 
 const oswald = Oswald({
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartProvider>
           <div className="app-shell">{children}</div>
         </CartProvider>
+        <Toaster />
       </body>
     </html>
   );

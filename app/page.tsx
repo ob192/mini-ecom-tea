@@ -5,7 +5,6 @@ import { Hero } from '@/components/Hero';
 import { CatalogGrid } from '@/components/CatalogGrid';
 import { products, categories } from '@/lib/products';
 
-// Fully static — no per-request work.
 export const dynamic = 'force-static';
 
 export default function HomePage() {

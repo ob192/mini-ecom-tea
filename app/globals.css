@@ -1,120 +1,34 @@
+/*
+  globals.css — the single stylesheet the app imports.
+
+  Structure (order matters for PostCSS):
+  1. @import the modular, per-feature CSS files FIRST. postcss-import only
+     inlines @import rules that appear before other rules, so every import
+     lives at the very top of this file.
+  2. THEN the @tailwind layer directives.
+
+  Cascade correctness: the feature files wrap their rules in @layer so their
+  specificity/order is controlled by Tailwind's layer system, not by where the
+  @import happens to sit. tokens.css stays outside any layer (it only defines
+  :root custom properties, which aren't subject to layer ordering).
+
+  To add a feature stylesheet: create app/styles/<feature>.css and add one
+  @import line in the block below.
+*/
+
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/shell.css';
+@import './styles/sticky-bar.css';
+@import './styles/motion.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --paper: #f3ecdd;
-  --paper-deep: #ebe1cd;
-  --card: #fcf8f0;
-  --ink: #232719;
-  --ink-soft: #5e6151;
-  --ink-faint: #908f7c;
-  --line: #e3d9c4;
-  --line-soft: #ede5d4;
-  --green: #2e4631;
-  --green-deep: #233726;
-  --green-600: #3e5a41;
-  --green-tint: #e4e9df;
-  --on-green: #f3ecdd;
-  --amber: #be8638;
-  --amber-deep: #a36f28;
-  --amber-tint: #f2e4c8;
-  --danger: #b0492f;
-  --danger-tint: #f3ddd3;
-  --ok: #3e7a4e;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  background: var(--paper);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.45;
-}
-
-/*
-  Responsive layout column.
-  - phone:  full-width single column
-  - tablet: centered, comfortable reading width
-  - desktop: full-width site canvas (multi-column layouts take over inside)
-*/
-.app-shell {
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100dvh;
-  position: relative;
-  background: var(--paper);
-  box-shadow: 0 0 60px rgba(45, 40, 20, 0.06);
-}
-
-@media (min-width: 768px) {
-  .app-shell {
-    max-width: 720px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .app-shell {
-    max-width: 1240px;
-    box-shadow: none;
-  }
-}
-
-/* On wide viewports, frame the canvas against a slightly deeper page bg. */
-@media (min-width: 1280px) {
-  body {
-    background: radial-gradient(140% 90% at 50% -20%, #efe6d3 0%, #e6dcc6 55%, #ddd0b6 100%);
-  }
-  .app-shell {
-    box-shadow: 0 24px 70px rgba(45, 40, 20, 0.14);
-  }
-}
-
-/*
-  Sticky action bar — mobile/tablet pattern.
-  On desktop (≥1024) it dissolves into the normal column flow, because the
-  primary action lives inside a two-column layout there.
-*/
-.sticky-bar {
-  position: sticky;
-  bottom: 0;
-  background: rgba(252, 248, 240, 0.92);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--line);
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  z-index: 40;
-}
-
-@media (min-width: 1024px) {
-  .sticky-bar {
-    position: static;
-    background: transparent;
-    backdrop-filter: none;
-    border-top: 0;
-    padding: 0;
-  }
-}
-
-.divider {
-  height: 1px;
-  background: var(--line);
-  border: 0;
-  margin: 0;
-}
-
-/* hide scrollbars on horizontal scrollers */
-.app-shell ::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-/* Screen entrance animates transform only — content is always visible. */
-@media (prefers-reduced-motion: reduce) {
-  .animate-screenIn {
-    animation: none !important;
+/* shadcn base layer: apply the border token globally, like the CLI does. */
+@layer base {
+  * {
+    border-color: hsl(var(--border));
   }
 }

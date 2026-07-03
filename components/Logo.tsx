@@ -124,7 +124,7 @@ export function Stepper({
         aria-label="Зменшити кількість"
         className={`${btn} flex items-center justify-center rounded-full text-green hover:bg-green-tint disabled:text-ink-faint disabled:cursor-not-allowed transition-colors`}
       >
-        <MinusIcon />
+        <MinusIcon width={20} height={20} />
       </button>
       <span className={`font-display font-semibold text-center text-ink ${val}`}>{value}</span>
       <button
@@ -134,7 +134,7 @@ export function Stepper({
         aria-label="Збільшити кількість"
         className={`${btn} flex items-center justify-center rounded-full text-green hover:bg-green-tint disabled:text-ink-faint disabled:cursor-not-allowed transition-colors`}
       >
-        <PlusIcon />
+        <PlusIcon width={20} height={20} />
       </button>
     </div>
   );
