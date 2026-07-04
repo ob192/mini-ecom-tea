@@ -12,7 +12,7 @@ export function Logo({ size = 19 }: { size?: number }) {
         className="font-display font-semibold text-ink leading-none whitespace-nowrap"
         style={{ fontSize: size, letterSpacing: '0.14em' }}
       >
-        TEA CHE
+        jintea.shop
       </span>
     </span>
   );

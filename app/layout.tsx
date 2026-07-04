@@ -25,27 +25,27 @@ const SITE = siteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: 'TEA CHE — колекційний листовий чай прямих поставок',
-    template: '%s · TEA CHE',
+    default: 'jintea.shop — колекційний листовий чай прямих поставок',
+    template: '%s · jintea.shop',
   },
   description:
     'Інтернет-магазин колекційного листового чаю: пуер, улун, зелений, червоний і білий чай зі старих дерев Юньнані й Тайваню. Доставка по Україні.',
-  applicationName: 'TEA CHE',
+  applicationName: 'jintea.shop',
   keywords: ['чай', 'пуер', 'улун', 'зелений чай', 'білий чай', 'листовий чай', 'купити чай Україна'],
-  authors: [{ name: 'TEA CHE' }],
+  authors: [{ name: 'jintea.shop' }],
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'uk_UA',
-    siteName: 'TEA CHE',
+    siteName: 'jintea.shop',
     url: SITE,
-    title: 'TEA CHE — колекційний листовий чай прямих поставок',
+    title: 'jintea.shop — колекційний листовий чай прямих поставок',
     description:
       'Пуер, улун, зелений, червоний і білий чай зі старих дерев. Невеликі партії, чесне походження. Доставка по Україні.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TEA CHE — колекційний листовий чай',
+    title: 'jintea.shop — колекційний листовий чай',
     description: 'Колекційний листовий чай прямих поставок. Доставка по Україні.',
   },
   robots: { index: true, follow: true },

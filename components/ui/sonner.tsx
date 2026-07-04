@@ -3,7 +3,7 @@
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 
 /*
-  Sonner Toaster, themed with TEA CHE tokens.
+  Sonner Toaster, themed with jintea.shop tokens.
 
   We don't use next-themes here (the app is light-only), so we hard-set
   theme="light" and drive colors from CSS variables via toastOptions.

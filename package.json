@@ -2,7 +2,7 @@
   "name": "tea-che-marketplace",
   "version": "1.0.0",
   "private": true,
-  "description": "TEA CHE — mobile-first SEO-optimized tea marketplace (Next.js App Router).",
+  "description": "jintea.shop — mobile-first SEO-optimized tea marketplace (Next.js App Router).",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

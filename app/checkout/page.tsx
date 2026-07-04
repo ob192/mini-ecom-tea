@@ -3,7 +3,7 @@ import { CheckoutForm } from '@/components/CheckoutForm';
 
 export const metadata: Metadata = {
   title: 'Оформлення замовлення',
-  description: 'Оформлення замовлення в магазині TEA CHE — доставка по Україні.',
+  description: 'Оформлення замовлення в магазині jintea.shop — доставка по Україні.',
   alternates: { canonical: '/checkout' },
   robots: { index: false, follow: false },
 };

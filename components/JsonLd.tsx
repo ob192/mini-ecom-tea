@@ -13,18 +13,13 @@ export function OrganizationJsonLd({ siteUrl }: { siteUrl: string }) {
             data={{
                 '@context': 'https://schema.org',
                 '@type': 'Organization',
-                name: 'TEA CHE',
+                name: 'jintea.shop',
                 description: 'Колекційний листовий чай прямих поставок з Юньнані й Тайваню.',
                 url: siteUrl,
                 logo: `${siteUrl}/icon.png`,
-                email: 'hello@teache.ua',
-                telephone: '+380971234567',
-                address: {
-                    '@type': 'PostalAddress',
-                    addressLocality: 'Київ',
-                    streetAddress: 'вул. Чайна, 7',
-                    addressCountry: 'UA',
-                },
+                email: 'hello@jintea.shop',
+                telephone: '+380986575800',
+                sameAs: ['https://instagram.com/jintea.ua', 'https://t.me/Jin_tea'],
             }}
         />
     );
@@ -42,7 +37,7 @@ export function ProductJsonLd({ product, siteUrl }: { product: Product; siteUrl:
                 category: categoryLabel(product.category),
                 sku: product.slug,
                 ...(product.image ? { image: product.images.map((i) => `${siteUrl}${i}`) } : {}),
-                brand: { '@type': 'Brand', name: 'TEA CHE' },
+                brand: { '@type': 'Brand', name: 'jintea.shop' },
                 ...(product.price != null
                     ? {
                         offers: {

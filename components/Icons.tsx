@@ -44,6 +44,11 @@ import {
   Mail,
   Truck,
   Leaf,
+  Clock,
+  Package,
+  Thermometer,
+  Instagram,
+  Send,
   type LucideProps,
 } from 'lucide-react';
 
@@ -70,6 +75,11 @@ export const PinIcon = make(MapPin);
 export const PhoneIcon = make(Phone);
 export const MailIcon = make(Mail);
 export const TruckIcon = make(Truck);
+export const ClockIcon = make(Clock);
+export const PackageIcon = make(Package);
+export const ThermometerIcon = make(Thermometer);
+export const InstagramIcon = make(Instagram);
+export const TelegramIcon = make(Send);
 
 /** BRAND MARK — restyle this with your bespoke leaf when ready. */
 export const LeafIcon = make(Leaf);

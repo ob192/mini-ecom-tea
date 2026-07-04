@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         alternates: { canonical: url },
         openGraph: {
             type: 'website',
-            title: `${product.title} · TEA CHE`,
+            title: `${product.title} · jintea.shop`,
             description,
             url,
             locale: 'uk_UA',
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${product.title} · TEA CHE`,
+            title: `${product.title} · jintea.shop`,
             description,
             ...(product.image ? { images: [product.image] } : {}),
         },

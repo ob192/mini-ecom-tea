@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { categories } from '@/lib/products';
-import { LeafIcon, MailIcon, PhoneIcon, PinIcon } from './Icons';
+import { LeafIcon, PhoneIcon, InstagramIcon, TelegramIcon } from './Icons';
 
 export function Footer() {
   const linkCls = 'block text-[14px] leading-8 text-on-green/80 hover:text-on-green transition-colors';
@@ -14,7 +14,7 @@ export function Footer() {
             <span className="flex text-amber" aria-hidden>
               <LeafIcon width={22} height={22} />
             </span>
-            <span className="font-display font-semibold text-[19px] tracking-[0.14em]">TEA CHE</span>
+            <span className="font-display font-semibold text-[19px] tracking-[0.14em]">jintea.shop</span>
           </div>
           <p className="m-0 text-[13.5px] text-on-green/70 max-w-[30ch] leading-relaxed">
             Колекційний листовий чай прямих поставок. Обсмажуємо досвід, а не листя.
@@ -32,10 +32,10 @@ export function Footer() {
           </nav>
           <nav aria-label="Інформація">
             <div className={headCls}>Інформація</div>
-            <span className={linkCls}>Про нас</span>
-            <span className={linkCls}>Доставка й оплата</span>
-            <span className={linkCls}>Як заварювати</span>
-            <span className={linkCls}>Гуртовим клієнтам</span>
+            <Link href="/about" className={linkCls}>Про нас</Link>
+            <Link href="/delivery" className={linkCls}>Доставка й оплата</Link>
+            <Link href="/brewing" className={linkCls}>Як заварювати</Link>
+            <Link href="/contacts" className={linkCls}>Контакти</Link>
           </nav>
         </div>
 
@@ -44,22 +44,22 @@ export function Footer() {
           <address className="not-italic flex flex-col gap-[7px] text-[13.5px] text-on-green/80">
             <span className="flex items-center gap-2">
               <span className="text-amber"><PhoneIcon width={15} height={15} /></span>
-              <a href="tel:+380971234567" className="hover:text-on-green">+38 (097) 123-45-67</a>
+              <a href="tel:+380986575800" className="hover:text-on-green">+38 (098) 657-58-00</a>
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-amber"><MailIcon width={15} height={15} /></span>
-              <a href="mailto:hello@teache.ua" className="hover:text-on-green">hello@teache.ua</a>
+              <span className="text-amber"><InstagramIcon width={15} height={15} /></span>
+              <a href="https://instagram.com/jintea.ua" target="_blank" rel="noreferrer" className="hover:text-on-green">jintea.ua</a>
             </span>
             <span className="flex items-center gap-2">
-              <span className="text-amber"><PinIcon width={15} height={15} /></span>
-              Київ, вул. Чайна, 7 · Пн–Сб 10:00–20:00
+              <span className="text-amber"><TelegramIcon width={15} height={15} /></span>
+              <a href="https://t.me/Jin_tea" target="_blank" rel="noreferrer" className="hover:text-on-green">Jin_tea</a>
             </span>
           </address>
         </div>
       </div>
 
       <div className="lg:max-w-[1040px] lg:mx-auto mt-[22px] lg:mt-10 pt-4 border-t border-on-green/20 text-[12px] text-on-green/60 flex justify-between flex-wrap gap-1.5">
-        <span>© {new Date().getFullYear()} TEA CHE</span>
+        <span>© {new Date().getFullYear()} jintea.shop</span>
         <span>Зроблено з любов&apos;ю в Україні</span>
       </div>
     </footer>

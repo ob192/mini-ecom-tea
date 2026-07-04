@@ -3,7 +3,7 @@ import { CartView } from '@/components/CartView';
 
 export const metadata: Metadata = {
   title: 'Кошик',
-  description: 'Ваш кошик у магазині TEA CHE.',
+  description: 'Ваш кошик у магазині jintea.shop.',
   alternates: { canonical: '/cart' },
   robots: { index: false, follow: true },
 };

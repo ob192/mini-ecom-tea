@@ -25,7 +25,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
             <ChevLeftIcon width={22} height={22} />
           </button>
         ) : (
-          <Link href="/" aria-label="TEA CHE — на головну" className="flex items-center h-11 pr-1.5">
+          <Link href="/" aria-label="jintea.shop — на головну" className="flex items-center h-11 pr-1.5">
             <Logo size={19} />
           </Link>
         )}

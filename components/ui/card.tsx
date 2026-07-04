@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 /*
-  shadcn Card — themed to the TEA CHE "bg-card rounded-lg shadow-sh-1" surface
+  shadcn Card — themed to the jintea.shop "bg-card rounded-lg shadow-sh-1" surface
   used for product spec rows, cart summaries, order summaries, etc.
 */
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

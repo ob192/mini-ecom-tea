@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 /*
-  Button — shadcn base + TEA CHE variants.
+  Button — shadcn base + jintea.shop variants.
 
   The app's real buttons are large green pills ("Додати в кошик", "Оформити
   замовлення"). Those are expressed as the `pill` variant + `xl` size so call
