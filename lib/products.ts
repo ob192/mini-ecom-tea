@@ -31,8 +31,11 @@ function build(raw: RawProduct): Product {
   const images = files.map((f) => `/${raw.slug}/${f}`);
   const priceTiers = (raw.priceTiers ?? []).slice().sort((a, b) => a.weight - b.weight);
 
-  const basePrice = raw.price ?? priceTiers[0]?.price ?? null;
-  const baseWeight = raw.weight ?? priceTiers[0]?.weight ?? null;
+  // When tiers exist, anchor the displayed "від ..." price/weight to the
+  // cheapest (lowest-weight) tier rather than whatever `raw.price` says —
+  // some source rows set `price`/`weight` to a middle tier.
+  const basePrice = priceTiers[0]?.price ?? raw.price ?? null;
+  const baseWeight = priceTiers[0]?.weight ?? raw.weight ?? null;
 
   return {
     slug: raw.slug,
@@ -93,6 +96,30 @@ export function defaultWeight(product: Product): number {
     return (fifty ?? product.priceTiers[0]).weight;
   }
   return product.weight ?? 0;
+}
+
+/**
+ * If buying `qty` packs of `weight` adds up to exactly another tier's weight
+ * at a cheaper (or equal) price, collapse the selection to that single tier
+ * pack instead of stacking N small packs — e.g. 2 × 25 г should become 1 × 50 г
+ * when the 50 г tier is priced below double the 25 г price.
+ */
+export function collapseToTier(
+    product: Product,
+    weight: number,
+    qty: number,
+): { weight: number; qty: number } {
+  if (qty <= 1 || product.priceTiers.length === 0) return { weight, qty };
+
+  const unit = priceFor(product, weight);
+  if (unit == null) return { weight, qty };
+
+  const totalWeight = weight * qty;
+  const match = product.priceTiers.find((t) => t.weight === totalWeight);
+  if (match && match.price < unit * qty) {
+    return { weight: match.weight, qty: 1 };
+  }
+  return { weight, qty };
 }
 
 /** Per-category placeholder tones (warm tea palette, low saturation). */

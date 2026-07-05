@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Header } from '@/components/Header';
-import { ProductImage } from '@/components/Logo';
+import { ProductGallery } from '@/components/ProductGallery';
 import { ProductBuy } from '@/components/ProductBuy';
 import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd';
 import { Badge } from '@/components/ui/badge';
@@ -71,13 +71,12 @@ export default async function ProductPage({ params }: Params) {
 
             <article className="animate-screenIn lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start lg:max-w-[1080px] lg:mx-auto lg:px-8 lg:py-10">
                 <div className="px-4 pt-2 lg:px-0 lg:pt-0 lg:sticky lg:top-20">
-                    <ProductImage
-                        src={product.image}
+                    <ProductGallery
+                        images={product.images}
                         category={product.category}
                         alt={`${product.title} — ${product.subtitle}`}
                         ratio="4 / 5"
                         radius={22}
-                        tag="фото товару"
                         priority
                         sizes="(max-width: 480px) 100vw, (max-width: 1024px) 720px, 520px"
                     />

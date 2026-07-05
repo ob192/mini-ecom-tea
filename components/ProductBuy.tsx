@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import { uah } from '@/lib/format';
-import { priceFor, defaultWeight, UNIT } from '@/lib/products';
+import { priceFor, defaultWeight, collapseToTier, UNIT } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { Stepper } from '@/components/Logo';
 import { CartIcon } from '@/components/Icons';
@@ -15,6 +15,16 @@ export function ProductBuy({ product }: { product: Product }) {
   const router = useRouter();
   const [weight, setWeight] = useState<number>(defaultWeight(product));
   const [qty, setQty] = useState(1);
+
+  // Buying N packs of one tier that add up to another tier's weight should
+  // charge that tier's (cheaper) price instead of N × the smaller price.
+  useEffect(() => {
+    const collapsed = collapseToTier(product, weight, qty);
+    if (collapsed.weight !== weight || collapsed.qty !== qty) {
+      setWeight(collapsed.weight);
+      setQty(collapsed.qty);
+    }
+  }, [product, weight, qty]);
 
   const hasTiers = product.priceTiers.length > 1;
   const unitPrice = priceFor(product, weight);
