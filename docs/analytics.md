@@ -15,7 +15,7 @@ The single exception is `purchase`, sent server-side over the Measurement Protoc
 | `GA4_MEASUREMENT_ID` | server | `G-5PCX5S995S` |
 | `GA4_API_SECRET` | server | Measurement Protocol secret ("JINTEA API SECRET") — **secret, never commit** |
 | `GA4_MP_DEBUG` | server | `1` → POST to `/debug/mp/collect` and log validation errors instead of recording hits |
-| `NEXT_PUBLIC_SITE_URL` | both | `https://jintea.shop`. Not used by client tracking (the browser supplies the real URL), but the server-side `purchase` has no browser context, so it stamps `page_location` from this. Unset in production it falls back to the per-deployment `VERCEL_URL`. |
+| `NEXT_PUBLIC_SITE_URL` | both | `https://jintea.restreto-labs.com` — the domain the shop actually runs on, and the one the GA4 stream is registered to. Not used by client tracking (the browser supplies the real URL), but the server-side `purchase` has no browser context, so it stamps `page_location` from this. Unset in production it falls back to the per-deployment `VERCEL_URL`. |
 
 Set all four in Vercel → Project → Settings → Environment Variables (production +
 preview). Locally they live in `.env.local`.
@@ -106,9 +106,8 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
   `page_view` on route changes, and leaving both on double counts every SPA navigation.
 - `purchase` is a key event by default. Mark `begin_checkout` and `contact_click` as key
   events too if you want them in conversion reports.
-- The stream URL is `https://jintea.restreto-labs.com` while the shop runs on
-  `jintea.shop`. Hits are still collected (GA4 doesn't enforce the stream URL), but
-  update it so "unassigned"/self-referral traffic and the tag assistant behave.
+- The stream URL (`https://jintea.restreto-labs.com`) matches `NEXT_PUBLIC_SITE_URL`.
+  Keep them in sync if the shop ever moves domain.
 
 ## Verifying
 
