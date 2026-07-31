@@ -16,7 +16,8 @@ export function OrganizationJsonLd({ siteUrl }: { siteUrl: string }) {
                 name: 'jintea.shop',
                 description: 'Колекційний листовий чай прямих поставок з Юньнані й Тайваню.',
                 url: siteUrl,
-                logo: `${siteUrl}/icon.png`,
+                // app/icon.svg is the only logo asset that exists; /icon.png 404s.
+                logo: `${siteUrl}/icon.svg`,
                 email: 'hello@jintea.shop',
                 telephone: '+380986575800',
                 sameAs: ['https://instagram.com/jintea.ua', 'https://t.me/Jin_tea'],

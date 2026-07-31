@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { useCart } from '@/context/CartContext';
 import { getProduct, priceFor, UNIT } from '@/lib/products';
 import { uah, plural } from '@/lib/format';
+import { trackRemoveFromCart, trackViewCart } from '@/lib/analytics';
 import { Header } from '@/components/Header';
 import { Stepper, ProductImage } from '@/components/Logo';
 import { CartIcon, LeafIcon, TrashIcon, ArrowIcon } from '@/components/Icons';
@@ -73,6 +74,21 @@ export function CartView() {
   const { items, ready, count, subtotal, delivery, total, freeDeliveryThreshold, inc, dec, remove } =
       useCart();
 
+  // GA4 `view_cart` — once per visit to this screen, after hydration.
+  const viewSent = useRef(false);
+  useEffect(() => {
+    if (!ready || viewSent.current || items.length === 0) return;
+    viewSent.current = true;
+    trackViewCart(items);
+  }, [ready, items]);
+
+  const handleRemove = (slug: string, weight: number) => {
+    const line = items.find((i) => i.slug === slug && i.weight === weight);
+    const product = getProduct(slug);
+    if (line && product) trackRemoveFromCart(product, weight, line.qty);
+    remove(slug, weight);
+  };
+
   if (!ready) {
     return (
         <>
@@ -118,7 +134,7 @@ export function CartView() {
               {items.map((it, i) => (
                   <Fragment key={`${it.slug}|${it.weight}`}>
                     {i > 0 && <hr className="divider" />}
-                    <CartRow item={it} onDec={dec} onInc={inc} onRemove={remove} />
+                    <CartRow item={it} onDec={dec} onInc={inc} onRemove={handleRemove} />
                   </Fragment>
               ))}
             </div>

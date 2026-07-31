@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getProduct, priceFor, UNIT } from '@/lib/products';
-import { uah, isValidUaPhone, normalizeUaPhone } from '@/lib/format';
+import { getProduct, priceFor, categoryLabel, CURRENCY, UNIT } from '@/lib/products';
+import { uah, isValidUaPhone, normalizeUaPhone, siteUrl } from '@/lib/format';
 import { rateLimit, clientKey } from '@/lib/rate-limit';
+import { readGaCookies, sendPurchase } from '@/lib/ga4-server';
 import type { OrderPayload, CartItem } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -64,7 +65,15 @@ export async function POST(request: Request) {
     return bad('Кошик порожній.');
   }
 
-  type Line = { name: string; weight: number; qty: number; price: number; lineTotal: number };
+  type Line = {
+    slug: string;
+    category: string;
+    name: string;
+    weight: number;
+    qty: number;
+    price: number;
+    lineTotal: number;
+  };
   const lines: Line[] = [];
   let subtotal = 0;
 
@@ -81,7 +90,15 @@ export async function POST(request: Request) {
 
     const lineTotal = price * qty;
     subtotal += lineTotal;
-    lines.push({ name: product.title, weight, qty, price, lineTotal });
+    lines.push({
+      slug: product.slug,
+      category: categoryLabel(product.category),
+      name: product.title,
+      weight,
+      qty,
+      price,
+      lineTotal,
+    });
   }
 
   const delivery = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
@@ -141,6 +158,28 @@ export async function POST(request: Request) {
     console.error('[order] Telegram request failed', err);
     return bad('Не вдалося надіслати замовлення. Спробуйте ще раз.', 502);
   }
+
+  // GA4 `purchase` — server-side (Measurement Protocol) so the revenue comes
+  // from the recomputed total and survives ad-blockers. Fired only after
+  // Telegram accepted the order; never throws.
+  await sendPurchase(
+      {
+        transaction_id: orderId,
+        value: total,
+        currency: CURRENCY,
+        shipping: delivery,
+        page_location: `${siteUrl()}/order/success`,
+        items: lines.map((l) => ({
+          item_id: l.slug,
+          item_name: l.name,
+          item_category: l.category,
+          ...(l.weight ? { item_variant: `${l.weight} ${UNIT}` } : {}),
+          price: l.price,
+          quantity: l.qty,
+        })),
+      },
+      readGaCookies(request.headers.get('cookie'), process.env.GA4_MEASUREMENT_ID ?? ''),
+  );
 
   return NextResponse.json({ ok: true, orderId, total });
 }

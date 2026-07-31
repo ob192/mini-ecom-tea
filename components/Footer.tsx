@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { categories } from '@/lib/products';
 import { LeafIcon, PhoneIcon, InstagramIcon, TelegramIcon } from './Icons';
+import { ContactLink } from './Analytics';
 
 export function Footer() {
   const linkCls = 'block text-[14px] leading-8 text-on-green/80 hover:text-on-green transition-colors';
@@ -44,15 +45,21 @@ export function Footer() {
           <address className="not-italic flex flex-col gap-[7px] text-[13.5px] text-on-green/80">
             <span className="flex items-center gap-2">
               <span className="text-amber"><PhoneIcon width={15} height={15} /></span>
-              <a href="tel:+380986575800" className="hover:text-on-green">+38 (098) 657-58-00</a>
+              <ContactLink channel="phone" location="footer" href="tel:+380986575800" className="hover:text-on-green">
+                +38 (098) 657-58-00
+              </ContactLink>
             </span>
             <span className="flex items-center gap-2">
               <span className="text-amber"><InstagramIcon width={15} height={15} /></span>
-              <a href="https://instagram.com/jintea.ua" target="_blank" rel="noreferrer" className="hover:text-on-green">jintea.ua</a>
+              <ContactLink channel="instagram" location="footer" href="https://instagram.com/jintea.ua" className="hover:text-on-green">
+                jintea.ua
+              </ContactLink>
             </span>
             <span className="flex items-center gap-2">
               <span className="text-amber"><TelegramIcon width={15} height={15} /></span>
-              <a href="https://t.me/Jin_tea" target="_blank" rel="noreferrer" className="hover:text-on-green">Jin_tea</a>
+              <ContactLink channel="telegram" location="footer" href="https://t.me/Jin_tea" className="hover:text-on-green">
+                Jin_tea
+              </ContactLink>
             </span>
           </address>
         </div>

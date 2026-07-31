@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import type { Product, Category } from '@/lib/types';
 import { plural } from '@/lib/format';
 import { categoryLabel } from '@/lib/products';
+import { trackSelectCategory, trackViewItemList } from '@/lib/analytics';
 import { ProductCard } from './ProductCard';
 import { TruckIcon } from './Icons';
 
@@ -48,6 +49,21 @@ export function CatalogGrid({
       [activeCat, products],
   );
 
+  const listId = `catalog_${activeCat}`;
+  const listName = activeCat === 'all' ? 'Каталог' : `Каталог · ${categoryLabel(activeCat)}`;
+
+  // GA4 `view_item_list` — one per rendered selection, refired when the filter changes.
+  useEffect(() => {
+    if (filtered.length === 0) return;
+    trackViewItemList(filtered, listId, listName);
+  }, [filtered, listId, listName]);
+
+  /** Position of a product in the currently rendered list (GA4 `index`). */
+  const positions = useMemo(
+      () => new Map(filtered.map((p, i) => [p.slug, i])),
+      [filtered],
+  );
+
   // Group results by category, preserving the configured category order.
   const groups = useMemo(() => {
     const order = categories.map((c) => c.slug);
@@ -74,7 +90,10 @@ export function CatalogGrid({
                       type="button"
                       role="tab"
                       aria-selected={active}
-                      onClick={() => setActiveCat(c.slug)}
+                      onClick={() => {
+                        setActiveCat(c.slug);
+                        trackSelectCategory(c.slug, c.label);
+                      }}
                       className={`font-display font-medium text-[14px] rounded-full min-h-[40px] px-4 transition ${
                           active
                               ? 'bg-green text-on-green shadow-sh-1'
@@ -111,7 +130,14 @@ export function CatalogGrid({
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 px-4 md:px-8">
                     {g.items.map((p, i) => (
-                        <ProductCard key={p.slug} product={p} priority={activeCat !== 'all' && i < 4} />
+                        <ProductCard
+                            key={p.slug}
+                            product={p}
+                            priority={activeCat !== 'all' && i < 4}
+                            listId={listId}
+                            listName={listName}
+                            index={positions.get(p.slug)}
+                        />
                     ))}
                   </div>
                 </section>

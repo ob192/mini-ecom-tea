@@ -13,7 +13,6 @@ export function ProductGallery({
   alt,
   ratio = '4 / 5',
   radius = 22,
-  priority = false,
   sizes = '(max-width: 480px) 100vw, (max-width: 1024px) 720px, 520px',
 }: {
   images: string[];
@@ -21,7 +20,6 @@ export function ProductGallery({
   alt: string;
   ratio?: string;
   radius?: number;
-  priority?: boolean;
   sizes?: string;
 }) {
   const [active, setActive] = useState(0);
@@ -43,14 +41,22 @@ export function ProductGallery({
         className="group relative block w-full overflow-hidden cursor-zoom-in"
         style={{ aspectRatio: ratio, borderRadius: radius }}
       >
-        <Image
-          src={images[active]}
-          alt={alt}
-          fill
-          sizes={sizes}
-          priority={priority}
-          className="object-cover"
-        />
+        {/* All photos are mounted (and eagerly fetched) up front so switching
+            the active one is an instant opacity swap, not a new network request. */}
+        {images.map((src, i) => (
+          <Image
+            key={src}
+            src={src}
+            alt={i === active ? alt : ''}
+            aria-hidden={i !== active}
+            fill
+            sizes={sizes}
+            priority
+            className={`object-cover transition-opacity duration-150 ${
+              i === active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          />
+        ))}
         <span className="absolute bottom-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-ink/45 text-on-green backdrop-blur-sm opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
           <ZoomIn width={18} height={18} strokeWidth={1.7} />
         </span>
@@ -86,7 +92,8 @@ export function ProductGallery({
         >
           <div className="relative h-full w-full overflow-hidden sm:aspect-square sm:h-auto sm:rounded-2xl">
             <ZoomableImage
-              src={images[active]}
+              images={images}
+              active={active}
               alt={alt}
               onSwipeNext={images.length > 1 ? () => go(1) : undefined}
               onSwipePrev={images.length > 1 ? () => go(-1) : undefined}
@@ -133,13 +140,15 @@ export function ProductGallery({
  * moves to the next/prev photo and a vertical swipe dismisses the dialog.
  */
 function ZoomableImage({
-  src,
+  images,
+  active,
   alt,
   onSwipeNext,
   onSwipePrev,
   onSwipeDismiss,
 }: {
-  src: string;
+  images: string[];
+  active: number;
   alt: string;
   onSwipeNext?: () => void;
   onSwipePrev?: () => void;
@@ -157,7 +166,7 @@ function ZoomableImage({
   useEffect(() => {
     setScale(1);
     setPan({ x: 0, y: 0 });
-  }, [src]);
+  }, [active]);
 
   const toggleZoom = (clientX: number, clientY: number, rect: DOMRect) => {
     if (scale > 1) {
@@ -222,15 +231,24 @@ function ZoomableImage({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes="100vw"
-        draggable={false}
-        className="object-contain transition-transform duration-150 ease-out"
-        style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}
-      />
+      {/* All photos are mounted up front (eagerly fetched) so paging through
+          the lightbox is an instant opacity swap, not a new network request. */}
+      {images.map((src, i) => (
+        <Image
+          key={src}
+          src={src}
+          alt={i === active ? alt : ''}
+          aria-hidden={i !== active}
+          fill
+          sizes="100vw"
+          priority
+          draggable={false}
+          className={`object-contain transition-opacity duration-150 ${
+            i === active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          style={i === active ? { transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` } : undefined}
+        />
+      ))}
     </div>
   );
 }

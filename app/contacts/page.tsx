@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { PhoneIcon, InstagramIcon, TelegramIcon } from '@/components/Icons';
+import { ContactLink } from '@/components/Analytics';
 
 export const dynamic = 'force-static';
 
@@ -19,20 +20,23 @@ const contacts = [
     label: 'Телефон',
     value: '+38 (098) 657-58-00',
     href: 'tel:+380986575800',
+    channel: 'phone',
   },
   {
     icon: InstagramIcon,
     label: 'Instagram',
     value: 'jintea.ua',
     href: 'https://instagram.com/jintea.ua',
+    channel: 'instagram',
   },
   {
     icon: TelegramIcon,
     label: 'Telegram',
     value: 'Jin_tea',
     href: 'https://t.me/Jin_tea',
+    channel: 'telegram',
   },
-];
+] as const;
 
 export default function ContactsPage() {
   return (
@@ -45,12 +49,12 @@ export default function ContactsPage() {
         </p>
 
         <div className="flex flex-col gap-2.5">
-          {contacts.map(({ icon: Icon, label, value, href }) => (
-            <a
+          {contacts.map(({ icon: Icon, label, value, href, channel }) => (
+            <ContactLink
               key={label}
+              channel={channel}
+              location="contacts_page"
               href={href}
-              target={href.startsWith('http') ? '_blank' : undefined}
-              rel={href.startsWith('http') ? 'noreferrer' : undefined}
               className="bg-card rounded-lg shadow-sh-1 p-4 flex items-center gap-3.5 hover:bg-green-tint transition-colors"
             >
               <span className="w-10 h-10 shrink-0 rounded-full bg-green-tint text-green flex items-center justify-center">
@@ -60,7 +64,7 @@ export default function ContactsPage() {
                 <div className="text-ink-faint text-[12.5px]">{label}</div>
                 <div className="font-display font-semibold text-[15.5px] text-ink">{value}</div>
               </div>
-            </a>
+            </ContactLink>
           ))}
         </div>
 

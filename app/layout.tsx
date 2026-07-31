@@ -1,8 +1,14 @@
 import type { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import { Oswald, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { OrganizationJsonLd } from '@/components/JsonLd';
+import {
+  GoogleTagManager,
+  GoogleTagManagerNoScript,
+  PageViewTracker,
+} from '@/components/Analytics';
 import { Toaster } from '@/components/ui/sonner';
 import { siteUrl } from '@/lib/format';
 
@@ -61,6 +67,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="uk" className={`${oswald.variable} ${ptSans.variable}`}>
       <body className="font-body">
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
+        <Suspense fallback={null}>
+          <PageViewTracker />
+        </Suspense>
         <OrganizationJsonLd siteUrl={SITE} />
         <CartProvider>
           <div className="app-shell">{children}</div>

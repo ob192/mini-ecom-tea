@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { CheckIcon, LeafIcon } from '@/components/Icons';
+import { ContactLink } from '@/components/Analytics';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -30,13 +31,13 @@ export function SuccessView() {
 
       <Card className="w-full p-4 mt-[22px] text-left text-[14px] text-ink-soft leading-relaxed">
         Оплата — при отриманні або за реквізитами. Якщо у вас є запитання, зателефонуйте{' '}
-        <a href="tel:+380986575800" className="text-green underline">
+        <ContactLink channel="phone" location="order_success" href="tel:+380986575800" className="text-green underline">
           +38 (098) 657-58-00
-        </a>{' '}
+        </ContactLink>{' '}
         або напишіть у{' '}
-        <a href="https://t.me/Jin_tea" target="_blank" rel="noreferrer" className="text-green underline">
+        <ContactLink channel="telegram" location="order_success" href="https://t.me/Jin_tea" className="text-green underline">
           Telegram
-        </a>
+        </ContactLink>
         .
       </Card>
 

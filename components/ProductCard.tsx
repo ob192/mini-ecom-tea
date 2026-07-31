@@ -6,11 +6,25 @@ import type { Product } from '@/lib/types';
 import { categoryLabel, defaultWeight, UNIT } from '@/lib/products';
 import { uah } from '@/lib/format';
 import { useCart } from '@/context/CartContext';
+import { trackAddToCart, trackSelectItem } from '@/lib/analytics';
 import { ProductImage } from './Logo';
 import { CartIcon, CheckIcon } from './Icons';
 import { Button } from '@/components/ui/button';
 
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({
+                              product,
+                              priority = false,
+                              listId = 'catalog',
+                              listName = 'Каталог',
+                              index,
+                            }: {
+  product: Product;
+  priority?: boolean;
+  /** GA4 item-list context — where this card was rendered. */
+  listId?: string;
+  listName?: string;
+  index?: number;
+}) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
 
@@ -20,14 +34,23 @@ export function ProductCard({ product, priority = false }: { product: Product; p
     e.preventDefault();
     e.stopPropagation();
     if (!product.inStock) return;
-    add(product.slug, defaultWeight(product), 1);
+    const weight = defaultWeight(product);
+    add(product.slug, weight, 1);
+    trackAddToCart(product, weight, 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 1300);
   };
 
+  const handleSelect = () => trackSelectItem(product, listId, listName, index);
+
   return (
       <article className="bg-card rounded-lg shadow-sh-1 overflow-hidden flex flex-col transition hover:-translate-y-0.5 hover:shadow-sh-2">
-        <Link href={`/product/${product.slug}`} className="block" aria-label={product.title}>
+        <Link
+            href={`/product/${product.slug}`}
+            className="block"
+            aria-label={product.title}
+            onClick={handleSelect}
+        >
           <ProductImage
               src={product.image}
               category={product.category}
@@ -40,6 +63,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           <Link
               href={`/product/${product.slug}`}
               className="font-display font-medium text-[15.5px] leading-tight text-ink"
+              onClick={handleSelect}
           >
             {product.title}
           </Link>

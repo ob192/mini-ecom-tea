@@ -1,13 +1,15 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { useCart } from '@/context/CartContext';
 import { getProduct, priceFor } from '@/lib/products';
 import { uah } from '@/lib/format';
+import { trackAddShippingInfo, trackBeginCheckout, trackCheckoutError } from '@/lib/analytics';
 import { checkoutSchema, type CheckoutValues } from '@/lib/checkout-schema';
 import { Header } from '@/components/Header';
 import { AlertIcon } from '@/components/Icons';
@@ -47,6 +49,14 @@ export function CheckoutForm() {
         },
     });
 
+    // GA4 `begin_checkout` — once, as soon as a non-empty cart reaches this screen.
+    const checkoutTracked = useRef(false);
+    useEffect(() => {
+        if (!ready || checkoutTracked.current || items.length === 0) return;
+        checkoutTracked.current = true;
+        trackBeginCheckout(items);
+    }, [ready, items]);
+
     const deliveryMethod = form.watch('deliveryMethod');
 
     const shippingValue: ShippingValue = {
@@ -83,6 +93,13 @@ export function CheckoutForm() {
     }
 
     const onSubmit = async (values: CheckoutValues) => {
+        // The delivery choice is only final once the form validates, so
+        // add_shipping_info rides along with the submit.
+        trackAddShippingInfo(
+            items,
+            values.deliveryMethod === 'np_courier' ? 'Нова Пошта — кур\'єр' : 'Нова Пошта — відділення',
+        );
+
         try {
             const res = await fetch('/api/order', {
                 method: 'POST',
@@ -92,6 +109,7 @@ export function CheckoutForm() {
             const data = await res.json().catch(() => ({}));
 
             if (!res.ok) {
+                trackCheckoutError(String(data?.error ?? `http_${res.status}`));
                 toast.error(data?.error || 'Не вдалося надіслати замовлення. Спробуйте ще раз.');
                 return;
             }
@@ -100,13 +118,17 @@ export function CheckoutForm() {
             const id = encodeURIComponent(data?.orderId ?? '');
             router.push(`/order/success${id ? `?id=${id}` : ''}`);
         } catch {
+            trackCheckoutError('network');
             toast.error("Помилка мережі. Перевірте з'єднання та спробуйте ще раз.");
         }
     };
 
     // On invalid submit, focus the first bad field (RHF focuses automatically,
     // but we also surface a toast for the sticky-bar submit on mobile).
-    const onInvalid = () => {
+    // `errors` comes from the handler, not formState — the latter is a proxy
+    // that only tracks the fields read during render.
+    const onInvalid = (errors: FieldErrors<CheckoutValues>) => {
+        trackCheckoutError('validation:' + Object.keys(errors).join(','));
         toast.error('Перевірте виділені поля.');
     };
 

@@ -77,7 +77,6 @@ export default async function ProductPage({ params }: Params) {
                         alt={`${product.title} — ${product.subtitle}`}
                         ratio="4 / 5"
                         radius={22}
-                        priority
                         sizes="(max-width: 480px) 100vw, (max-width: 1024px) 720px, 520px"
                     />
                 </div>

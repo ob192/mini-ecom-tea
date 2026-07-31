@@ -18,7 +18,7 @@ npm run lint       # next lint
 
 There is no test suite/framework configured in this repo.
 
-Required env vars (see `.env.example`): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL`. The Nova Poshta integration (see below) additionally requires `NOVA_POSHTA_API_KEY` server-side, which is **not** currently listed in `.env.example` — set it manually in `.env.local` or the NP city/warehouse lookups will 500.
+Required env vars — all listed in `.env.example`: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL`, `NOVA_POSHTA_API_KEY` (server-side; without it the NP city/warehouse lookups 500), plus the analytics vars described in `docs/analytics.md`.
 
 ## Data model: `public/products.json`
 
@@ -54,9 +54,33 @@ Delivery is Nova Poshta only, either to a branch/postomat (`np_warehouse`, needs
 - `app/api/order/route.ts` has a honeypot field (`company`): if filled, it returns a fake success without sending anything, to silently drop bot submissions.
 - `lib/rate-limit.ts` is an in-memory fixed-window limiter stored on `globalThis` (survives HMR in dev). It is **per-process**, not shared across serverless instances — fine as a basic guard, not a hard limit in a multi-instance deployment.
 
+## Analytics
+
+GTM (`GTM-MKJP47L5`) + GA4 (`G-5PCX5S995S`). Full setup and the GTM container recipe:
+`docs/analytics.md`.
+
+- Client code never calls Google — it pushes to the `dataLayer` through the helpers in
+  `lib/analytics.ts` (`trackViewItem`, `trackAddToCart`, …). Add new events there, not inline.
+- Ecommerce pushes must reset with `{ ecommerce: null }` first; `pushEcommerce` does that.
+- The GTM snippet lives in `components/Analytics.tsx`; it renders nothing when
+  `NEXT_PUBLIC_GTM_ID` is unset, which is how tracking is disabled for dev/previews.
+- SPA `page_view` is pushed manually by `PageViewTracker` (App Router navigations don't
+  reload the document). GA4 Enhanced Measurement's "page changes based on browser history
+  events" must stay OFF or every navigation is counted twice.
+- `purchase` is the exception: sent server-side from `app/api/order/route.ts` via the
+  Measurement Protocol (`lib/ga4-server.ts`), using the recomputed total and the visitor's
+  `_ga` cookies. Never add a client-side `purchase` — it would double count.
+
 ## UI / design system
 
 - `components/ui/*` are shadcn/ui components (`components.json`: style `new-york`, base color `stone`, `cssVariables: true`). Brand colors (`paper`, `ink`, `green`, `amber`, etc.) are defined directly in `tailwind.config.ts`; shadcn's own utilities (`bg-background`, `text-foreground`, `ring-ring`, …) are bridged to the same brand theme via HSL CSS variables in `app/styles/tokens.css`. When touching either the brand palette or shadcn components, keep both in sync.
 - Fonts: Oswald (display) + PT Sans (body), loaded with Cyrillic subsets in `app/layout.tsx`.
 - Layout is mobile-first, generally centered in a narrow column, with `lg:` breakpoints added for desktop where relevant (see `app/product/[...slug]/page.tsx` for the pattern: single column on mobile, two-column grid on `lg:`).
 - SEO: per-page `generateMetadata`, JSON-LD via `components/JsonLd.tsx` (Product, BreadcrumbList, Organization), `app/sitemap.ts`, `app/robots.ts`.
+- Every absolute URL (canonical, OG, JSON-LD, sitemap, robots) comes from `siteUrl()` in
+  `lib/format.ts` → `NEXT_PUBLIC_SITE_URL`. Never hardcode the domain; for metadata,
+  prefer relative paths — `metadataBase` in `app/layout.tsx` resolves them.
+- `app/opengraph-image.tsx` generates the default 1200×630 social card at build time
+  (`next/og`), using the bundled `app/og/Oswald-SemiBold.ttf` — satori can't read woff2,
+  and the site's `next/font` files aren't reachable from the route. It covers every page
+  that doesn't set `openGraph.images` itself; product pages still use their own photo.

@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import { uah } from '@/lib/format';
 import { priceFor, defaultWeight, collapseToTier, UNIT } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
+import { trackAddToCart, trackViewItem } from '@/lib/analytics';
 import { Stepper } from '@/components/Logo';
 import { CartIcon } from '@/components/Icons';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,16 @@ export function ProductBuy({ product }: { product: Product }) {
   const router = useRouter();
   const [weight, setWeight] = useState<number>(defaultWeight(product));
   const [qty, setQty] = useState(1);
+
+  // GA4 `view_item` — once per product, at the default tier. This lives in the
+  // buy box because the product page itself is a server component. Keyed by
+  // slug, since re-renders hand us a fresh `product` object each time.
+  const viewedSlug = useRef<string | null>(null);
+  useEffect(() => {
+    if (viewedSlug.current === product.slug) return;
+    viewedSlug.current = product.slug;
+    trackViewItem(product, defaultWeight(product));
+  }, [product]);
 
   // Buying N packs of one tier that add up to another tier's weight should
   // charge that tier's (cheaper) price instead of N × the smaller price.
@@ -33,6 +44,7 @@ export function ProductBuy({ product }: { product: Product }) {
   const handleAdd = () => {
     if (!buyable) return;
     add(product.slug, weight, qty);
+    trackAddToCart(product, weight, qty);
     router.push('/cart');
   };
 
