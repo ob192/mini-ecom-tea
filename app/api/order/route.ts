@@ -19,9 +19,27 @@ function escapeHtml(s: string): string {
 }
 
 export async function POST(request: Request) {
+  // Correlation id: every line of one submission shares it, so a single order
+  // can be followed end to end in the Vercel function logs.
+  const rid = Math.random().toString(36).slice(2, 8);
+  const log = (msg: string, extra?: Record<string, unknown>) =>
+      console.log(`[order:${rid}] ${msg}${extra ? ' ' + JSON.stringify(extra) : ''}`);
+
+  /** Reject + log the reason. Never logs personal data, only what failed. */
+  const fail = (error: string, status = 400) => {
+    log('REJECTED', { status, error });
+    return bad(error, status);
+  };
+
   const key = clientKey(request.headers);
   const rl = rateLimit(key);
+  log('received', {
+    ua: (request.headers.get('user-agent') ?? '').slice(0, 60),
+    hasGaCookie: (request.headers.get('cookie') ?? '').includes('_ga='),
+  });
+
   if (!rl.ok) {
+    log('REJECTED rate limit', { retryAfterSec: rl.retryAfterSec });
     return NextResponse.json(
         { ok: false, error: 'Забагато спроб. Спробуйте за хвилину.' },
         { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
@@ -32,24 +50,39 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as OrderPayload;
   } catch {
-    return bad('Невірний формат запиту.');
+    return fail('Невірний формат запиту.');
   }
 
-  // Honeypot: pretend success, drop the order. Logged, because a silent drop
-  // is indistinguishable from a bug when it misfires (it did: the field used to
-  // be named "company" and browsers autofilled it from the address profile).
-  if (body.botField && body.botField.trim() !== '') {
-    console.warn('[order] honeypot triggered — dropped submission');
-    return NextResponse.json({ ok: true, orderId: 'TC-000000' });
+  log('payload', {
+    method: body.deliveryMethod,
+    items: Array.isArray(body.items) ? body.items.length : null,
+    // Presence only — never the values themselves.
+    fields: {
+      first: !!body.first,
+      last: !!body.last,
+      phone: !!body.phone,
+      city: !!body.cityRef,
+      warehouse: !!body.warehouseRef,
+      address: !!body.address,
+    },
+  });
+
+  // Honeypot. It no longer discards the order: a false positive here silently
+  // destroys real revenue (it did, for months, when the field was named
+  // "company" and browsers autofilled it). Suspicious submissions are flagged
+  // in the Telegram message instead, so a human decides.
+  const honeypot = (body.botField ?? '').trim();
+  if (honeypot !== '') {
+    log('honeypot filled — flagging, NOT dropping', { value: honeypot.slice(0, 40) });
   }
 
   const first = (body.first ?? '').trim();
   const last = (body.last ?? '').trim();
   const phoneRaw = (body.phone ?? '').trim();
 
-  if (first.length < 2) return bad("Вкажіть коректне ім'я.");
-  if (last.length < 1) return bad('Вкажіть прізвище.');
-  if (!isValidUaPhone(phoneRaw)) return bad('Невірний номер телефону.');
+  if (first.length < 2) return fail("Вкажіть коректне ім'я.");
+  if (last.length < 1) return fail('Вкажіть прізвище.');
+  if (!isValidUaPhone(phoneRaw)) return fail('Невірний номер телефону.');
 
   // Delivery validation.
   const method = body.deliveryMethod;
@@ -57,15 +90,15 @@ export async function POST(request: Request) {
   const warehouse = (body.warehouse ?? '').trim();
   const address = (body.address ?? '').trim();
 
-  if (method !== 'np_warehouse' && method !== 'np_courier') return bad('Оберіть спосіб доставки.');
-  if (cityName.length < 2 || !(body.cityRef ?? '').trim()) return bad('Оберіть місто.');
+  if (method !== 'np_warehouse' && method !== 'np_courier') return fail('Оберіть спосіб доставки.');
+  if (cityName.length < 2 || !(body.cityRef ?? '').trim()) return fail('Оберіть місто.');
   if (method === 'np_warehouse' && (!warehouse || !(body.warehouseRef ?? '').trim())) {
-    return bad('Оберіть відділення Нової Пошти.');
+    return fail('Оберіть відділення Нової Пошти.');
   }
-  if (method === 'np_courier' && address.length < 6) return bad('Уточніть адресу доставки.');
+  if (method === 'np_courier' && address.length < 6) return fail('Уточніть адресу доставки.');
 
   if (!Array.isArray(body.items) || body.items.length === 0) {
-    return bad('Кошик порожній.');
+    return fail('Кошик порожній.');
   }
 
   type Line = {
@@ -84,12 +117,12 @@ export async function POST(request: Request) {
     const product = getProduct(raw?.slug);
     const weight = Math.floor(Number(raw?.weight));
     const qty = Math.floor(Number(raw?.qty));
-    if (!product) return bad(`Невідомий товар: ${escapeHtml(String(raw?.slug))}`);
-    if (!Number.isFinite(qty) || qty < 1 || qty > 99) return bad('Невірна кількість товару.');
+    if (!product) return fail(`Невідомий товар: ${escapeHtml(String(raw?.slug))}`);
+    if (!Number.isFinite(qty) || qty < 1 || qty > 99) return fail('Невірна кількість товару.');
 
     const price = priceFor(product, weight);
-    if (price == null) return bad(`Товар недоступний: ${product.title}`);
-    if (!product.inStock) return bad(`Товар недоступний: ${product.title}`);
+    if (price == null) return fail(`Товар недоступний: ${product.title}`);
+    if (!product.inStock) return fail(`Товар недоступний: ${product.title}`);
 
     const lineTotal = price * qty;
     subtotal += lineTotal;
@@ -108,11 +141,16 @@ export async function POST(request: Request) {
   const total = subtotal + delivery;
   const phone = normalizeUaPhone(phoneRaw);
 
+  log('priced', { lines: lines.length, subtotal, delivery, total });
+
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) {
-    console.error('[order] Missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID');
-    return bad('Сервіс тимчасово недоступний. Спробуйте пізніше.', 503);
+    console.error(
+        `[order:${rid}] Missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID`,
+        JSON.stringify({ hasToken: !!token, hasChatId: !!chatId }),
+    );
+    return fail('Сервіс тимчасово недоступний. Спробуйте пізніше.', 503);
   }
 
   const orderId = 'TC-' + Math.floor(100000 + Math.random() * 900000);
@@ -131,6 +169,7 @@ export async function POST(request: Request) {
 
   const text =
       `🍵 <b>Нове замовлення ${orderId}</b>\n\n` +
+      (honeypot !== '' ? `⚠️ <i>Спрацював антибот-фільтр — перевірте вручну.</i>\n\n` : '') +
       `👤 <b>Клієнт:</b> ${escapeHtml(first)} ${escapeHtml(last)}\n` +
       `📞 <b>Телефон:</b> ${escapeHtml(phone)}\n` +
       `🚚 <b>Доставка:</b> ${deliveryLine}\n\n` +
@@ -138,6 +177,8 @@ export async function POST(request: Request) {
       `Сума: ${uah(subtotal)}\n` +
       `Доставка: ${delivery === 0 ? 'безкоштовно' : uah(delivery)}\n` +
       `💰 <b>Разом: ${uah(total)}</b>`;
+
+  log('sending to Telegram', { orderId, chatId, chars: text.length });
 
   try {
     const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -154,12 +195,13 @@ export async function POST(request: Request) {
 
     if (!tgRes.ok) {
       const detail = await tgRes.text().catch(() => '');
-      console.error('[order] Telegram error', tgRes.status, detail);
-      return bad('Не вдалося надіслати замовлення. Спробуйте ще раз.', 502);
+      console.error(`[order:${rid}] Telegram error`, tgRes.status, detail);
+      return fail('Не вдалося надіслати замовлення. Спробуйте ще раз.', 502);
     }
+    log('Telegram accepted', { orderId });
   } catch (err) {
-    console.error('[order] Telegram request failed', err);
-    return bad('Не вдалося надіслати замовлення. Спробуйте ще раз.', 502);
+    console.error(`[order:${rid}] Telegram request failed`, err);
+    return fail('Не вдалося надіслати замовлення. Спробуйте ще раз.', 502);
   }
 
   // GA4 `purchase` — server-side (Measurement Protocol) so the revenue comes
@@ -184,6 +226,7 @@ export async function POST(request: Request) {
       readGaCookies(request.headers.get('cookie'), process.env.GA4_MEASUREMENT_ID ?? ''),
   );
 
+  log('OK', { orderId, total, flagged: honeypot !== '' });
   return NextResponse.json({ ok: true, orderId, total });
 }
 
