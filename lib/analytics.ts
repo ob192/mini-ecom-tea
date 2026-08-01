@@ -159,10 +159,17 @@ export function trackAddShippingInfo(items: CartItem[], shippingTier: string): v
 /* Behavioural / engagement                                            */
 /* ------------------------------------------------------------------ */
 
-/** SPA page view — see components/Analytics.tsx for why this is manual. */
+/**
+ * SPA page view — see components/Analytics.tsx for why this is manual.
+ *
+ * Named `spa_page_view` rather than `page_view` so the dataLayer event is
+ * unambiguously ours and never confused with the `page_view` the Google tag
+ * sends by itself on document load. GTM maps it to a GA4 event named
+ * `page_view`; its trigger accepts both names.
+ */
 export function trackPageView(url: string, title: string): void {
   pushDataLayer({
-    event: 'page_view',
+    event: 'spa_page_view',
     page_location: url,
     page_path: new URL(url, 'https://x').pathname,
     page_title: title,

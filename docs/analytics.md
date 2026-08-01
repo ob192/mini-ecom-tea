@@ -24,7 +24,7 @@ preview). Locally they live in `.env.local`.
 
 | dataLayer event | Fired from | Notes |
 | --- | --- | --- |
-| `page_view` | `components/Analytics.tsx` | **Client-side route changes only.** The first page view is sent by the Google tag itself. |
+| `spa_page_view` | `components/Analytics.tsx` | **Client-side route changes only.** The first page view is sent by the Google tag itself. GTM re-emits this as a GA4 `page_view`. |
 | `view_item_list` | `CatalogGrid` | On load and on every category filter change; `item_list_id` = `catalog_<cat>`. |
 | `select_item` | `ProductCard` | Card image or title click. |
 | `view_item` | `ProductBuy` | Once per product page, at the default weight tier. |
@@ -80,7 +80,8 @@ Enable the built-in **Event** variable, then add these **Data Layer Variables**
    Tag type *Google Analytics: GA4 event*, Measurement ID `G-5PCX5S995S`,
    Event Name `page_view`, parameters `page_location`, `page_title`, `page_path`
    mapped to the data layer variables above.
-   Trigger: *Custom Event* → `page_view`.
+   Trigger: *Custom Event*, regex `^(page_view|spa_page_view)$` — both names are
+   accepted so a deploy can't open a gap between the site and the container.
 
 3. **GA4 event — Ecommerce** (one tag covers all of them)
    Event Name `{{Event}}`, tick **Send Ecommerce data → Data Layer**.
@@ -110,6 +111,13 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
   Keep them in sync if the shop ever moves domain.
 
 ## Verifying
+
+> **Publishing a container version does not take effect immediately in a browser
+> that already has it.** `gtm.js` is served with `Cache-Control: private,
+> max-age=900`, so a tab can run a container up to 15 minutes old. Before
+> concluding a tag "doesn't fire", refresh the cached copy —
+> `fetch('https://www.googletagmanager.com/gtm.js?id=GTM-MKJP47L5',{cache:'reload'})`
+> then reload the page. This cost a full debugging cycle once already.
 
 - **GTM Preview** (Tag Assistant) against the deployed site: walk catalog → product →
   cart → checkout and confirm each event above fires once.
