@@ -14,9 +14,23 @@ npm run build      # production build
 npm run start      # run the production build
 npm run typecheck  # tsc --noEmit
 npm run lint       # next lint
+npm test           # vitest run
+npm run test:watch # vitest
 ```
 
-There is no test suite/framework configured in this repo.
+Tests live in `tests/` (Vitest, node environment, `@/` alias mirrored from tsconfig in
+`vitest.config.ts`). They cover the revenue path rather than the UI:
+
+- `tests/order-api.test.ts` calls the `POST` handler of `app/api/order/route.ts` directly
+  with `fetch` stubbed, so Telegram and GA4 are captured instead of sent. Two production
+  incidents are pinned here as regressions: the honeypot silently discarding real orders
+  (browsers autofilled the field when it was named `company`), and a rejection helper that
+  recursed and returned 500s. Each request uses a unique `x-forwarded-for` so the 5/min
+  rate limiter doesn't interfere.
+- `tests/pricing.test.ts` covers tier resolution, `collapseToTier` never producing a more
+  expensive basket, catalogue integrity, and UA phone validation.
+- `tests/analytics.test.ts` covers `_ga` cookie parsing (both GA4 cookie formats), GA4 item
+  mapping, and the mandatory `{ ecommerce: null }` reset before each ecommerce push.
 
 Required env vars — all listed in `.env.example`: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL`, `NOVA_POSHTA_API_KEY` (server-side; without it the NP city/warehouse lookups 500), plus the analytics vars described in `docs/analytics.md`.
 
