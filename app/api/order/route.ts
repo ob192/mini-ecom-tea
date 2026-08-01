@@ -35,8 +35,11 @@ export async function POST(request: Request) {
     return bad('Невірний формат запиту.');
   }
 
-  // Honeypot: pretend success, drop the order.
-  if (body.company && body.company.trim() !== '') {
+  // Honeypot: pretend success, drop the order. Logged, because a silent drop
+  // is indistinguishable from a bug when it misfires (it did: the field used to
+  // be named "company" and browsers autofilled it from the address profile).
+  if (body.botField && body.botField.trim() !== '') {
+    console.warn('[order] honeypot triggered — dropped submission');
     return NextResponse.json({ ok: true, orderId: 'TC-000000' });
   }
 

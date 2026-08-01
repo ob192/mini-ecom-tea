@@ -45,7 +45,7 @@ export function CheckoutForm() {
             warehouseRef: '',
             warehouse: '',
             address: '',
-            company: '',
+            botField: '',
         },
     });
 
@@ -183,15 +183,18 @@ export function CheckoutForm() {
                     <Form {...form}>
                         {/* No native onSubmit navigation quirks — the sticky button drives it. */}
                         <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} noValidate>
-                            {/* honeypot — hidden from users, bait for bots */}
+                            {/* Honeypot — hidden from users, bait for bots.
+                                No label and a meaningless field name: browsers autofill
+                                by name/label (company, organization, …) even with
+                                autocomplete="off", which used to drop real orders. */}
                             <div aria-hidden className="absolute -left-[9999px] w-px h-px overflow-hidden">
-                                <label htmlFor="company">Компанія (не заповнюйте)</label>
                                 <input
-                                    id="company"
+                                    id="bot-field"
                                     type="text"
                                     tabIndex={-1}
                                     autoComplete="off"
-                                    {...form.register('company')}
+                                    aria-hidden="true"
+                                    {...form.register('botField')}
                                 />
                             </div>
 

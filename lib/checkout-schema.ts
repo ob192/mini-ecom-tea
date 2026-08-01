@@ -24,7 +24,10 @@ export const checkoutSchema = z
       address: z.string().trim().default(''),
 
       // Honeypot — must stay empty. Not shown to users.
-      company: z.string().optional(),
+      // Deliberately NOT named company/organization/nickname/etc: browsers
+      // autofill address-profile fields by name and label regardless of
+      // autocomplete="off", which silently dropped real orders.
+      botField: z.string().optional(),
     })
     .superRefine((v, ctx) => {
       if (v.deliveryMethod === 'np_warehouse' && !v.warehouseRef) {

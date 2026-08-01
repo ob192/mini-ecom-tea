@@ -68,5 +68,5 @@ export interface CheckoutForm {
 export interface OrderPayload extends CheckoutForm {
   items: CartItem[];
   /** Honeypot field — must be empty for a legitimate submission. */
-  company?: string;
+  botField?: string;
 }
