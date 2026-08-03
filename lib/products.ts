@@ -5,13 +5,18 @@ export const CURRENCY = 'UAH';
 export const UNIT = 'г';
 
 /** Display order + labels for every category we support. */
-const CATEGORY_ORDER: Category[] = [
+export const CATEGORY_ORDER: Category[] = [
   { slug: 'puer', label: 'Пуер' },
   { slug: 'oolong', label: 'Улун' },
   { slug: 'green', label: 'Зелений чай' },
   { slug: 'red', label: 'Червоний чай' },
   { slug: 'white', label: 'Білий чай' },
-  { slug: 'piala', label: 'Посуд' },
+  { slug: 'set', label: 'Набори' },
+  { slug: 'gaiwan', label: 'Гайвані' },
+  { slug: 'teapot', label: 'Чайники' },
+  { slug: 'piala', label: 'Піали' },
+  { slug: 'accessory', label: 'Аксесуари' },
+  { slug: 'figurine', label: 'Чайні фігурки' },
 ];
 
 interface RawProduct {
@@ -129,7 +134,12 @@ export const CAT_TONE: Record<CategorySlug, { a: string; b: string; label: strin
   oolong: { a: '#7A6334', b: '#574722', label: 'УЛУН' },
   red: { a: '#7A3F2C', b: '#592A1C', label: 'ЧЕРВОНИЙ' },
   white: { a: '#8A7E63', b: '#6B6047', label: 'БІЛИЙ' },
-  piala: { a: '#6E6552', b: '#4E4739', label: 'ПОСУД' },
+  set: { a: '#6B5B3E', b: '#4C4029', label: 'НАБІР' },
+  gaiwan: { a: '#7A6A55', b: '#584C3C', label: 'ГАЙВАНЬ' },
+  teapot: { a: '#5F5A4A', b: '#434036', label: 'ЧАЙНИК' },
+  piala: { a: '#6E6552', b: '#4E4739', label: 'ПІАЛА' },
+  accessory: { a: '#6A6A63', b: '#4B4B46', label: 'АКСЕСУАР' },
+  figurine: { a: '#75604F', b: '#54453A', label: 'ФІГУРКА' },
 };
 
 export function tone(slug: string) {

@@ -6,7 +6,13 @@ import { ProductBuy } from '@/components/ProductBuy';
 import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd';
 import { Badge } from '@/components/ui/badge';
 import { getProduct, allProductSlugs, categoryLabel, UNIT } from '@/lib/products';
-import { uah, siteUrl } from '@/lib/format';
+import {
+    uah,
+    siteUrl,
+    descriptionParagraphs,
+    flattenDescription,
+    truncateWords,
+} from '@/lib/format';
 
 interface Params {
     // Catch-all: slug is an array of path segments, e.g. ["green","longjing-cha"].
@@ -23,7 +29,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     if (!product) return { title: 'Товар не знайдено' };
 
     const title = `${product.title} — ${product.subtitle}`;
-    const description = product.description.slice(0, 160);
+    const description = truncateWords(flattenDescription(product.description), 160);
     const url = `/product/${product.slug}`;
 
     return {
@@ -119,9 +125,13 @@ export default async function ProductPage({ params }: Params) {
                         </dl>
 
                         <h2 className="font-display text-[14px] tracking-[0.1em] uppercase text-green-deep mb-1.5">Опис</h2>
-                        <p className="m-0 text-ink-soft text-[15.5px] lg:text-[16px] leading-relaxed text-pretty">
-                            {product.description}
-                        </p>
+                        <div className="flex flex-col gap-2 text-ink-soft text-[15.5px] lg:text-[16px] leading-relaxed text-pretty">
+                            {descriptionParagraphs(product.description).map((p, i) => (
+                                <p key={i} className={`m-0 ${p.startsWith('• ') ? 'pl-3.5 -indent-3.5' : ''}`}>
+                                    {p}
+                                </p>
+                            ))}
+                        </div>
                     </div>
 
                     <ProductBuy product={product} />

@@ -32,6 +32,31 @@ export function normalizeUaPhone(raw: string): string {
   return raw.trim();
 }
 
+/**
+ * Product descriptions are stored newline-separated (one line per source
+ * paragraph or bullet) so the page can lay them out instead of rendering one
+ * wall of text.
+ */
+export function descriptionParagraphs(description: string): string[] {
+  return description.split('\n').filter((p) => p.trim().length > 0);
+}
+
+/** The same copy on one line — for meta tags and JSON-LD. */
+export function flattenDescription(description: string): string {
+  return descriptionParagraphs(description).join(' ');
+}
+
+/**
+ * Trim to at most `max` characters on a word boundary, for meta descriptions.
+ * Cutting mid-word is what a bare `.slice()` does, and it shows in SERP snippets.
+ */
+export function truncateWords(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[\s,;:.]+$/, '') + '…';
+}
+
 /** Site origin for canonical/OG/sitemap. No trailing slash. */
 export function siteUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL;

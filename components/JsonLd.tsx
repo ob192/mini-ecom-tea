@@ -1,5 +1,6 @@
 import type { Product } from '@/lib/types';
 import { categoryLabel } from '@/lib/products';
+import { flattenDescription } from '@/lib/format';
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
     return (
@@ -34,7 +35,7 @@ export function ProductJsonLd({ product, siteUrl }: { product: Product; siteUrl:
                 '@context': 'https://schema.org',
                 '@type': 'Product',
                 name: product.title,
-                description: product.description,
+                description: flattenDescription(product.description),
                 category: categoryLabel(product.category),
                 sku: product.slug,
                 ...(product.image ? { image: product.images.map((i) => `${siteUrl}${i}`) } : {}),

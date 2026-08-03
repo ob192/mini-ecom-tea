@@ -1,4 +1,15 @@
-export type CategorySlug = 'puer' | 'green' | 'oolong' | 'red' | 'white' | 'piala';
+export type CategorySlug =
+  | 'puer'
+  | 'green'
+  | 'oolong'
+  | 'red'
+  | 'white'
+  | 'set'
+  | 'gaiwan'
+  | 'teapot'
+  | 'piala'
+  | 'accessory'
+  | 'figurine';
 
 export interface Category {
   slug: CategorySlug;

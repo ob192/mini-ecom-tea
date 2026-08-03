@@ -1,12 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { products, getProduct, priceFor, defaultWeight, collapseToTier } from '@/lib/products';
+import {
+  products,
+  getProduct,
+  priceFor,
+  defaultWeight,
+  collapseToTier,
+  CATEGORY_ORDER,
+} from '@/lib/products';
 import { isValidUaPhone, normalizeUaPhone, uah, plural } from '@/lib/format';
 
 const tiered = products.find((p) => p.priceTiers.length > 1)!;
 
 describe('catalog integrity', () => {
   it('every product derives a known category from its slug prefix', () => {
-    const known = ['puer', 'green', 'oolong', 'red', 'white', 'piala'];
+    // A slug prefix that isn't a configured category falls through silently —
+    // no label, no filter chip, no placeholder tone. Catch it here instead.
+    const known = CATEGORY_ORDER.map((c) => c.slug);
     const strays = products.filter((p) => !known.includes(p.category));
     expect(strays.map((p) => p.slug)).toEqual([]);
   });
