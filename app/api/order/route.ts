@@ -8,7 +8,7 @@ import type { OrderPayload, CartItem } from '@/lib/types';
 export const runtime = 'nodejs';
 
 const FREE_DELIVERY_THRESHOLD = 500;
-const DELIVERY_FEE = 60;
+const DELIVERY_FEE = 100;
 
 function bad(error: string, status = 400) {
   return NextResponse.json({ ok: false, error }, { status });

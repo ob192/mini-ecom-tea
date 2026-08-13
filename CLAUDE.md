@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-jintea.shop — a mobile-first, SEO-optimized Ukrainian leaf-tea storefront. Next.js 15 (App Router) + TypeScript + Tailwind. No database, no online payment: orders are validated and priced server-side, then pushed to a Telegram chat via the Bot API; the customer pays on delivery. All UI copy is Ukrainian.
+jintea.restreto-labs.com — a mobile-first, SEO-optimized Ukrainian leaf-tea storefront. Next.js 15 (App Router) + TypeScript + Tailwind. No database, no online payment: orders are validated and priced server-side, then pushed to a Telegram chat via the Bot API; the customer pays on delivery. All UI copy is Ukrainian.
 
 ## Commands
 
@@ -54,9 +54,12 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
 - `/` — catalog (`app/page.tsx`), statically generated, category filter via `CatalogGrid`.
 - `/product/[...slug]` — **catch-all** route (`app/product/[...slug]/page.tsx`), because product slugs are multi-segment (`category/product-name`). `generateStaticParams` splits `Product.slug` on `/`.
 - `/cart`, `/checkout`, `/order/success` — client cart flow.
-- `/about`, `/brewing`, `/contacts`, `/delivery`, `/returns` — static informational pages.
-  `/delivery` and `/returns` are the policy pages Merchant Center requires to be visible;
-  both are linked from the footer and from under the checkout submit button.
+- `/about`, `/brewing`, `/contacts`, `/delivery`, `/returns`, `/privacy` — static informational
+  pages. `/delivery` (Оплата і доставка), `/returns` (Обмін та повернення) and `/privacy`
+  (Угода користувача — the personal-data policy) are the policy pages Merchant Center requires
+  to be visible; all three are linked from the footer and from under the checkout submit button.
+  Contact details for all of them come from `lib/contacts.ts` — author them there, not inline,
+  because Merchant Center checks that they agree across the site and the Organization JSON-LD.
 - `app/api/order/route.ts` — order submission → Telegram.
 - `app/api/np/cities`, `app/api/np/warehouses` — Nova Poshta lookups (see below).
 - `/google-merchant.xml` — Google Merchant Center product feed (see below).
@@ -65,7 +68,7 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
 
 `context/CartContext.tsx` is a React Context + `useReducer`, persisted to `localStorage` under `teache_cart_v2` (the version suffix was bumped when the line-item shape changed to include `weight` — bump it again if the persisted shape changes). Cart lines are keyed by `(slug, weight)`, not just `slug`, since the same product can be added at different weight tiers. On hydration, stale/invalid lines (unknown slug, price no longer resolvable for that weight) are silently dropped.
 
-`FREE_DELIVERY_THRESHOLD` (500) and `DELIVERY_FEE` (60) are duplicated as constants in both `context/CartContext.tsx` (client-side display) and `app/api/order/route.ts` (authoritative, server-side total) — there's no shared config module, so keep them in sync if either changes. The same two numbers are also written out as **prose** in `app/delivery/page.tsx` (both the meta description and the "Нова Пошта" card) and in the free-delivery banner in `components/CatalogGrid.tsx`; Google Merchant Center compares the feed's `g:shipping` against what those pages say, so they move together too.
+`FREE_DELIVERY_THRESHOLD` (500) and `DELIVERY_FEE` (100) are duplicated as constants in both `context/CartContext.tsx` (client-side display) and `app/api/order/route.ts` (authoritative, server-side total) — there's no shared config module, so keep them in sync if either changes. The same two numbers are also written out as **prose** in `app/delivery/page.tsx` (the meta description and two delivery cards) and in the free-delivery banner in `components/CatalogGrid.tsx`; Google Merchant Center compares the feed's `g:shipping` against what those pages say, so they move together too. `tests/order-api.test.ts` and `tests/merchant-feed.test.ts` each hardcode the pair as well, which is what catches a half-done change.
 
 ## Checkout, delivery, and the order API
 

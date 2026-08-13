@@ -2,6 +2,7 @@ import type { Product } from '@/lib/types';
 import { categoryLabel } from '@/lib/products';
 import { flattenDescription } from '@/lib/format';
 import { offerId } from '@/lib/merchant-feed';
+import { CONTACT_EMAIL, INSTAGRAM_URL, SITE_NAME, TELEGRAM_URL } from '@/lib/contacts';
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
     return (
@@ -15,14 +16,14 @@ export function OrganizationJsonLd({ siteUrl }: { siteUrl: string }) {
             data={{
                 '@context': 'https://schema.org',
                 '@type': 'Organization',
-                name: 'jintea.shop',
+                name: SITE_NAME,
                 description: 'Колекційний листовий чай прямих поставок з Юньнані й Тайваню.',
                 url: siteUrl,
                 // app/icon.svg is the only logo asset that exists; /icon.png 404s.
                 logo: `${siteUrl}/icon.svg`,
-                email: 'hello@jintea.shop',
+                email: CONTACT_EMAIL,
                 telephone: '+380986575800',
-                sameAs: ['https://instagram.com/jintea.ua', 'https://t.me/Jin_tea'],
+                sameAs: [INSTAGRAM_URL, TELEGRAM_URL],
             }}
         />
     );
@@ -63,7 +64,7 @@ export function ProductJsonLd({ product, siteUrl }: { product: Product; siteUrl:
                 category: categoryLabel(product.category),
                 sku: product.slug,
                 ...(product.image ? { image: product.images.map((i) => `${siteUrl}${i}`) } : {}),
-                brand: { '@type': 'Brand', name: 'jintea.shop' },
+                brand: { '@type': 'Brand', name: SITE_NAME },
                 ...(offers.length > 0 ? { offers: offers.length === 1 ? offers[0] : offers } : {}),
             }}
         />

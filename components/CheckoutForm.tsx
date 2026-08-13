@@ -361,11 +361,15 @@ export function CheckoutForm() {
                             <p className="m-0 mt-3 text-[12.5px] text-ink-faint leading-relaxed">
                                 Підтверджуючи замовлення, ви погоджуєтесь з умовами{' '}
                                 <Link href="/delivery" className="underline underline-offset-2 hover:text-ink">
-                                    доставки й оплати
-                                </Link>{' '}
-                                та{' '}
+                                    оплати і доставки
+                                </Link>
+                                ,{' '}
                                 <Link href="/returns" className="underline underline-offset-2 hover:text-ink">
-                                    повернення товару
+                                    обміну та повернення
+                                </Link>{' '}
+                                і{' '}
+                                <Link href="/privacy" className="underline underline-offset-2 hover:text-ink">
+                                    Угодою користувача
                                 </Link>
                                 .
                             </p>

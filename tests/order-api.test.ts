@@ -14,7 +14,7 @@ const itemWeight = item.priceTiers[0].weight;
 const itemPrice = priceFor(item, itemWeight)!;
 
 const FREE_DELIVERY_THRESHOLD = 500;
-const DELIVERY_FEE = 60;
+const DELIVERY_FEE = 100;
 
 /** A submission that should always be accepted. */
 function validOrder(overrides: Record<string, unknown> = {}) {

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { tone } from '@/lib/products';
 import { LeafIcon, MinusIcon, PlusIcon } from './Icons';
+import { SITE_NAME } from '@/lib/contacts';
 
 export function Logo({ size = 19 }: { size?: number }) {
   return (
@@ -10,9 +11,11 @@ export function Logo({ size = 19 }: { size?: number }) {
       </span>
       <span
         className="font-display font-semibold text-ink leading-none whitespace-nowrap"
-        style={{ fontSize: size, letterSpacing: '0.14em' }}
+        // 0.05em, not the old 0.14em: the wordmark is a full domain and has to
+        // stay on one line next to the cart button at 360px.
+        style={{ fontSize: size, letterSpacing: '0.05em' }}
       >
-        jintea.shop
+        {SITE_NAME}
       </span>
     </span>
   );

@@ -3,14 +3,23 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { PhoneIcon, InstagramIcon, TelegramIcon } from '@/components/Icons';
+import { PhoneIcon, InstagramIcon, TelegramIcon, MailIcon } from '@/components/Icons';
 import { ContactLink } from '@/components/Analytics';
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  CONTACT_PHONE_HREF,
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  TELEGRAM_HANDLE,
+  TELEGRAM_URL,
+} from '@/lib/contacts';
 
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Контакти',
-  description: 'Зв’яжіться з jintea.shop за телефоном, в Instagram або Telegram.',
+  description: 'Зв’яжіться з jintea.restreto-labs.com за телефоном, в Instagram або Telegram.',
   alternates: { canonical: '/contacts' },
 };
 
@@ -18,23 +27,30 @@ const contacts = [
   {
     icon: PhoneIcon,
     label: 'Телефон',
-    value: '+38 (098) 657-58-00',
-    href: 'tel:+380986575800',
+    value: CONTACT_PHONE,
+    href: CONTACT_PHONE_HREF,
     channel: 'phone',
   },
   {
     icon: InstagramIcon,
     label: 'Instagram',
-    value: 'jintea.ua',
-    href: 'https://instagram.com/jintea.ua',
+    value: INSTAGRAM_HANDLE,
+    href: INSTAGRAM_URL,
     channel: 'instagram',
   },
   {
     icon: TelegramIcon,
     label: 'Telegram',
-    value: 'Jin_tea',
-    href: 'https://t.me/Jin_tea',
+    value: TELEGRAM_HANDLE,
+    href: TELEGRAM_URL,
     channel: 'telegram',
+  },
+  {
+    icon: MailIcon,
+    label: 'Пошта',
+    value: CONTACT_EMAIL,
+    href: `mailto:${CONTACT_EMAIL}`,
+    channel: 'email',
   },
 ] as const;
 

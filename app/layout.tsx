@@ -10,7 +10,9 @@ import {
   PageViewTracker,
 } from '@/components/Analytics';
 import { Toaster } from '@/components/ui/sonner';
+import { CookieConsent } from '@/components/CookieConsent';
 import { siteUrl } from '@/lib/format';
+import { SITE_NAME } from '@/lib/contacts';
 
 const oswald = Oswald({
   subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
@@ -31,27 +33,27 @@ const SITE = siteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: 'jintea.shop — колекційний листовий чай прямих поставок',
-    template: '%s · jintea.shop',
+    default: `${SITE_NAME} — колекційний листовий чай прямих поставок`,
+    template: `%s · ${SITE_NAME}`,
   },
   description:
     'Інтернет-магазин колекційного листового чаю: пуер, улун, зелений, червоний і білий чай зі старих дерев Юньнані й Тайваню. Доставка по Україні.',
-  applicationName: 'jintea.shop',
+  applicationName: SITE_NAME,
   keywords: ['чай', 'пуер', 'улун', 'зелений чай', 'білий чай', 'листовий чай', 'купити чай Україна'],
-  authors: [{ name: 'jintea.shop' }],
+  authors: [{ name: SITE_NAME }],
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'uk_UA',
-    siteName: 'jintea.shop',
+    siteName: SITE_NAME,
     url: SITE,
-    title: 'jintea.shop — колекційний листовий чай прямих поставок',
+    title: `${SITE_NAME} — колекційний листовий чай прямих поставок`,
     description:
       'Пуер, улун, зелений, червоний і білий чай зі старих дерев. Невеликі партії, чесне походження. Доставка по Україні.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'jintea.shop — колекційний листовий чай',
+    title: `${SITE_NAME} — колекційний листовий чай`,
     description: 'Колекційний листовий чай прямих поставок. Доставка по Україні.',
   },
   robots: { index: true, follow: true },
@@ -76,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartProvider>
           <div className="app-shell">{children}</div>
         </CartProvider>
+        <CookieConsent />
         <Toaster />
       </body>
     </html>

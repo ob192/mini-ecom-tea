@@ -11,7 +11,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Про нас',
   description:
-    'jintea.shop — чай, який ми п’ємо самі: улуни, шени, червоні та білі чаї, а також посуд для щоденного заварювання.',
+    'jintea.restreto-labs.com — чай, який ми п’ємо самі: улуни, шени, червоні та білі чаї, а також посуд для щоденного заварювання.',
   alternates: { canonical: '/about' },
 };
 

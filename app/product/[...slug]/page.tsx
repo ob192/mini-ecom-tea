@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         alternates: { canonical: url },
         openGraph: {
             type: 'website',
-            title: `${product.title} · jintea.shop`,
+            title: `${product.title} · jintea.restreto-labs.com`,
             description,
             url,
             locale: 'uk_UA',
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${product.title} · jintea.shop`,
+            title: `${product.title} · jintea.restreto-labs.com`,
             description,
             ...(product.image ? { images: [product.image] } : {}),
         },

@@ -4,7 +4,7 @@ import { SuccessView } from '@/components/SuccessView';
 
 export const metadata: Metadata = {
   title: 'Замовлення прийнято',
-  description: 'Дякуємо за замовлення в jintea.shop.',
+  description: 'Дякуємо за замовлення в jintea.restreto-labs.com.',
   robots: { index: false, follow: false },
 };
 

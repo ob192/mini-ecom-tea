@@ -182,7 +182,10 @@ export function trackSelectCategory(category: string, label: string): void {
 }
 
 /** Phone / Telegram / Instagram taps — GA4 enhanced measurement misses tel: links. */
-export function trackContactClick(channel: 'phone' | 'telegram' | 'instagram', location: string): void {
+export function trackContactClick(
+  channel: 'phone' | 'telegram' | 'instagram' | 'email',
+  location: string,
+): void {
   pushDataLayer({ event: 'contact_click', contact_channel: channel, contact_location: location });
 }
 

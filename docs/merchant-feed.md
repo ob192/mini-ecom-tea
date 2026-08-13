@@ -46,17 +46,30 @@ GTIN; that is a disapproval, not a fix.
 
 **Shipping.** `g:shipping` quotes what an order containing only that item would
 actually cost: `0.00 UAH` at or above the 500 ₴ free-delivery threshold, else
-`60.00 UAH`. `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here from
+`100.00 UAH`. `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here from
 `context/CartContext.tsx` and `app/api/order/route.ts` — there is no shared
 config module, so all three move together. Google also reads the shipping cost
 stated on the site itself, so `app/delivery/page.tsx` has to quote the same two
-numbers in prose; it said "від 80 грн" while the feed published `60.00 UAH`,
+numbers in prose; it once said "від 80 грн" while the feed published `60.00 UAH`,
 which is exactly the mismatch Merchant Center flags.
 
-**Policy pages.** Merchant Center requires a visible return and refund policy;
-`app/returns/page.tsx` is it, linked from the footer and from under the checkout
-submit button. The matching return policy still has to be filled in on the
-Merchant Center account settings side — the page alone is not enough.
+**Policy pages.** Merchant Center requires the shop's terms to be visible on the
+site itself:
+
+| Page | Route | Covers |
+| --- | --- | --- |
+| Оплата і доставка | `/delivery` | payment method (COD via Nova Poshta), shipping cost, timings |
+| Обмін та повернення | `/returns` | 14-day return right, refund procedure, contacts |
+| Угода користувача | `/privacy` | personal-data processing policy |
+
+All three are linked from the footer and from under the checkout submit button
+(cart and checkout do not render the footer). `components/CookieConsent.tsx` adds
+the cookie notice that points at `/privacy`.
+
+Two things the pages alone do not cover: the return policy still has to be filled
+in on the Merchant Center account settings side, and the site publishes no legal
+entity details (ФОП/ЄДРПОУ, registered address) — a deliberate choice, but it is
+the most likely remaining Misrepresentation trigger if the account is reviewed.
 
 **Exclusions.** A product with no price or no photo cannot be submitted
 (`g:image_link` is required and the branded placeholder gradient is not a product

@@ -16,17 +16,18 @@
 
 import { products, categoryLabel, CURRENCY, UNIT } from '@/lib/products';
 import { flattenDescription, truncateWords } from '@/lib/format';
+import { SITE_NAME } from '@/lib/contacts';
 import type { CategorySlug, Product } from '@/lib/types';
 
 /** Public path of the feed route. */
 export const FEED_PATH = '/google-merchant.xml';
 
-export const FEED_TITLE = 'jintea.shop — листовий чай і чайне приладдя';
+export const FEED_TITLE = `${SITE_NAME} — листовий чай і чайне приладдя`;
 export const FEED_DESCRIPTION =
   'Колекційний листовий чай прямих поставок з Юньнані й Тайваню, гайвані, чайники, піали та аксесуари.';
 
 /** Merchant Center `brand`. Matches the schema.org Brand on product pages. */
-export const BRAND = 'jintea.shop';
+export const BRAND = SITE_NAME;
 
 export const SHIPPING_COUNTRY = 'UA';
 export const SHIPPING_SERVICE = 'Нова Пошта';
@@ -35,7 +36,7 @@ export const SHIPPING_SERVICE = 'Нова Пошта';
 // already duplicate each other — there is no shared config module. Keep all
 // three in sync.
 const FREE_DELIVERY_THRESHOLD = 500;
-const DELIVERY_FEE = 60;
+const DELIVERY_FEE = 100;
 
 /** GMC hard limits (https://support.google.com/merchants/answer/7052112). */
 const MAX_ID_LENGTH = 50;

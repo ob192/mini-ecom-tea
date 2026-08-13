@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-/** shadcn Textarea, themed to jintea.shop. */
+/** shadcn Textarea, themed to jintea.restreto-labs.com. */
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
   React.TextareaHTMLAttributes<HTMLTextAreaElement>

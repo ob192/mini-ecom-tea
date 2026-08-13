@@ -52,7 +52,7 @@ describe('required attributes', () => {
       expect(item.availability, item.id).toBe('in_stock');
       expect(item.price, item.id).toMatch(/^\d+\.\d{2} UAH$/);
       expect(item.condition, item.id).toBe('new');
-      expect(item.brand, item.id).toBe('jintea.shop');
+      expect(item.brand, item.id).toBe('jintea.restreto-labs.com');
     }
   });
 
@@ -156,7 +156,7 @@ describe('categories and shipping', () => {
   it('charges delivery only below the free-delivery threshold', () => {
     for (const item of items) {
       const price = Number.parseFloat(item.price);
-      expect(item.shippingPrice, item.id).toBe(price >= 500 ? '0.00 UAH' : '60.00 UAH');
+      expect(item.shippingPrice, item.id).toBe(price >= 500 ? '0.00 UAH' : '100.00 UAH');
     }
   });
 });

@@ -59,7 +59,7 @@ export function ContactLink({
   className,
   children,
 }: {
-  channel: 'phone' | 'telegram' | 'instagram';
+  channel: 'phone' | 'telegram' | 'instagram' | 'email';
   /** Where on the site the link sits, e.g. "footer" / "contacts_page". */
   location: string;
   href: string;
