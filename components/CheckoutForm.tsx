@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -354,6 +355,20 @@ export function CheckoutForm() {
                                     {submitting ? 'Надсилаємо…' : 'Підтвердити замовлення'}
                                 </Button>
                             </div>
+
+                            {/* Merchant Center expects the delivery and return terms to be
+                                reachable from checkout, not only from the footer. */}
+                            <p className="m-0 mt-3 text-[12.5px] text-ink-faint leading-relaxed">
+                                Підтверджуючи замовлення, ви погоджуєтесь з умовами{' '}
+                                <Link href="/delivery" className="underline underline-offset-2 hover:text-ink">
+                                    доставки й оплати
+                                </Link>{' '}
+                                та{' '}
+                                <Link href="/returns" className="underline underline-offset-2 hover:text-ink">
+                                    повернення товару
+                                </Link>
+                                .
+                            </p>
                         </form>
                     </Form>
                 </div>

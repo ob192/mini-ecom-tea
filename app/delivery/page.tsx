@@ -10,7 +10,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Доставка та оплата',
   description:
-    'Доставка чаю по всій Україні службою Нова Пошта від 80 грн, 1–3 робочі дні. Відправка в день замовлення.',
+    'Доставка чаю по всій Україні службою Нова Пошта — 60 грн, безкоштовно від 500 грн. 1–3 робочі дні, відправка в день замовлення.',
   alternates: { canonical: '/delivery' },
 };
 
@@ -18,7 +18,9 @@ const steps = [
   {
     icon: TruckIcon,
     title: 'Нова Пошта',
-    text: 'Доставляємо замовлення по всій Україні швидко та надійно. Вартість — від 80 грн.',
+    // 60 / 500 mirror DELIVERY_FEE and FREE_DELIVERY_THRESHOLD — Merchant Center
+    // compares the feed's g:shipping against what this page says.
+    text: 'Доставляємо замовлення по всій Україні швидко та надійно. Вартість — 60 грн, безкоштовно від 500 грн.',
   },
   {
     icon: ClockIcon,
@@ -67,6 +69,16 @@ export default function DeliveryPage() {
         <p className="m-0 text-ink-soft text-[15px] leading-relaxed">
           Оплата — при отриманні (накладений платіж) або за реквізитами. Спосіб оплати уточнюємо разом
           із менеджером під час підтвердження замовлення.
+        </p>
+
+        <h2 className="font-display font-semibold text-[19px] text-ink mt-7 mb-2.5">Повернення</h2>
+        <p className="m-0 text-ink-soft text-[15px] leading-relaxed">
+          Чайне приладдя можна повернути протягом 14 днів, а пошкоджений або невідповідний товар
+          замінюємо чи повертаємо кошти повністю. Деталі —{' '}
+          <Link href="/returns" className="text-green underline underline-offset-2">
+            Повернення та обмін
+          </Link>
+          .
         </p>
 
         <Button asChild variant="pill" size="xl" className="mt-7 w-full">

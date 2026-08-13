@@ -31,6 +31,9 @@ Tests live in `tests/` (Vitest, node environment, `@/` alias mirrored from tscon
   expensive basket, catalogue integrity, and UA phone validation.
 - `tests/analytics.test.ts` covers `_ga` cookie parsing (both GA4 cookie formats), GA4 item
   mapping, and the mandatory `{ ecommerce: null }` reset before each ecommerce push.
+- `tests/merchant-feed.test.ts` covers the Google Merchant Center feed: required attributes,
+  GMC length limits, variant grouping, and the exclusion list (a product silently dropping
+  out of the feed is otherwise invisible).
 
 Required env vars — all listed in `.env.example`: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL`, `NOVA_POSHTA_API_KEY` (server-side; without it the NP city/warehouse lookups 500), plus the analytics vars described in `docs/analytics.md`.
 
@@ -51,15 +54,18 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
 - `/` — catalog (`app/page.tsx`), statically generated, category filter via `CatalogGrid`.
 - `/product/[...slug]` — **catch-all** route (`app/product/[...slug]/page.tsx`), because product slugs are multi-segment (`category/product-name`). `generateStaticParams` splits `Product.slug` on `/`.
 - `/cart`, `/checkout`, `/order/success` — client cart flow.
-- `/about`, `/brewing`, `/contacts`, `/delivery` — static informational pages.
+- `/about`, `/brewing`, `/contacts`, `/delivery`, `/returns` — static informational pages.
+  `/delivery` and `/returns` are the policy pages Merchant Center requires to be visible;
+  both are linked from the footer and from under the checkout submit button.
 - `app/api/order/route.ts` — order submission → Telegram.
 - `app/api/np/cities`, `app/api/np/warehouses` — Nova Poshta lookups (see below).
+- `/google-merchant.xml` — Google Merchant Center product feed (see below).
 
 ## Cart
 
 `context/CartContext.tsx` is a React Context + `useReducer`, persisted to `localStorage` under `teache_cart_v2` (the version suffix was bumped when the line-item shape changed to include `weight` — bump it again if the persisted shape changes). Cart lines are keyed by `(slug, weight)`, not just `slug`, since the same product can be added at different weight tiers. On hydration, stale/invalid lines (unknown slug, price no longer resolvable for that weight) are silently dropped.
 
-`FREE_DELIVERY_THRESHOLD` (500) and `DELIVERY_FEE` (60) are duplicated as constants in both `context/CartContext.tsx` (client-side display) and `app/api/order/route.ts` (authoritative, server-side total) — there's no shared config module, so keep them in sync if either changes.
+`FREE_DELIVERY_THRESHOLD` (500) and `DELIVERY_FEE` (60) are duplicated as constants in both `context/CartContext.tsx` (client-side display) and `app/api/order/route.ts` (authoritative, server-side total) — there's no shared config module, so keep them in sync if either changes. The same two numbers are also written out as **prose** in `app/delivery/page.tsx` (both the meta description and the "Нова Пошта" card) and in the free-delivery banner in `components/CatalogGrid.tsx`; Google Merchant Center compares the feed's `g:shipping` against what those pages say, so they move together too.
 
 ## Checkout, delivery, and the order API
 
@@ -85,6 +91,22 @@ GTM (`GTM-MKJP47L5`) + GA4 (`G-5PCX5S995S`). Full setup and the GTM container re
 - `purchase` is the exception: sent server-side from `app/api/order/route.ts` via the
   Measurement Protocol (`lib/ga4-server.ts`), using the recomputed total and the visitor's
   `_ga` cookies. Never add a client-side `purchase` — it would double count.
+
+## Google Merchant Center feed
+
+`/google-merchant.xml` (`app/google-merchant.xml/route.ts` → `lib/merchant-feed.ts`) is a
+statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
+
+- **Weight tiers become variants**: one offer per tier, grouped by `g:item_group_id` and
+  differentiated by `g:size`. The feed `g:id` comes from `offerId()`, which
+  `components/JsonLd.tsx` also uses as the per-tier schema.org `sku` — Google compares the
+  crawled landing page against the feed, so publishing only the base "від ..." price there
+  reads as a price mismatch on every larger tier.
+- No GTIN/MPN exists for this catalogue, so every offer sets `g:identifier_exists` to `no`.
+- `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here too (third copy, alongside
+  `context/CartContext.tsx` and `app/api/order/route.ts`) to compute `g:shipping`.
+- Products with no price or no photo are excluded — `g:image_link` is required and the
+  placeholder gradient isn't a product photo. The route logs what it skipped at build time.
 
 ## UI / design system
 

@@ -49,6 +49,7 @@ import {
   Thermometer,
   Instagram,
   Send,
+  RotateCcw,
   type LucideProps,
 } from 'lucide-react';
 
@@ -78,6 +79,7 @@ export const TruckIcon = make(Truck);
 export const ClockIcon = make(Clock);
 export const PackageIcon = make(Package);
 export const ThermometerIcon = make(Thermometer);
+export const ReturnIcon = make(RotateCcw);
 export const InstagramIcon = make(Instagram);
 export const TelegramIcon = make(Send);
 

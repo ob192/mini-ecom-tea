@@ -35,6 +35,7 @@ export function Footer() {
             <div className={headCls}>Інформація</div>
             <Link href="/about" className={linkCls}>Про нас</Link>
             <Link href="/delivery" className={linkCls}>Доставка й оплата</Link>
+            <Link href="/returns" className={linkCls}>Повернення та обмін</Link>
             <Link href="/brewing" className={linkCls}>Як заварювати</Link>
             <Link href="/contacts" className={linkCls}>Контакти</Link>
           </nav>
