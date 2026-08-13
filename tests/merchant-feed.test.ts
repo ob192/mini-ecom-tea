@@ -2,11 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   buildFeed,
   buildFeedItems,
+  feedDefects,
   feedExclusionFor,
-  feedExclusions,
   googleCategoryFor,
   offerId,
   productTypeFor,
+  ADVERTISED_CATEGORIES,
   FEED_LIMITS,
   GOOGLE_CATEGORY,
 } from '@/lib/merchant-feed';
@@ -25,10 +26,24 @@ describe('feed coverage', () => {
     expect(items).toHaveLength(expected);
   });
 
+  it('advertises tea only — teaware and sets are deliberately left out', () => {
+    for (const product of products) {
+      const advertised = feedExclusionFor(product) === null;
+      expect(advertised && !ADVERTISED_CATEGORIES.has(product.category), product.slug).toBe(false);
+    }
+    // Nothing outside the tea categories reaches the feed.
+    expect(items.every((i) => ADVERTISED_CATEGORIES.has(i.id.split('/')[0] as never))).toBe(true);
+    // ...and every tea category is actually represented, so a typo in the set
+    // silently dropping a whole category fails here.
+    const inFeed = new Set(items.map((i) => i.id.split('/')[0]));
+    expect([...ADVERTISED_CATEGORIES].every((c) => inFeed.has(c))).toBe(true);
+  });
+
   it('excludes only products Merchant Center would reject outright', () => {
     // image_link is required, so a photo-less product cannot be submitted.
-    // If this list grows, a product silently stopped being advertised.
-    expect(feedExclusions()).toEqual([{ slug: 'figurine/tiger-yixing', reason: 'no image' }]);
+    // If this list grows, an advertised product silently stopped being listed.
+    // The photo-less figurine no longer appears: figurines are not advertised.
+    expect(feedDefects()).toEqual([]);
   });
 
   it('quotes the same price the storefront resolves for that weight', () => {
@@ -125,9 +140,8 @@ describe('variants', () => {
       expect(item.unitPricingMeasure, item.id).toMatch(/^\d+ g$/);
       expect(item.unitPricingBaseMeasure, item.id).toBe('100 g');
     }
-    // Teaware has no weight, so it must not claim a unit price.
-    const teaware = items.find((i) => i.id.startsWith('gaiwan/'))!;
-    expect(teaware.unitPricingMeasure).toBeUndefined();
+    // Every listed offer is tea sold by weight, so all of them carry one.
+    expect(items.every((i) => i.unitPricingMeasure)).toBe(true);
   });
 });
 

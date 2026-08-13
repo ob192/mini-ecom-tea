@@ -71,18 +71,41 @@ in on the Merchant Center account settings side, and the site publishes no legal
 entity details (ФОП/ЄДРПОУ, registered address) — a deliberate choice, but it is
 the most likely remaining Misrepresentation trigger if the account is reviewed.
 
-**Exclusions.** A product with no price or no photo cannot be submitted
-(`g:image_link` is required and the branded placeholder gradient is not a product
-photo). `feedExclusions()` reports them and the route logs them at build time:
+## What gets advertised
+
+**Tea only.** `ADVERTISED_CATEGORIES` in `lib/merchant-feed.ts` lists the five
+tea categories (`puer`, `green`, `oolong`, `red`, `white`). Teaware — гайвані,
+чайники, піали, аксесуари, чайні фігурки — and the gift sets stay in the
+storefront and the sitemap but are kept out of the feed. Add a slug to that set
+to bring a category back; nothing else in the feed is category-aware.
+
+One consequence worth knowing: `set/start-mini-7` is a tea assortment, not
+teaware, and `GOOGLE_CATEGORY_BY_SLUG` still classifies it as tea — but it lives
+under the `set` category, so it is excluded along with the rest of the sets.
+Moving it into a tea category, or adding `set` to `ADVERTISED_CATEGORIES`, are
+the two ways back in.
+
+**Exclusions.** Two different things drop a product, and `feedExclusionFor()`
+checks them in this order:
+
+1. `category not advertised` — deliberate, per the set above.
+2. `no price` / `no photo` — a product that *should* be advertised but cannot be
+   (`g:image_link` is required and the branded placeholder gradient is not a
+   product photo).
+
+Only the second kind is a problem, which is what `feedDefects()` isolates. The
+route logs a count of everything and names only the defects, so the deliberate
+exclusions do not drown them out:
 
 ```
-[merchant-feed] skipped 1 product(s): figurine/tiger-yixing (no image)
+[merchant-feed] 54 offer(s), 27 product(s) skipped
 ```
 
-Currently 43 of 44 products produce 80 offers. Adding photos under
-`public/figurine/tiger-yixing/` and listing them in `files` is all it takes to
-bring that one in — the test in `tests/merchant-feed.test.ts` pins the exclusion
-list, so it fails loudly when the set changes in either direction.
+Currently 17 tea products produce 54 offers, and `feedDefects()` is empty — the
+photo-less `figurine/tiger-yixing` no longer registers, because figurines are
+not advertised at all. `tests/merchant-feed.test.ts` pins both halves: nothing
+outside the tea categories may appear, every tea category must appear, and
+`feedDefects()` must stay empty.
 
 ## Verifying a change
 

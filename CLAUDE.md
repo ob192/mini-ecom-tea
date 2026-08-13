@@ -108,8 +108,12 @@ statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
 - No GTIN/MPN exists for this catalogue, so every offer sets `g:identifier_exists` to `no`.
 - `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here too (third copy, alongside
   `context/CartContext.tsx` and `app/api/order/route.ts`) to compute `g:shipping`.
-- Products with no price or no photo are excluded — `g:image_link` is required and the
-  placeholder gradient isn't a product photo. The route logs what it skipped at build time.
+- **Tea only.** `ADVERTISED_CATEGORIES` limits the feed to `puer`/`green`/`oolong`/`red`/
+  `white`; teaware, sets and figurines stay in the storefront but are not advertised. Add a
+  slug to that set to bring a category back.
+- Products with no price or no photo are excluded too — `g:image_link` is required and the
+  placeholder gradient isn't a product photo. `feedDefects()` separates those (a problem)
+  from the category exclusions (intended); the route logs a count and names only the defects.
 
 ## UI / design system
 

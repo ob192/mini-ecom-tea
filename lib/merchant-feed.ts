@@ -22,9 +22,23 @@ import type { CategorySlug, Product } from '@/lib/types';
 /** Public path of the feed route. */
 export const FEED_PATH = '/google-merchant.xml';
 
-export const FEED_TITLE = `${SITE_NAME} — листовий чай і чайне приладдя`;
+export const FEED_TITLE = `${SITE_NAME} — листовий чай`;
 export const FEED_DESCRIPTION =
-  'Колекційний листовий чай прямих поставок з Юньнані й Тайваню, гайвані, чайники, піали та аксесуари.';
+  'Колекційний листовий чай прямих поставок з Юньнані й Тайваню: пуер, улун, зелений, червоний і білий чай.';
+
+/**
+ * Only tea is advertised. Teaware (гайвані, чайники, піали, аксесуари,
+ * фігурки) and the gift sets stay in the storefront but are kept out of the
+ * feed — see `feedExclusionFor`. Widening this set is all it takes to bring a
+ * category back; nothing else here is category-aware.
+ */
+export const ADVERTISED_CATEGORIES: ReadonlySet<CategorySlug> = new Set<CategorySlug>([
+  'puer',
+  'green',
+  'oolong',
+  'red',
+  'white',
+]);
 
 /** Merchant Center `brand`. Matches the schema.org Brand on product pages. */
 export const BRAND = SITE_NAME;
@@ -211,8 +225,22 @@ export function offerId(product: Product, weight: number | null): string {
   return weight ? `${product.slug}-${weight}g` : product.slug;
 }
 
-/** Non-null when the product cannot be submitted, explaining why. */
+/**
+ * Reason a product is not advertised, rather than not advertisable — the
+ * category was deliberately left out of `ADVERTISED_CATEGORIES`.
+ */
+export const NOT_ADVERTISED = 'category not advertised';
+
+/**
+ * Non-null when the product is not in the feed, explaining why.
+ *
+ * The category check comes first on purpose: a figurine with no photo is not a
+ * problem worth reporting once figurines are not advertised at all.
+ */
 export function feedExclusionFor(product: Product): FeedExclusion | null {
+  if (!ADVERTISED_CATEGORIES.has(product.category)) {
+    return { slug: product.slug, reason: NOT_ADVERTISED };
+  }
   if (product.price == null) return { slug: product.slug, reason: 'no price' };
   // image_link is required; a placeholder gradient is not a product photo.
   if (product.images.length === 0) return { slug: product.slug, reason: 'no image' };
@@ -222,6 +250,15 @@ export function feedExclusionFor(product: Product): FeedExclusion | null {
 /** Everything skipped, for build-time logging and tests. */
 export function feedExclusions(): FeedExclusion[] {
   return products.map(feedExclusionFor).filter((e): e is FeedExclusion => e !== null);
+}
+
+/**
+ * Exclusions that indicate something wrong rather than something intended —
+ * an advertised product that fell out for want of a price or a photo. These
+ * are the ones worth naming in the build log.
+ */
+export function feedDefects(): FeedExclusion[] {
+  return feedExclusions().filter((e) => e.reason !== NOT_ADVERTISED);
 }
 
 /**
