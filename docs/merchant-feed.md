@@ -59,31 +59,38 @@ first successful ingest, expensive after. `components/JsonLd.tsx` derives the
 schema.org `sku` from the same `offerId()`, so the landing page follows
 automatically — verify with a build if you ever touch one of them by hand.
 
-**Brand + MPN, no GTIN, no `identifier_exists`.** The feed used to declare
-`g:identifier_exists: no` and publish neither identifier, which every feed audit
-scores as "0% pass, 54 of 54 products fail".
+**Brand + MPN, no GTIN, no `identifier_exists`.** Feed audits score a catalogue
+with neither identifier "0% pass, 54 of 54 products fail". Half of that is
+unavoidable here and half was ours to fix.
 
-Half of that is unavoidable and half was our mistake. **GTIN**: none exists.
-A GTIN is a GS1-issued barcode, loose leaf tea has none, and fabricating one is
-a disapproval rather than a fix — so the feed publishes no `g:gtin`, and a test
-enforces that. **MPN**: this one we *can* supply. Google's rule is that only a
-manufacturer assigns an MPN, and the important corollary is that on a
-private-label product the merchant *is* the manufacturer. Google's own guidance
-for the case where the merchant is the brand owner and only seller of a product
-with no official brand is to use the store name as `brand` and include an MPN
-"with a unique identifier number of your choice", **instead of** submitting
-`identifier_exists`. That is exactly this catalogue: tea with no brand of its
-own, sourced and sold as Jintea.
+**GTIN: none, and none may be invented.** A GTIN is a GS1-issued barcode.
+Unbranded leaf tea has none, and fabricating one is a disapproval rather than a
+fix. The feed publishes no `g:gtin` and a test enforces that.
 
-So `g:mpn` is `offerId()` — the same value as `g:id`, unique per weight tier —
-and `g:identifier_exists` is gone. Submitting both would contradict itself:
+**MPN: ours to assign.** This turns entirely on one question — *does the product
+already carry someone else's brand?* It does not. The tea is bought direct from
+a producer in a Chinese village, arrives unbranded, and is packaged and sold as
+Jintea. Google's wording for `brand` covers this explicitly: use your store name
+for "products manufactured by someone else and **rebranded by you**". That is
+private label, and on a private-label product the merchant is the manufacturer
+for feed purposes, so the part number is Jintea's to issue. Google's instruction
+for exactly this case — merchant is the brand owner and only seller of a product
+with no official brand — is to give the store name as `brand` and an MPN "with a
+unique identifier number of your choice", **instead of** `identifier_exists`.
+
+So `g:mpn` is `offerId()`, the same value as `g:id` and unique per weight tier,
+and `g:identifier_exists` is absent. Publishing both would contradict itself:
 `identifier_exists: no` asserts there are no identifiers while `g:mpn` supplies
-one. `components/JsonLd.tsx` publishes the same `mpn` on the product page so the
-crawled page corroborates the feed.
+one. `components/JsonLd.tsx` emits the same `mpn` so the crawled landing page
+corroborates the feed.
 
-**This rests on Jintea being the brand owner, not a reseller.** If the tea is
-ever sold under someone else's brand, that brand's real MPN belongs here and
-ours does not.
+> **Do not "fix" this back to `identifier_exists: no`.** It was reverted once on
+> the reading that "we resell it, so we are not the manufacturer" — true in the
+> ordinary sense of the word, and irrelevant to Google's. Reselling is only
+> disqualifying when the item already has a brand of its own. The test that
+> matters is whether *someone else's* brand and part number exist for this tea.
+> They do not. If that ever changes — a supplier whose name is on the package —
+> then their brand and their MPN belong here, and ours do not.
 
 **Brand and language.** `g:brand` is `Jintea` — `BRAND_NAME` in `lib/contacts.ts`,
 the same value the wordmark, the page titles, the Organization JSON-LD and the
