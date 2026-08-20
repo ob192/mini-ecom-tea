@@ -8,6 +8,8 @@ import {
   CATEGORY_ORDER,
 } from '@/lib/products';
 import { isValidUaPhone, normalizeUaPhone, uah, plural } from '@/lib/format';
+import { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE, RETURN_WINDOW_DAYS, deliveryFeeFor } from '@/lib/shipping';
+import { buildFeedItems } from '@/lib/merchant-feed';
 
 const tiered = products.find((p) => p.priceTiers.length > 1)!;
 
@@ -119,5 +121,33 @@ describe('formatting', () => {
     expect(plural(3, 'товар', 'товари', 'товарів')).toBe('товари');
     expect(plural(11, 'товар', 'товари', 'товарів')).toBe('товарів');
     expect(plural(21, 'товар', 'товари', 'товарів')).toBe('товар');
+  });
+});
+
+describe('shipping terms are single-sourced', () => {
+  // These two numbers were copy-pasted into the cart, the order API and the
+  // feed, and are written out as prose on /delivery and in the catalogue
+  // banner. Merchant Center compares the feed against the page, so a half-done
+  // change is a disapproval — lib/shipping.ts is now the one place they live.
+  it('quotes 100 UAH, free from 500 UAH', () => {
+    expect(FREE_DELIVERY_THRESHOLD).toBe(500);
+    expect(DELIVERY_FEE).toBe(100);
+  });
+
+  it('charges delivery below the threshold and nothing at or above it', () => {
+    expect(deliveryFeeFor(499)).toBe(DELIVERY_FEE);
+    expect(deliveryFeeFor(FREE_DELIVERY_THRESHOLD)).toBe(0);
+    expect(deliveryFeeFor(1200)).toBe(0);
+  });
+
+  it('agrees with the feed shipping the Merchant Center feed publishes', () => {
+    for (const item of buildFeedItems('https://example.com')) {
+      const price = Number(item.price.split(' ')[0]);
+      expect(item.shippingPrice, item.id).toBe(`${deliveryFeeFor(price).toFixed(2)} UAH`);
+    }
+  });
+
+  it('keeps the return window the /returns page states', () => {
+    expect(RETURN_WINDOW_DAYS).toBe(14);
   });
 });

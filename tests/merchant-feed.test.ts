@@ -67,8 +67,22 @@ describe('required attributes', () => {
       expect(item.availability, item.id).toBe('in_stock');
       expect(item.price, item.id).toMatch(/^\d+\.\d{2} UAH$/);
       expect(item.condition, item.id).toBe('new');
-      expect(item.brand, item.id).toBe('jintea.restreto-labs.com');
+      expect(item.brand, item.id).toBe('Jintea');
     }
+  });
+
+  // Merchant Center once carried the bare host here. A URL where a brand
+  // belongs means a search for "Jintea" cannot match the offers, and the
+  // Knowledge Graph has no name to bind the shop to — so brand must never
+  // drift back into looking like a domain.
+  it('advertises a brand name, not a hostname', () => {
+    for (const item of items) {
+      expect(item.brand, item.id).not.toMatch(/\.[a-z]{2,}(\/|$)/i);
+    }
+  });
+
+  it('declares Ukrainian as the feed content language', () => {
+    expect(xml).toContain('<language>uk</language>');
   });
 
   it('declares identifier_exists=no — the catalogue has no GTIN or MPN', () => {

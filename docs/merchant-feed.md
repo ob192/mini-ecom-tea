@@ -44,6 +44,22 @@ but if you change one of the two by hand, Google will report price mismatches.**
 MPN, so every offer sets `g:identifier_exists` to `no`. Do not add a fabricated
 GTIN; that is a disapproval, not a fix.
 
+**Brand and language.** `g:brand` is `Jintea` — `BRAND_NAME` in `lib/contacts.ts`,
+the same value the wordmark, the page titles, the Organization JSON-LD and the
+schema.org `Brand` use. It briefly carried the bare host
+(`jintea.restreto-labs.com`) instead, which cost the shop twice: with
+`identifier_exists: no` every offer leans on brand + title to be matched, so a
+URL there means a search for "Jintea" matches nothing, and the Knowledge Graph
+has no name to bind the shop to. `tests/merchant-feed.test.ts` now rejects any
+`g:brand` that looks like a hostname.
+
+The feed declares `<language>uk</language>`, matching `<html lang="uk">`. **This
+element does not decide anything.** Google takes the content language from the
+feed *registration* in Merchant Center, so a feed registered as English stays
+English no matter what the XML says — fix that in Merchant Center → the feed's
+settings. Registered as `en` while the copy is Ukrainian, Google reads the shop
+as English-language and matches the ads to the wrong queries.
+
 **Shipping.** `g:shipping` quotes what an order containing only that item would
 actually cost: `0.00 UAH` at or above the 500 ₴ free-delivery threshold, else
 `100.00 UAH`. `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here from

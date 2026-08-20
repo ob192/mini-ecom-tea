@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { AlertIcon, MailIcon, PhoneIcon, TelegramIcon } from '@/components/Icons';
 import {
+  BRAND_NAME,
   CONTACT_EMAIL,
   CONTACT_PHONE,
   CONTACT_PHONE_HREF,
@@ -17,7 +18,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Обмін та повернення',
   description:
-    'Умови обміну та повернення товару jintea.restreto-labs.com: 14 днів згідно із Законом України «Про захист прав споживачів», порядок повернення коштів і контакти для звернення.',
+    `Умови обміну та повернення товару ${BRAND_NAME}: 14 днів згідно із Законом України «Про захист прав споживачів», порядок повернення коштів і контакти для звернення.`,
   alternates: { canonical: '/returns' },
 };
 

@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Oswald, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
-import { OrganizationJsonLd } from '@/components/JsonLd';
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/JsonLd';
 import {
   GoogleTagManager,
   GoogleTagManagerNoScript,
@@ -12,7 +12,7 @@ import {
 import { Toaster } from '@/components/ui/sonner';
 import { CookieConsent } from '@/components/CookieConsent';
 import { siteUrl } from '@/lib/format';
-import { SITE_NAME } from '@/lib/contacts';
+import { BRAND_NAME } from '@/lib/contacts';
 
 const oswald = Oswald({
   subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
@@ -33,27 +33,27 @@ const SITE = siteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: `${SITE_NAME} — колекційний листовий чай прямих поставок`,
-    template: `%s · ${SITE_NAME}`,
+    default: `${BRAND_NAME} — колекційний листовий чай прямих поставок`,
+    template: `%s · ${BRAND_NAME}`,
   },
   description:
     'Інтернет-магазин колекційного листового чаю: пуер, улун, зелений, червоний і білий чай зі старих дерев Юньнані й Тайваню. Доставка по Україні.',
-  applicationName: SITE_NAME,
+  applicationName: BRAND_NAME,
   keywords: ['чай', 'пуер', 'улун', 'зелений чай', 'білий чай', 'листовий чай', 'купити чай Україна'],
-  authors: [{ name: SITE_NAME }],
+  authors: [{ name: BRAND_NAME }],
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'uk_UA',
-    siteName: SITE_NAME,
+    siteName: BRAND_NAME,
     url: SITE,
-    title: `${SITE_NAME} — колекційний листовий чай прямих поставок`,
+    title: `${BRAND_NAME} — колекційний листовий чай прямих поставок`,
     description:
       'Пуер, улун, зелений, червоний і білий чай зі старих дерев. Невеликі партії, чесне походження. Доставка по Україні.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_NAME} — колекційний листовий чай`,
+    title: `${BRAND_NAME} — колекційний листовий чай`,
     description: 'Колекційний листовий чай прямих поставок. Доставка по Україні.',
   },
   robots: { index: true, follow: true },
@@ -75,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PageViewTracker />
         </Suspense>
         <OrganizationJsonLd siteUrl={SITE} />
+        <WebSiteJsonLd siteUrl={SITE} />
         <CartProvider>
           <div className="app-shell">{children}</div>
         </CartProvider>

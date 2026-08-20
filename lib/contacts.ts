@@ -7,11 +7,15 @@
  * the landing pages and the structured data, so keep this the single place any
  * of it is authored.
  *
- * SITE_NAME is the bare domain, matching NEXT_PUBLIC_SITE_URL. The absolute URL
- * itself comes from `siteUrl()` in lib/format.ts — never hardcode it.
+ * BRAND_NAME is the brand, not a domain. It used to be the bare host
+ * (`jintea.restreto-labs.com`), which cost us twice: Merchant Center read a URL
+ * where a brand belongs, so a search for "Jintea" could not match the offers,
+ * and the Knowledge Graph had no name to attach the shop to. Domains are a
+ * deployment detail — the absolute URL comes from `siteUrl()` in lib/format.ts
+ * (NEXT_PUBLIC_SITE_URL) and is never hardcoded here.
  */
 
-export const SITE_NAME = 'jintea.restreto-labs.com';
+export const BRAND_NAME = 'Jintea';
 
 export const CONTACT_EMAIL = 'support@jintea.restreto-labs.com';
 

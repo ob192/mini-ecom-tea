@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { categories } from '@/lib/products';
 import { LeafIcon, PhoneIcon, InstagramIcon, TelegramIcon } from './Icons';
 import { ContactLink } from './Analytics';
-import { SITE_NAME } from '@/lib/contacts';
+import { BRAND_NAME } from '@/lib/contacts';
 
 export function Footer() {
   const linkCls = 'block text-[14px] leading-8 text-on-green/80 hover:text-on-green transition-colors';
@@ -16,7 +16,7 @@ export function Footer() {
             <span className="flex text-amber" aria-hidden>
               <LeafIcon width={22} height={22} />
             </span>
-            <span className="font-display font-semibold text-[17px] tracking-[0.05em] break-all">{SITE_NAME}</span>
+            <span className="font-display font-semibold text-[19px] tracking-[0.14em]">{BRAND_NAME}</span>
           </div>
           <p className="m-0 text-[13.5px] text-on-green/70 max-w-[30ch] leading-relaxed">
             Колекційний листовий чай прямих поставок. Обсмажуємо досвід, а не листя.
@@ -69,7 +69,7 @@ export function Footer() {
       </div>
 
       <div className="lg:max-w-[1040px] lg:mx-auto mt-[22px] lg:mt-10 pt-4 border-t border-on-green/20 text-[12px] text-on-green/60 flex justify-between flex-wrap gap-1.5">
-        <span>© {new Date().getFullYear()} {SITE_NAME}</span>
+        <span>© {new Date().getFullYear()} {BRAND_NAME}</span>
         <span>Зроблено з любов&apos;ю в Україні</span>
       </div>
     </footer>

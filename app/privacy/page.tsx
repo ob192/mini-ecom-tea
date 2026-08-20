@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { CONTACT_EMAIL } from '@/lib/contacts';
+import { BRAND_NAME, CONTACT_EMAIL } from '@/lib/contacts';
 
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Угода користувача',
   description:
-    'Положення про обробку і захист персональних даних у базах персональних даних, володільцем яких є продавець jintea.restreto-labs.com.',
+    `Положення про обробку і захист персональних даних у базах персональних даних, володільцем яких є продавець ${BRAND_NAME}.`,
   alternates: { canonical: '/privacy' },
 };
 

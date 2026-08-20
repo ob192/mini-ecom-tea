@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { PhoneIcon, InstagramIcon, TelegramIcon, MailIcon } from '@/components/Icons';
 import { ContactLink } from '@/components/Analytics';
 import {
+  BRAND_NAME,
   CONTACT_EMAIL,
   CONTACT_PHONE,
   CONTACT_PHONE_HREF,
@@ -19,7 +20,7 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Контакти',
-  description: 'Зв’яжіться з jintea.restreto-labs.com за телефоном, в Instagram або Telegram.',
+  description: `Зв’яжіться з ${BRAND_NAME} за телефоном, в Instagram або Telegram.`,
   alternates: { canonical: '/contacts' },
 };
 

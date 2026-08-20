@@ -61,9 +61,20 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
   to be visible; all three are linked from the footer and from under the checkout submit button.
   Contact details for all of them come from `lib/contacts.ts` — author them there, not inline,
   because Merchant Center checks that they agree across the site and the Organization JSON-LD.
+  So does the shop's name: `BRAND_NAME` (`Jintea`) is the wordmark, every page title, the
+  Organization and `Brand` JSON-LD, and the feed's `g:brand`. **It is a brand, not a domain** —
+  it once held the bare host, which made `g:brand` a URL and left brand searches unmatchable.
+  Domains belong in `NEXT_PUBLIC_SITE_URL` via `siteUrl()`; never write one into copy.
 - `app/api/order/route.ts` — order submission → Telegram.
 - `app/api/np/cities`, `app/api/np/warehouses` — Nova Poshta lookups (see below).
 - `/google-merchant.xml` — Google Merchant Center product feed (see below).
+
+**One host, not three.** `jintea.shop` and `www.jintea.shop` are aliases of the same Vercel
+deployment and used to serve byte-identical 200s alongside the primary host, which split GA4
+(`page_location` carries the hostname) and gave Google a second crawlable copy of every URL.
+`redirects()` in `next.config.mjs` now 308s every alias onto the host in `NEXT_PUBLIC_SITE_URL`;
+the primary host is filtered out of that list, so changing the variable moves the redirect
+instead of creating a loop. Adding a domain means adding it to `ALIAS_HOSTS`, not just to Vercel.
 
 ## Cart
 

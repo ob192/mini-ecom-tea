@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
-import { SITE_NAME } from '@/lib/contacts';
+import { BRAND_NAME } from '@/lib/contacts';
 
 /**
  * Default social card for every route that doesn't ship its own image
@@ -10,7 +10,7 @@ import { SITE_NAME } from '@/lib/contacts';
  * Next resolves the served URL against `metadataBase` in app/layout.tsx, i.e.
  * NEXT_PUBLIC_SITE_URL — nothing here hardcodes a domain.
  */
-export const alt = `${SITE_NAME} — колекційний листовий чай прямих поставок`;
+export const alt = `${BRAND_NAME} — колекційний листовий чай прямих поставок`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -47,10 +47,8 @@ export default async function OpengraphImage() {
           <path d="M6 19c2-6 6-9 11-12" />
         </svg>
 
-        {/* 62px, not the old 96px: the wordmark is a full domain and overflowed
-            the 1200px card at the larger size. */}
-        <div style={{ display: 'flex', fontSize: 62, letterSpacing: 2, marginTop: 34 }}>
-          {SITE_NAME}
+        <div style={{ display: 'flex', fontSize: 96, letterSpacing: 6, marginTop: 34 }}>
+          {BRAND_NAME}
         </div>
 
         <div style={{ display: 'flex', fontSize: 40, lineHeight: 1.3, marginTop: 18, opacity: 0.9, maxWidth: 900 }}>

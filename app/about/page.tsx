@@ -5,13 +5,14 @@ import { Footer } from '@/components/Footer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowIcon } from '@/components/Icons';
+import { BRAND_NAME } from '@/lib/contacts';
 
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Про нас',
   description:
-    'jintea.restreto-labs.com — чай, який ми п’ємо самі: улуни, шени, червоні та білі чаї, а також посуд для щоденного заварювання.',
+    `${BRAND_NAME} — чай, який ми п’ємо самі: улуни, шени, червоні та білі чаї, а також посуд для щоденного заварювання.`,
   alternates: { canonical: '/about' },
 };
 

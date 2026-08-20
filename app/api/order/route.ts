@@ -4,11 +4,11 @@ import { uah, isValidUaPhone, normalizeUaPhone, siteUrl } from '@/lib/format';
 import { rateLimit, clientKey } from '@/lib/rate-limit';
 import { readGaCookies, sendPurchase } from '@/lib/ga4-server';
 import type { OrderPayload, CartItem } from '@/lib/types';
+import { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE } from '@/lib/shipping';
 
 export const runtime = 'nodejs';
 
-const FREE_DELIVERY_THRESHOLD = 500;
-const DELIVERY_FEE = 100;
+
 
 function bad(error: string, status = 400) {
   return NextResponse.json({ ok: false, error }, { status });

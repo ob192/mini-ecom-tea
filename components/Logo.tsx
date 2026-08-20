@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { tone } from '@/lib/products';
 import { LeafIcon, MinusIcon, PlusIcon } from './Icons';
-import { SITE_NAME } from '@/lib/contacts';
+import { BRAND_NAME } from '@/lib/contacts';
 
 export function Logo({ size = 19 }: { size?: number }) {
   return (
@@ -11,11 +11,9 @@ export function Logo({ size = 19 }: { size?: number }) {
       </span>
       <span
         className="font-display font-semibold text-ink leading-none whitespace-nowrap"
-        // 0.05em, not the old 0.14em: the wordmark is a full domain and has to
-        // stay on one line next to the cart button at 360px.
-        style={{ fontSize: size, letterSpacing: '0.05em' }}
+        style={{ fontSize: size, letterSpacing: '0.14em' }}
       >
-        {SITE_NAME}
+        {BRAND_NAME}
       </span>
     </span>
   );

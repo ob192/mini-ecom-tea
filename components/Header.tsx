@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import { categories } from '@/lib/products';
 import { Logo } from './Logo';
 import { CartIcon, ChevLeftIcon } from './Icons';
+import { BRAND_NAME } from '@/lib/contacts';
 
 export function Header({ title, back = false }: { title?: string; back?: boolean }) {
   const { count, ready } = useCart();
@@ -25,7 +26,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
             <ChevLeftIcon width={22} height={22} />
           </button>
         ) : (
-          <Link href="/" aria-label="jintea.restreto-labs.com — на головну" className="flex items-center h-11 pr-1.5">
+          <Link href="/" aria-label={`${BRAND_NAME} — на головну`} className="flex items-center h-11 pr-1.5">
             <Logo size={19} />
           </Link>
         )}

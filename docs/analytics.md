@@ -109,6 +109,13 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
   events too if you want them in conversion reports.
 - The stream URL (`https://jintea.restreto-labs.com`) matches `NEXT_PUBLIC_SITE_URL`.
   Keep them in sync if the shop ever moves domain.
+- **One hostname only.** A "Pages and screens" report split by hostname means an alias
+  domain is serving the site directly instead of redirecting: `jintea.shop` did exactly
+  that (36 views vs 27 over 28 days) because both hosts pointed at the same deployment and
+  ran the same container. `page_location` carries the hostname, so the two never merge in
+  GA4 and every landing-page and attribution report is halved. The redirect lives in
+  `next.config.mjs` — see CLAUDE.md → Routing. Historical data stays split; sessions from
+  before the redirect can't be rewritten.
 
 ## Verifying
 

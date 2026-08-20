@@ -13,6 +13,7 @@ import {
     flattenDescription,
     truncateWords,
 } from '@/lib/format';
+import { BRAND_NAME } from '@/lib/contacts';
 
 interface Params {
     // Catch-all: slug is an array of path segments, e.g. ["green","longjing-cha"].
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         alternates: { canonical: url },
         openGraph: {
             type: 'website',
-            title: `${product.title} · jintea.restreto-labs.com`,
+            title: `${product.title} · ${BRAND_NAME}`,
             description,
             url,
             locale: 'uk_UA',
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${product.title} · jintea.restreto-labs.com`,
+            title: `${product.title} · ${BRAND_NAME}`,
             description,
             ...(product.image ? { images: [product.image] } : {}),
         },

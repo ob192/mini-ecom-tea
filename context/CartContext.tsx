@@ -10,10 +10,10 @@ import React, {
 } from 'react';
 import type { CartItem } from '@/lib/types';
 import { getProduct, priceFor } from '@/lib/products';
+import { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE } from '@/lib/shipping';
 
 const LS_KEY = 'teache_cart_v2'; // bumped: cart lines now carry a weight
-const FREE_DELIVERY_THRESHOLD = 500;
-const DELIVERY_FEE = 100;
+
 
 const same = (i: CartItem, slug: string, weight: number) =>
     i.slug === slug && i.weight === weight;

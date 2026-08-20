@@ -4,12 +4,15 @@ import { Footer } from '@/components/Footer';
 import { Hero } from '@/components/Hero';
 import { CatalogGrid } from '@/components/CatalogGrid';
 import { products, categories } from '@/lib/products';
+import { ItemListJsonLd } from '@/components/JsonLd';
+import { siteUrl } from '@/lib/format';
 
 export const dynamic = 'force-static';
 
 export default function HomePage() {
   return (
     <>
+      <ItemListJsonLd products={products} siteUrl={siteUrl()} />
       <Header />
       <Hero />
       <div id="catalog" className="flex flex-col min-h-[40vh]">
