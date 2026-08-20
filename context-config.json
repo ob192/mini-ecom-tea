@@ -1,0 +1,31 @@
+{
+  "root_dir": "./",
+  "output": "llm_context.txt",
+  "ignore_dirs": [
+    ".next",
+    "node_modules",
+    ".git",
+    "public",
+    "images"
+  ],
+  "ignore_files": [
+    "pnpm-lock.yaml",
+    "next-env.d.ts",
+    "postcss.config.js",
+    "mini-ecom-tea.iml",
+    ".thumbnail",
+    "llm_context.txt"
+  ],
+  "include_patterns": [
+    "*.ts",
+    "*.tsx",
+    "*.json",
+    "*.mjs",
+    "*.css"
+  ],
+  "max_file_size": 102400,
+  "include_tree": true,
+  "include_content": true,
+  "skip_binary": true,
+  "auto_convert": false
+}

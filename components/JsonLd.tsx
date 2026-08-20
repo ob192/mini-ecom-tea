@@ -171,6 +171,10 @@ export function ProductJsonLd({ product, siteUrl }: { product: Product; siteUrl:
                 description: flattenDescription(product.description),
                 category: categoryLabel(product.category),
                 sku: product.slug,
+                // Same merchant-assigned part number the feed publishes as
+                // g:mpn, so the crawled page corroborates the feed's identifier
+                // rather than contradicting it.
+                mpn: offerId(product, null),
                 ...(product.image ? { image: product.images.map((i) => `${siteUrl}${i}`) } : {}),
                 brand: { '@type': 'Brand', name: BRAND_NAME },
                 ...(offers.length > 0 ? { offers: offers.length === 1 ? offers[0] : offers } : {}),

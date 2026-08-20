@@ -4,8 +4,12 @@
  * Served statically from `app/google-merchant.xml/route.ts`; register that URL
  * as a scheduled fetch in Merchant Center. See `docs/merchant-feed.md`.
  *
- * The catalogue has no GTINs/MPNs (single-origin tea and one-off teaware), so
- * every offer declares `identifier_exists: no` and relies on brand + title.
+ * The catalogue has no GTINs — single-origin leaf tea carries no GS1 barcode.
+ * It does carry an MPN: Jintea is the brand owner and sole seller of tea that
+ * has no official brand of its own, which is the private-label case Google
+ * documents, and there the merchant assigns the part number. See
+ * `docs/merchant-feed.md` before touching `g:mpn` or reintroducing
+ * `identifier_exists`.
  *
  * Weight tiers become variants: one offer per `{weight, price}` pair, tied
  * together by `item_group_id` (the product slug). The per-tier prices must be
@@ -123,7 +127,11 @@ export interface FeedItem {
   price: string;
   condition: 'new';
   brand: string;
-  identifierExists: false;
+  /**
+   * Our own part number. Google accepts a merchant-assigned MPN for
+   * private-label goods; it doubles as `g:id` so the two cannot diverge.
+   */
+  mpn: string;
   googleProductCategory: number;
   productType: string;
   /** Set only for products with more than one weight tier. */
@@ -208,7 +216,7 @@ export function buildFeedItems(siteUrl: string): FeedItem[] {
         price: money(offer.price),
         condition: 'new',
         brand: BRAND,
-        identifierExists: false,
+        mpn: offerId(product, tiered ? offer.weight : null),
         googleProductCategory: googleCategoryFor(product),
         productType: productTypeFor(product),
         ...(tiered ? { itemGroupId: feedKey(product.slug) } : {}),
@@ -330,7 +338,7 @@ function renderItem(item: FeedItem): string {
     tag('g:price', item.price),
     tag('g:condition', item.condition),
     tag('g:brand', item.brand),
-    tag('g:identifier_exists', 'no'),
+    tag('g:mpn', item.mpn),
     tag('g:google_product_category', item.googleProductCategory),
     tag('g:product_type', item.productType),
     ...optionalTag('g:item_group_id', item.itemGroupId),

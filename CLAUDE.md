@@ -117,7 +117,10 @@ statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
   `components/JsonLd.tsx` also uses as the per-tier schema.org `sku` — Google compares the
   crawled landing page against the feed, so publishing only the base "від ..." price there
   reads as a price mismatch on every larger tier.
-- No GTIN/MPN exists for this catalogue, so every offer sets `g:identifier_exists` to `no`.
+- No GTIN exists (loose tea has no GS1 barcode) and none may be fabricated, but `g:mpn` is
+  published: Jintea is the brand owner and sole seller of tea with no brand of its own, the
+  private-label case where Google has the merchant assign the part number. Brand + MPN replaces
+  `g:identifier_exists`, which is gone — submitting both contradicts itself.
 - `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are imported from `lib/shipping.ts` to compute
   `g:shipping`, so the feed cannot drift from the cart or the order API.
 - **Tea only.** `ADVERTISED_CATEGORIES` limits the feed to `puer`/`green`/`oolong`/`red`/

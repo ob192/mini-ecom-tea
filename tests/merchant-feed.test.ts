@@ -127,10 +127,21 @@ describe('required attributes', () => {
     expect(xml).not.toMatch(/<g:availability>\s|\s<\/g:availability>/);
   });
 
-  it('declares identifier_exists=no — the catalogue has no GTIN or MPN', () => {
-    expect(items.every((i) => i.identifierExists === false)).toBe(true);
+  // Leaf tea has no GS1 barcode, so there is no GTIN to publish and none may
+  // be invented. It does have an MPN: Jintea is the brand owner and sole
+  // seller of tea with no official brand, which is the private-label case
+  // where Google has the merchant assign the part number. Supplying brand +
+  // MPN is what replaces identifier_exists — submitting both together is the
+  // contradiction Merchant Center warns about.
+  it('publishes a merchant-assigned MPN instead of identifier_exists', () => {
+    for (const item of items) {
+      expect(item.mpn, item.id).toBe(item.id);
+    }
+    expect(xml).toContain('<g:mpn>');
+    expect(xml).not.toContain('<g:identifier_exists>');
+    // No GS1 barcode exists for loose leaf tea, and a fabricated one is a
+    // disapproval rather than a fix.
     expect(xml).not.toContain('<g:gtin>');
-    expect(xml).not.toContain('<g:mpn>');
   });
 
   it('keeps ids unique and within the 50-character limit', () => {
