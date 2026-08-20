@@ -211,7 +211,7 @@ export function buildFeedItems(siteUrl: string): FeedItem[] {
         identifierExists: false,
         googleProductCategory: googleCategoryFor(product),
         productType: productTypeFor(product),
-        ...(tiered ? { itemGroupId: product.slug } : {}),
+        ...(tiered ? { itemGroupId: feedKey(product.slug) } : {}),
         ...(tiered && offer.weight ? { size: `${offer.weight} ${UNIT}` } : {}),
         ...(offer.weight
           ? { unitPricingMeasure: `${offer.weight} g`, unitPricingBaseMeasure: '100 g' }
@@ -230,7 +230,27 @@ export function buildFeedItems(siteUrl: string): FeedItem[] {
  * change one and you must change the other.
  */
 export function offerId(product: Product, weight: number | null): string {
-  return weight ? `${product.slug}-${weight}g` : product.slug;
+  const base = feedKey(product.slug);
+  return weight ? `${base}-${weight}g` : base;
+}
+
+/**
+ * A catalogue slug as a feed identifier.
+ *
+ * Slugs are two-segment paths (`green/longjing-cha`), and a raw `/` inside an
+ * `id` is what feed validators flag as malformed — the character reads as a
+ * path separator wherever the id is echoed back into a URL or a report. Google
+ * only asks for "valid unicode characters", so a slash is not a disapproval on
+ * its own, but nothing is gained by keeping it.
+ *
+ * **Changing this renumbers the whole catalogue.** Merchant Center keys a
+ * product's history off its `id`, so a new id is a new product: performance
+ * history resets and the old ids need re-review. Safe to do before the feed is
+ * first ingested; expensive afterwards. `components/JsonLd.tsx` publishes the
+ * same value as the schema.org `sku`, so the two cannot drift apart.
+ */
+export function feedKey(slug: string): string {
+  return slug.replace(/\//g, '-');
 }
 
 /**
@@ -295,9 +315,15 @@ function renderItem(item: FeedItem): string {
   const lines = [
     '  <item>',
     tag('g:id', item.id),
-    tag('g:title', item.title),
-    tag('g:description', item.description),
-    tag('g:link', item.link),
+    // `title`, `link` and `description` are RSS 2.0's own predefined item
+    // elements, so they are written WITHOUT the g: prefix — the namespace is
+    // for the attributes Google adds on top of RSS, not for the ones RSS
+    // already defines. Prefixed, a validator reads all three as missing and
+    // the item has no name, no landing page and no copy. Everything below
+    // this line is a Google attribute and does take the prefix.
+    tag('title', item.title),
+    tag('link', item.link),
+    tag('description', item.description),
     tag('g:image_link', item.imageLink),
     ...item.additionalImageLinks.map((url) => tag('g:additional_image_link', url)),
     tag('g:availability', item.availability),

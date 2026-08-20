@@ -23,14 +23,14 @@ The storefront publishes an RSS 2.0 product feed at **`/google-merchant.xml`**
 
 | Feed attribute | Source |
 | --- | --- |
-| `g:id` | `offerId()` — product slug, plus `-<weight>g` for tiered products |
-| `g:title` | `title[, weight г] — subtitle`, word-trimmed to 150 chars |
-| `g:description` | `flattenDescription()` of the product description |
-| `g:link` / `g:image_link` | `siteUrl()` + product path / `public/<slug>/<file>` |
+| `g:id` | `offerId()` — slug flattened by `feedKey()`, plus `-<weight>g` for tiered products |
+| `title` | `title[, weight г] — subtitle`, word-trimmed to 150 chars |
+| `description` | `flattenDescription()` of the product description |
+| `link` / `g:image_link` | `siteUrl()` + product path / `public/<slug>/<file>` |
 | `g:price` | tier price (or base price), `"350.00 UAH"` |
 | `g:google_product_category` | `GOOGLE_CATEGORY` by category, `GOOGLE_CATEGORY_BY_SLUG` per product |
 | `g:product_type` | `Чай > Пуер`-style path from the Ukrainian category labels |
-| `g:item_group_id` / `g:size` | product slug / `50 г` — only for multi-tier products |
+| `g:item_group_id` / `g:size` | `feedKey()` of the slug / `50 г` — only for multi-tier products |
 | `g:unit_pricing_measure` | `50 g` against a `100 g` base, for anything with a weight |
 
 **Weight tiers are variants.** A product with 25/50/100 г tiers becomes three
@@ -40,9 +40,35 @@ schema.org `Offer` per tier, each with the same `sku` as the feed `g:id`.
 **If you change the id format in `offerId()`, the JSON-LD follows automatically —
 but if you change one of the two by hand, Google will report price mismatches.**
 
-**No product identifiers.** Single-origin tea and one-off teaware have no GTIN or
-MPN, so every offer sets `g:identifier_exists` to `no`. Do not add a fabricated
-GTIN; that is a disapproval, not a fix.
+**RSS's own elements are not Google's.** `title`, `link` and `description` are
+RSS 2.0's predefined item elements and are written **without** the `g:` prefix;
+everything else in an `<item>` is a Google attribute and takes it. Prefixing
+those three makes a validator report all of them as missing — the offer then has
+no name, no landing page and no copy, which is the whole item. This was live for
+one release. `tests/merchant-feed.test.ts` now counts `<title>`/`<link>`/
+`<description>` against the item count and fails if a `g:` version reappears.
+
+**Ids carry no path separator.** `feedKey()` flattens the slug's `/` to `-`, so
+`green/longjing-cha` becomes `green-longjing-cha-25g`. Google only asks for
+"valid unicode characters", so a slash is not a disapproval by itself, but it
+reads as a path separator wherever the id is echoed into a URL or a report, and
+validators flag it. **Changing the id format renumbers the catalogue**: Merchant
+Center keys a product's history off its `id`, so new ids are new products —
+performance history resets and everything needs re-review. Cheap before the
+first successful ingest, expensive after. `components/JsonLd.tsx` derives the
+schema.org `sku` from the same `offerId()`, so the landing page follows
+automatically — verify with a build if you ever touch one of them by hand.
+
+**No product identifiers — and none can be invented.** Single-origin tea and
+one-off teaware have no GTIN or MPN, so every offer sets `g:identifier_exists`
+to `no`. Feed-audit tools report this as "0% pass, 54 of 54 products fail" on
+the identifiers check. That is the expected result for this catalogue, not a
+defect: `identifier_exists: no` is Google's documented way to say the
+identifiers do not exist. Neither half is fixable by us — a GTIN is a real GS1
+barcode, and Google's spec is explicit that you may "only submit MPNs assigned
+by a manufacturer", so the shop cannot mint its own from the SKU. Fabricating
+either is a disapproval, not a fix. The one thing that *was* missing here is the
+brand, and that is now `Jintea` rather than a hostname.
 
 **Brand and language.** `g:brand` is `Jintea` — `BRAND_NAME` in `lib/contacts.ts`,
 the same value the wordmark, the page titles, the Organization JSON-LD and the
@@ -62,9 +88,10 @@ as English-language and matches the ads to the wrong queries.
 
 **Shipping.** `g:shipping` quotes what an order containing only that item would
 actually cost: `0.00 UAH` at or above the 500 ₴ free-delivery threshold, else
-`100.00 UAH`. `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here from
-`context/CartContext.tsx` and `app/api/order/route.ts` — there is no shared
-config module, so all three move together. Google also reads the shipping cost
+`100.00 UAH`. `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` come from
+`lib/shipping.ts`, which `context/CartContext.tsx` and `app/api/order/route.ts`
+also import, so the feed, the cart and the authoritative server-side total can
+no longer disagree. Google also reads the shipping cost
 stated on the site itself, so `app/delivery/page.tsx` has to quote the same two
 numbers in prose; it once said "від 80 грн" while the feed published `60.00 UAH`,
 which is exactly the mismatch Merchant Center flags.

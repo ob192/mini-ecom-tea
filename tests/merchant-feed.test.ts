@@ -6,6 +6,7 @@ import {
   feedExclusionFor,
   googleCategoryFor,
   offerId,
+  feedKey,
   productTypeFor,
   ADVERTISED_CATEGORIES,
   FEED_LIMITS,
@@ -20,6 +21,17 @@ const xml = buildFeed(SITE);
 /** Products that should be listed — everything not explicitly excluded. */
 const listed = products.filter((p) => feedExclusionFor(p) === null);
 
+/**
+ * The product an offer came from. Ids no longer contain the slug verbatim
+ * (a raw "/" in an id is what validators flag), so resolve through the same
+ * feedKey() the feed builds them with rather than parsing the id back apart.
+ * `item_group_id` is the key for tiered products; a single-price product's id
+ * is the key itself.
+ */
+const byKey = new Map(products.map((p) => [feedKey(p.slug), p]));
+const productFor = (item: { id: string; itemGroupId?: string }) =>
+  byKey.get(item.itemGroupId ?? item.id)!;
+
 describe('feed coverage', () => {
   it('emits one offer per weight tier, and one per single-price product', () => {
     const expected = listed.reduce((n, p) => n + Math.max(1, p.priceTiers.length), 0);
@@ -32,10 +44,10 @@ describe('feed coverage', () => {
       expect(advertised && !ADVERTISED_CATEGORIES.has(product.category), product.slug).toBe(false);
     }
     // Nothing outside the tea categories reaches the feed.
-    expect(items.every((i) => ADVERTISED_CATEGORIES.has(i.id.split('/')[0] as never))).toBe(true);
+    expect(items.every((i) => ADVERTISED_CATEGORIES.has(productFor(i).category))).toBe(true);
     // ...and every tea category is actually represented, so a typo in the set
     // silently dropping a whole category fails here.
-    const inFeed = new Set(items.map((i) => i.id.split('/')[0]));
+    const inFeed = new Set(items.map((i) => productFor(i).category));
     expect([...ADVERTISED_CATEGORIES].every((c) => inFeed.has(c))).toBe(true);
   });
 
@@ -48,7 +60,7 @@ describe('feed coverage', () => {
 
   it('quotes the same price the storefront resolves for that weight', () => {
     for (const item of items) {
-      const product = listed.find((p) => item.id.startsWith(p.slug))!;
+      const product = productFor(item);
       const weight = item.size ? Number.parseInt(item.size, 10) : null;
       const expected = weight != null ? priceFor(product, weight) : product.price;
       expect(item.price, item.id).toBe(`${expected!.toFixed(2)} UAH`);
@@ -62,7 +74,7 @@ describe('required attributes', () => {
       expect(item.id, 'id').toBeTruthy();
       expect(item.title, item.id).toBeTruthy();
       expect(item.description, item.id).toBeTruthy();
-      expect(item.link, item.id).toBe(`${SITE}/product/${item.id.replace(/-\d+g$/, '')}`);
+      expect(item.link, item.id).toBe(`${SITE}/product/${productFor(item).slug}`);
       expect(item.imageLink, item.id).toMatch(/^https:\/\/.+\.(jpg|jpeg|png|webp|avif)$/i);
       expect(item.availability, item.id).toBe('in_stock');
       expect(item.price, item.id).toMatch(/^\d+\.\d{2} UAH$/);
@@ -83,6 +95,36 @@ describe('required attributes', () => {
 
   it('declares Ukrainian as the feed content language', () => {
     expect(xml).toContain('<language>uk</language>');
+  });
+
+  // title/link/description are RSS 2.0's OWN predefined item elements. The g:
+  // namespace is for the attributes Google adds on top of RSS, so prefixing
+  // these three makes a validator read all of them as missing — the item then
+  // has no name, no landing page and no copy.
+  it('writes the RSS predefined elements without the g: prefix', () => {
+    for (const el of ['title', 'link', 'description']) {
+      expect(xml, el).not.toContain(`<g:${el}>`);
+      expect(xml.match(new RegExp(`<${el}>`, 'g'))!.length, el).toBe(items.length + 1); // +1 = channel
+    }
+  });
+
+  // A raw "/" in an id reads as a path separator wherever the id is echoed
+  // into a URL or a report, and validators flag it as malformed.
+  it('keeps path separators out of ids and item_group_ids', () => {
+    for (const item of items) {
+      expect(item.id, item.id).not.toContain('/');
+      if (item.itemGroupId) expect(item.itemGroupId, item.id).not.toContain('/');
+    }
+  });
+
+  // Google's accepted values are in_stock / out_of_stock / preorder /
+  // backorder — underscored, and with no stray whitespace to be trimmed.
+  it('uses Google\'s exact availability token', () => {
+    for (const item of items) {
+      expect(item.availability, item.id).toBe('in_stock');
+      expect(item.availability.trim(), item.id).toBe(item.availability);
+    }
+    expect(xml).not.toMatch(/<g:availability>\s|\s<\/g:availability>/);
   });
 
   it('declares identifier_exists=no — the catalogue has no GTIN or MPN', () => {
@@ -128,7 +170,7 @@ describe('variants', () => {
 
   it('groups every tier of a product under one item_group_id', () => {
     for (const product of tiered) {
-      const group = items.filter((i) => i.itemGroupId === product.slug);
+      const group = items.filter((i) => i.itemGroupId === feedKey(product.slug));
       expect(group.map((i) => i.id), product.slug).toEqual(
         product.priceTiers.map((t) => offerId(product, t.weight)),
       );

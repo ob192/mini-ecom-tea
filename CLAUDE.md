@@ -80,7 +80,7 @@ instead of creating a loop. Adding a domain means adding it to `ALIAS_HOSTS`, no
 
 `context/CartContext.tsx` is a React Context + `useReducer`, persisted to `localStorage` under `teache_cart_v2` (the version suffix was bumped when the line-item shape changed to include `weight` — bump it again if the persisted shape changes). Cart lines are keyed by `(slug, weight)`, not just `slug`, since the same product can be added at different weight tiers. On hydration, stale/invalid lines (unknown slug, price no longer resolvable for that weight) are silently dropped.
 
-`FREE_DELIVERY_THRESHOLD` (500) and `DELIVERY_FEE` (100) are duplicated as constants in both `context/CartContext.tsx` (client-side display) and `app/api/order/route.ts` (authoritative, server-side total) — there's no shared config module, so keep them in sync if either changes. The same two numbers are also written out as **prose** in `app/delivery/page.tsx` (the meta description and two delivery cards) and in the free-delivery banner in `components/CatalogGrid.tsx`; Google Merchant Center compares the feed's `g:shipping` against what those pages say, so they move together too. `tests/order-api.test.ts` and `tests/merchant-feed.test.ts` each hardcode the pair as well, which is what catches a half-done change.
+`FREE_DELIVERY_THRESHOLD` (500) and `DELIVERY_FEE` (100) live in `lib/shipping.ts`, imported by `context/CartContext.tsx` (client-side display), `app/api/order/route.ts` (authoritative, server-side total), `lib/merchant-feed.ts` (`g:shipping`) and `components/JsonLd.tsx` (`shippingDetails`). They used to be copy-pasted into each. What still cannot be imported is the **prose**: `app/delivery/page.tsx` (the meta description and two delivery cards) and the free-delivery banner in `components/CatalogGrid.tsx` state both numbers as sentences, and Google Merchant Center compares the feed's `g:shipping` against what those pages say — so a change to the constants means editing that copy by hand. `tests/pricing.test.ts` pins the pair and checks the feed agrees, which is what catches a half-done change.
 
 ## Checkout, delivery, and the order API
 
@@ -118,8 +118,8 @@ statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
   crawled landing page against the feed, so publishing only the base "від ..." price there
   reads as a price mismatch on every larger tier.
 - No GTIN/MPN exists for this catalogue, so every offer sets `g:identifier_exists` to `no`.
-- `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are duplicated here too (third copy, alongside
-  `context/CartContext.tsx` and `app/api/order/route.ts`) to compute `g:shipping`.
+- `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` are imported from `lib/shipping.ts` to compute
+  `g:shipping`, so the feed cannot drift from the cart or the order API.
 - **Tea only.** `ADVERTISED_CATEGORIES` limits the feed to `puer`/`green`/`oolong`/`red`/
   `white`; teaware, sets and figurines stay in the storefront but are not advertised. Add a
   slug to that set to bring a category back.
