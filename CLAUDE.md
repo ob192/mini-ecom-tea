@@ -4,6 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
+> `HANDOFF.md` carries the current session-to-session state: what is committed but not
+> yet deployed, what only a human can do in the Google consoles, and decisions that were
+> reverted once and should not be reverted again. Check its date — the live-state facts
+> in it go stale; this file does not.
+
 jintea.restreto-labs.com — a mobile-first, SEO-optimized Ukrainian leaf-tea storefront. Next.js 15 (App Router) + TypeScript + Tailwind. No database, no online payment: orders are validated and priced server-side, then pushed to a Telegram chat via the Bot API; the customer pays on delivery. All UI copy is Ukrainian.
 
 ## Commands
