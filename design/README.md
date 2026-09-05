@@ -47,10 +47,16 @@ first, then all three.
 - **Spacing is Tailwind's default scale.** The design's 4/8/12/16/24/32/48/64
   grid is exactly `1/2/3/4/6/8/12/16`, which is why no spacing scale is
   configured. `tests/design-tokens.test.ts` pins that coincidence.
-- **Full-bleed sections, 1200px content.** Hero and footer run edge to edge;
-  content is held by `mx-auto max-w-content px-5 lg:px-8`. Note that an auto
-  cross-axis margin on a *flex item* makes it shrink to its content — so those
-  sections must not sit directly in a `flex flex-col` parent.
+- **A 1440px canvas, full-bleed sections, 1200px content.** "Full bleed" means
+  the width of the design frame, not of the monitor: past 1440 the canvas is
+  capped and centred (`app/styles/shell.css`), with the page behind it
+  paper-deep, because on an ultrawide the banners stretched into empty bands
+  around a small island of content. Inside it, hero/banner/footer run edge to
+  edge and content is held by `mx-auto max-w-content px-5 lg:px-8`.
+  Note that an auto cross-axis margin on a *flex item* makes it shrink to its
+  content. The shell is a flex column (to pin the footer down on short pages),
+  so `.app-shell > *` is given an explicit `width: 100%` to defend against
+  that — it collapsed every catalogue section once already.
 
 ## Where the implementation departs from the mockups
 

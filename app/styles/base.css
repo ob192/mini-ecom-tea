@@ -15,6 +15,18 @@
     /* The design's body line height (design/tokens/typography.ts, scale.body). */
     line-height: 1.55;
   }
+
+  /*
+    Past the 1440px design frame the canvas stops growing (app/styles/shell.css)
+    and this is what shows either side of it. A shade deeper than paper, so the
+    edge of the page reads as intentional rather than as the layout having run
+    out of content.
+  */
+  @media (min-width: 1440px) {
+    body {
+      background: var(--paper-deep);
+    }
+  }
 }
 
 /* .divider is a component-level utility used across cards/specs/summaries. */

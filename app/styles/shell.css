@@ -1,10 +1,14 @@
 /*
   shell.css — the site canvas.
 
-  The jintea.pen frames are full-bleed: the hero photograph, the discover
-  banner and the footer all run edge to edge, and only the *content* is held to
-  1200px (max-w-content, applied per section). So the shell no longer draws a
-  centred phone-width column with a drop shadow, as the previous design did.
+  The jintea.pen frames are 1440px wide: within them the hero, the discover
+  banner and the footer run edge to edge, and the content sits in a 1200px
+  column. So "full bleed" means the width of the design frame, not the width of
+  whatever monitor the page opens on — past about 1440 the banners stretched
+  into wide empty bands while the content stayed a small island in the middle.
+  The canvas is therefore capped at the frame width and centred, with the page
+  behind it a shade deeper so the edge reads as deliberate.
+
   @layer components so it overrides base but yields to Tailwind utilities.
 */
 @layer components {
@@ -13,6 +17,34 @@
     min-height: 100dvh;
     position: relative;
     background: var(--paper);
+
+    /* Keeps the footer at the bottom of short pages (the cart's empty state,
+       an article stub) instead of leaving a band of paper beneath it. */
+    display: flex;
+    flex-direction: column;
+  }
+
+  /*
+    An auto cross-axis margin on a flex item shrinks it to its content, and
+    every section centres itself with `mx-auto max-w-content`. Without this the
+    shell's flex context would collapse each one to its own width — which it
+    did once already, to every catalogue section. Declaring the width up front
+    means sections can keep using `mx-auto` safely.
+  */
+  .app-shell > * {
+    width: 100%;
+  }
+
+  .app-shell > footer {
+    margin-top: auto;
+  }
+
+  @media (min-width: 1440px) {
+    .app-shell {
+      max-width: 1440px;
+      margin-inline: auto;
+      box-shadow: 0 0 0 1px var(--line);
+    }
   }
 
   /* Hide scrollbars on horizontal scrollers inside the shell. */
