@@ -37,7 +37,15 @@ import {
   Trash2,
   Check,
   ChevronLeft,
+  ChevronRight,
+  ChevronDown,
   ArrowRight,
+  Search,
+  Menu,
+  ShoppingBag,
+  CreditCard,
+  Youtube,
+  Maximize2,
   AlertCircle,
   MapPin,
   Phone,
@@ -70,6 +78,8 @@ export const MinusIcon = make(Minus);
 export const TrashIcon = make(Trash2);
 export const CheckIcon = make(Check);
 export const ChevLeftIcon = make(ChevronLeft);
+export const ChevRightIcon = make(ChevronRight);
+export const ChevronDownIcon = make(ChevronDown);
 export const ArrowIcon = make(ArrowRight);
 export const AlertIcon = make(AlertCircle);
 export const PinIcon = make(MapPin);
@@ -82,6 +92,19 @@ export const ThermometerIcon = make(Thermometer);
 export const ReturnIcon = make(RotateCcw);
 export const InstagramIcon = make(Instagram);
 export const TelegramIcon = make(Send);
+export const YoutubeIcon = make(Youtube);
+
+/*
+  Added with the jintea.pen design: its header, footer and product page use a
+  wider glyph set than the previous design did. `BagIcon` is the shopping bag
+  the design draws in the header — distinct from `CartIcon` (a trolley), which
+  the buy buttons still use.
+*/
+export const SearchIcon = make(Search);
+export const MenuIcon = make(Menu);
+export const BagIcon = make(ShoppingBag);
+export const PayIcon = make(CreditCard);
+export const ExpandIcon = make(Maximize2);
 
 /** BRAND MARK — restyle this with your bespoke leaf when ready. */
 export const LeafIcon = make(Leaf);

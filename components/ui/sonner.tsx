@@ -16,7 +16,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            'group font-body rounded-lg shadow-sh-2 bg-card text-ink border border-line',
+            'group font-body rounded-lg shadow-overlay bg-card text-ink border border-line',
           title: 'font-display font-medium',
           description: 'text-ink-soft',
           actionButton: 'bg-green text-on-green rounded-full',

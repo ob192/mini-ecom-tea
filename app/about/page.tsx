@@ -54,7 +54,7 @@ export default function AboutPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-7">
           {points.map((p) => (
-            <div key={p.n} className="bg-card rounded-lg shadow-sh-1 p-4">
+            <div key={p.n} className="bg-card rounded-lg shadow-hairline p-4">
               <div className="font-display font-semibold text-[13px] text-amber tracking-[0.1em] mb-1.5">
                 {p.n}
               </div>

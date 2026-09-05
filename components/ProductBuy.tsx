@@ -7,11 +7,37 @@ import { uah } from '@/lib/format';
 import { priceFor, defaultWeight, collapseToTier, UNIT } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { trackAddToCart, trackViewItem } from '@/lib/analytics';
-import { Stepper } from '@/components/Logo';
-import { CartIcon } from '@/components/Icons';
-import { Button } from '@/components/ui/button';
+import { CartIcon, TruckIcon, PackageIcon, PayIcon } from '@/components/Icons';
+import { Button, QtyStepper, WeightChip, InfoRow, InfoRows } from '@/design';
 
-export function ProductBuy({ product }: { product: Product }) {
+/*
+  ProductBuy — the weight selector, buy row and reassurance lines of the
+  `Info` column on the product screens in jintea.pen.
+
+  The buy row is a 50px-tall stepper beside a flush primary button; the
+  stepper's height is what makes the two line up, so they are sized together.
+  Beneath it sit the three info rows the design specifies (delivery, pickup,
+  payment on receipt), separated from the controls by a hairline.
+
+  The headline price lives here, not on the page, because the design ties it
+  to the weight selector: picking 50 г must repoint the price at that tier. On
+  the page it could only ever print `product.price`, which is the *cheapest*
+  tier — so the page read "від 310 ₴ / 25 г" while the 50 г chip was selected.
+  The static parts of the buy column (SKU tags, description) are passed through
+  as `children` so they stay server-rendered between the price and the
+  selector, in the order the design draws them.
+
+  Pricing behaviour is unchanged: the server recomputes every total from
+  public/products.json, and `collapseToTier` still rewrites N packs of a small
+  tier into the cheaper larger tier before anything is added.
+*/
+export function ProductBuy({
+  product,
+  children,
+}: {
+  product: Product;
+  children?: React.ReactNode;
+}) {
   const { add } = useCart();
   const router = useRouter();
   const [weight, setWeight] = useState<number>(defaultWeight(product));
@@ -49,60 +75,66 @@ export function ProductBuy({ product }: { product: Product }) {
   };
 
   return (
-      <>
-        {hasTiers ? (
-            <div className="mt-5 px-[18px] lg:px-0">
-              <span className="font-display font-medium text-[16px] text-ink">Вага</span>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {product.priceTiers.map((t) => {
-                  const active = t.weight === weight;
-                  return (
-                      <button
-                          key={t.weight}
-                          type="button"
-                          onClick={() => setWeight(t.weight)}
-                          aria-pressed={active}
-                          className={`rounded-full min-h-[44px] px-4 font-display font-medium text-[14px] transition ${
-                              active
-                                  ? 'bg-green text-on-green'
-                                  : 'bg-card text-ink-soft shadow-[inset_0_0_0_1.5px_var(--line)] hover:text-green'
-                          }`}
-                      >
-                        {t.weight} {UNIT} · {uah(t.price)}
-                      </button>
-                  );
-                })}
-              </div>
-            </div>
-        ) : null}
+    <>
+      <p className="mt-3 flex items-baseline gap-2">
+        <span className="font-display text-[26px] font-semibold text-ink">
+          {unitPrice != null ? uah(unitPrice) : 'Ціна за запитом'}
+        </span>
+        {weight ? <span className="font-body text-small text-ink-faint">/ {weight} {UNIT}</span> : null}
+      </p>
 
-        <div className="flex items-center justify-between mt-[22px] px-[18px] lg:px-0">
-          <span className="font-display font-medium text-[16px] text-ink">Кількість</span>
-          <Stepper
-              value={qty}
-              onDec={() => setQty((q) => Math.max(1, q - 1))}
-              onInc={() => setQty((q) => Math.min(99, q + 1))}
-          />
-        </div>
+      {children}
 
-        <div className="sticky-bar flex items-center gap-3.5 mt-6 lg:mt-7 lg:pt-6 lg:border-t lg:border-line">
-          <div className="flex flex-col">
-            <span className="text-[12px] text-ink-faint">Разом</span>
-            <span className="font-display font-semibold text-[21px] text-ink">
-            {unitPrice != null ? uah(unitPrice * qty) : '—'}
-          </span>
+      {hasTiers ? (
+        <div className="mt-8">
+          <h2 className="m-0 font-body text-[12px] uppercase tracking-[1.6px] text-ink-faint">
+            Вага
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2.5" role="group" aria-label="Вага">
+            {product.priceTiers.map((t) => (
+              <WeightChip
+                key={t.weight}
+                weight={`${t.weight} ${UNIT}`}
+                price={uah(t.price)}
+                selected={t.weight === weight}
+                onClick={() => setWeight(t.weight)}
+              />
+            ))}
           </div>
-          <Button
-              variant="pill"
-              size="xl"
-              onClick={handleAdd}
-              disabled={!buyable}
-              className="flex-1 min-w-0 text-[16px] sm:text-[18px] px-4 sm:px-[22px] disabled:opacity-45"
-          >
-            <CartIcon width={19} height={19} />
-            {buyable ? 'Додати в кошик' : 'Немає в наявності'}
-          </Button>
         </div>
-      </>
+      ) : null}
+
+      <div className="sticky-bar mt-8 flex items-stretch gap-2.5">
+        <QtyStepper
+          value={qty}
+          onDec={() => setQty((q) => Math.max(1, q - 1))}
+          onInc={() => setQty((q) => Math.min(99, q + 1))}
+        />
+        <Button
+          onClick={handleAdd}
+          disabled={!buyable}
+          className="min-h-[50px] flex-1 gap-2.5"
+        >
+          <CartIcon width={17} height={17} aria-hidden />
+          {buyable ? 'Додати в кошик' : 'Немає в наявності'}
+        </Button>
+      </div>
+
+      {qty > 1 && unitPrice != null ? (
+        <p className="mt-4 font-body text-small text-ink-faint">
+          Разом: <span className="font-bold text-ink">{uah(unitPrice * qty)}</span>
+        </p>
+      ) : null}
+
+      <InfoRows className="mt-6 border-t border-line pt-6">
+        <InfoRow icon={<TruckIcon width={15} height={15} />}>
+          Доставка: Україна 1–3 дні
+        </InfoRow>
+        <InfoRow icon={<PackageIcon width={15} height={15} />}>
+          Самовивіз — Нова Пошта
+        </InfoRow>
+        <InfoRow icon={<PayIcon width={15} height={15} />}>Оплата при отриманні</InfoRow>
+      </InfoRows>
+    </>
   );
 }

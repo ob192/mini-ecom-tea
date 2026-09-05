@@ -36,6 +36,9 @@ Tests live in `tests/` (Vitest, node environment, `@/` alias mirrored from tscon
   expensive basket, catalogue integrity, and UA phone validation.
 - `tests/analytics.test.ts` covers `_ga` cookie parsing (both GA4 cookie formats), GA4 item
   mapping, and the mandatory `{ ecommerce: null }` reset before each ecommerce push.
+- `tests/design-tokens.test.ts` pins the three copies of every design token
+  (TypeScript, CSS custom properties, Tailwind scales) against each other, since
+  nothing syncs them; it also guards the near-square radius rule.
 - `tests/merchant-feed.test.ts` covers the Google Merchant Center feed: required attributes,
   GMC length limits, variant grouping, and the exclusion list (a product silently dropping
   out of the feed is otherwise invisible).
@@ -139,9 +142,36 @@ statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
 
 ## UI / design system
 
-- `components/ui/*` are shadcn/ui components (`components.json`: style `new-york`, base color `stone`, `cssVariables: true`). Brand colors (`paper`, `ink`, `green`, `amber`, etc.) are defined directly in `tailwind.config.ts`; shadcn's own utilities (`bg-background`, `text-foreground`, `ring-ring`, …) are bridged to the same brand theme via HSL CSS variables in `app/styles/tokens.css`. When touching either the brand palette or shadcn components, keep both in sync.
+The design is exported from **`/home/bunin192/Apps/Pencil/jintea.pen`** (Pencil
+MCP). `design/README.md` is the reference; read it before restyling anything.
+
+- `design/tokens/*.ts` is the source of truth for tokens; `design/tokens/tokens.css`
+  is its CSS twin (and carries the shadcn bridge); `tailwind.config.ts` is the
+  utility surface. All three must agree — `tests/design-tokens.test.ts` fails if
+  they don't. Change the `.pen` file first, then all three.
+- `design/primitives/*` are the reusable controls, one module per panel of the
+  file's `Design System — Components` frame (Button, IconButton, TextLink, Tag,
+  Eyebrow, WeightChip, QtyStepper, InfoRow, Accordion, SectionHeading,
+  Breadcrumb, Panel, Field). Screens compose these; if a screen needs a control
+  that isn't there, draw it in the design file first.
+- `components/ui/*` are shadcn/ui components (`components.json`: style `new-york`,
+  base color `stone`, `cssVariables: true`). `button`, `input` and `badge` are now
+  thin re-exports of the design primitives, so the shadcn import paths keep working;
+  `card` is the design's `Panel` surface with shadcn's parts.
+- The design separates surfaces with **hairlines, not shadows** (`shadow-hairline`);
+  `shadow-overlay` and `shadow-up` are the only real shadows. Corners are near-square:
+  `rounded-lg` is 6px, not 22px.
+- Content is held by `mx-auto max-w-content px-5 lg:px-8` inside full-bleed sections.
+  Such a section must not sit directly in a `flex flex-col` parent — an auto
+  cross-axis margin on a flex item shrinks it to its content, which silently
+  collapsed every catalogue section once already.
 - Fonts: Oswald (display) + PT Sans (body), loaded with Cyrillic subsets in `app/layout.tsx`.
-- Layout is mobile-first, generally centered in a narrow column, with `lg:` breakpoints added for desktop where relevant (see `app/product/[...slug]/page.tsx` for the pattern: single column on mobile, two-column grid on `lg:`).
+  Display face is for headings, prices and the wordmark only; button labels are
+  body-face, 13/700, uppercase.
+- Layout is mobile-first, with `lg:` breakpoints for desktop (see
+  `app/product/[...slug]/page.tsx`: single column on mobile, two-column grid on `lg:`).
+  The shell is full-width — the previous design's centred phone-width column with a
+  drop shadow is gone, because the hero and footer are full-bleed.
 - SEO: per-page `generateMetadata`, JSON-LD via `components/JsonLd.tsx` (Product, BreadcrumbList, Organization), `app/sitemap.ts`, `app/robots.ts`.
 - Every absolute URL (canonical, OG, JSON-LD, sitemap, robots) comes from `siteUrl()` in
   `lib/format.ts` → `NEXT_PUBLIC_SITE_URL`. Never hardcode the domain; for metadata,

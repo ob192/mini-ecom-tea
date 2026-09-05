@@ -30,14 +30,14 @@ function CartRow({
 
   return (
       <div className="flex gap-3 py-3.5 items-start">
-        <Link href={`/product/${p.slug}`} className="w-[66px] shrink-0 rounded-[14px] overflow-hidden">
+        <Link href={`/product/${p.slug}`} className="w-[66px] shrink-0 rounded-lg overflow-hidden">
           <ProductImage src={p.image} category={p.category} alt={p.title} ratio="1 / 1" tag="" />
         </Link>
         <div className="flex-1 min-w-0">
           <div className="flex justify-between gap-2">
             <Link
                 href={`/product/${p.slug}`}
-                className="font-display font-medium text-[15.5px] text-ink leading-tight"
+                className="font-display text-card-title uppercase text-ink"
             >
               {p.title}
             </Link>
@@ -61,7 +61,7 @@ function CartRow({
                 onDec={() => onDec(item.slug, item.weight)}
                 onInc={() => onInc(item.slug, item.weight)}
             />
-            <span className="font-display font-semibold text-[16px] text-green-deep">
+            <span className="font-body text-[15px] font-bold text-ink">
             {uah(unit * item.qty)}
           </span>
           </div>
@@ -106,7 +106,7 @@ export function CartView() {
             <div className="w-[84px] h-[84px] rounded-full bg-green-tint flex items-center justify-center text-green mb-2">
               <CartIcon width={36} height={36} />
             </div>
-            <h2 className="font-display text-[23px] text-ink">Кошик порожній</h2>
+            <h1 className="font-display text-h2 uppercase text-ink">Кошик порожній</h1>
             <p className="m-0 mb-4 text-ink-soft text-[15px] max-w-[26ch]">
               Додайте улюблений чай — і він з&apos;явиться тут.
             </p>
@@ -127,7 +127,8 @@ export function CartView() {
         <Header title="Кошик" back />
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
           <div className="animate-screenIn px-[18px] pt-1 pb-2 lg:px-0 lg:pt-0">
-            <div className="text-ink-faint text-[13px] pt-2 pb-0.5 lg:pt-0">
+            <h1 className="m-0 font-display text-h2 uppercase text-ink">Кошик</h1>
+            <div className="text-ink-faint text-[13px] pt-1.5 pb-0.5">
               {count} {plural(count, 'товар', 'товари', 'товарів')} у кошику
             </div>
             <div>

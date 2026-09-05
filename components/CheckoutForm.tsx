@@ -81,7 +81,7 @@ export function CheckoutForm() {
             <>
                 <Header title="Оформлення" back />
                 <div className="animate-screenIn flex flex-col items-center justify-center text-center px-8 py-16 gap-2 min-h-[60vh]">
-                    <h2 className="font-display text-[22px] text-ink">Кошик порожній</h2>
+                    <h1 className="font-display text-h2 uppercase text-ink">Кошик порожній</h1>
                     <p className="text-ink-soft text-[15px] max-w-[28ch]">
                         Додайте товари, щоб оформити замовлення.
                     </p>
@@ -136,10 +136,13 @@ export function CheckoutForm() {
     return (
         <>
             <Header title="Оформлення" back />
+            <h1 className="mx-auto max-w-content px-[18px] pt-4 font-display text-h2 uppercase text-ink lg:px-8">
+                Оформлення
+            </h1>
             <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
                 {/* order summary (right column on desktop) */}
-                <div className="animate-screenIn px-[18px] pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-20">
-                    <h2 className="font-display text-[13px] tracking-[0.1em] uppercase text-green-deep mt-2 lg:mt-0 mb-2.5">
+                <div className="animate-screenIn px-[18px] pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-24">
+                    <h2 className="mb-2.5 mt-2 font-body text-[12px] uppercase tracking-[1.6px] text-ink-faint lg:mt-0">
                         Ваше замовлення
                     </h2>
                     <Card className="p-4 mb-[22px] lg:mb-0">
@@ -150,12 +153,12 @@ export function CheckoutForm() {
                             return (
                                 <div key={`${it.slug}|${it.weight}`} className="flex justify-between gap-2.5 py-1.5 text-[14.5px]">
                   <span className="text-ink-soft">
-                    <span className="font-display font-semibold text-amber-deep mr-1.5">
+                    <span className="mr-1.5 font-body font-bold text-amber-deep">
                       {it.qty}×
                     </span>
                       {p.title}
                   </span>
-                                    <span className="font-display font-semibold text-ink whitespace-nowrap">
+                                    <span className="whitespace-nowrap font-body font-bold text-ink">
                     {uah(unitPrice * it.qty)}
                   </span>
                                 </div>
@@ -278,10 +281,10 @@ export function CheckoutForm() {
                                         type="button"
                                         onClick={() => form.setValue('deliveryMethod', 'np_warehouse', { shouldValidate: true })}
                                         aria-pressed={deliveryMethod === 'np_warehouse'}
-                                        className={`flex-1 rounded-full min-h-[44px] px-4 font-display font-medium text-[14px] transition ${
+                                        className={`flex-1 rounded min-h-[44px] px-4 font-body text-nav transition-colors ${
                                             deliveryMethod === 'np_warehouse'
                                                 ? 'bg-green text-on-green'
-                                                : 'bg-card text-ink-soft shadow-[inset_0_0_0_1.5px_var(--line)] hover:text-green'
+                                                : 'bg-card text-ink-soft shadow-hairline hover:text-ink'
                                         }`}
                                     >
                                         Відділення / поштомат
@@ -290,10 +293,10 @@ export function CheckoutForm() {
                                         type="button"
                                         onClick={() => form.setValue('deliveryMethod', 'np_courier', { shouldValidate: true })}
                                         aria-pressed={deliveryMethod === 'np_courier'}
-                                        className={`flex-1 rounded-full min-h-[44px] px-4 font-display font-medium text-[14px] transition ${
+                                        className={`flex-1 rounded min-h-[44px] px-4 font-body text-nav transition-colors ${
                                             deliveryMethod === 'np_courier'
                                                 ? 'bg-green text-on-green'
-                                                : 'bg-card text-ink-soft shadow-[inset_0_0_0_1.5px_var(--line)] hover:text-green'
+                                                : 'bg-card text-ink-soft shadow-hairline hover:text-ink'
                                         }`}
                                     >
                                         Кур&apos;єром

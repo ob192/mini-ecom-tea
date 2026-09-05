@@ -74,7 +74,7 @@ export function ProductGallery({
               className={`relative shrink-0 w-16 h-16 rounded-lg overflow-hidden transition ${
                 i === active
                   ? 'ring-2 ring-green ring-offset-0'
-                  : 'opacity-75 shadow-[inset_0_0_0_1.5px_var(--line)] hover:opacity-100'
+                  : 'opacity-75 shadow-hairline hover:opacity-100'
               }`}
             >
               <Image src={src} alt="" fill sizes="64px" className="object-cover" />
@@ -87,10 +87,10 @@ export function ProductGallery({
         <DialogContent
           className={
             'left-0 top-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-none bg-ink p-0 shadow-none ' +
-            'sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[calc(100%-1.5rem)] sm:max-w-[880px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:bg-card/95 sm:p-1.5 sm:shadow-sh-2'
+            'sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[calc(100%-1.5rem)] sm:max-w-[880px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:bg-card/95 sm:p-1.5 sm:shadow-overlay'
           }
         >
-          <div className="relative h-full w-full overflow-hidden sm:aspect-square sm:h-auto sm:rounded-2xl">
+          <div className="relative h-full w-full overflow-hidden sm:aspect-square sm:h-auto sm:rounded-xl">
             <ZoomableImage
               images={images}
               active={active}

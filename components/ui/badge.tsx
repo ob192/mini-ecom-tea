@@ -1,28 +1,19 @@
+/*
+  The badge now lives in the design system as `Tag`: see
+  design/primitives/Tag.tsx, drawn in the `Бейджі та теги` panel.
+
+  The shadcn variant names map onto the design's tones:
+    default -> category (amber-tint)
+    ok      -> in stock
+    danger  -> out of stock
+*/
 import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import { Tag } from '@/design/primitives/Tag';
 
-/** shadcn Badge — themed for the small category/stock pills. */
-const badgeVariants = cva(
-  'inline-flex items-center font-display font-medium text-[11px] tracking-wider uppercase px-[9px] py-[3px] rounded-full',
-  {
-    variants: {
-      variant: {
-        default: 'bg-green-tint text-green-deep',
-        ok: 'bg-green-tint text-ok',
-        danger: 'bg-danger-tint text-danger',
-      },
-    },
-    defaultVariants: { variant: 'default' },
-  },
-);
-
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {}
-
-function Badge({ className, variant, ...props }: BadgeProps) {
-  return <span className={cn(badgeVariants({ variant }), className)} {...props} />;
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  variant?: 'default' | 'ok' | 'danger';
 }
 
-export { Badge, badgeVariants };
+export function Badge({ variant = 'default', ...props }: BadgeProps) {
+  return <Tag tone={variant === 'default' ? 'category' : variant} {...props} />;
+}

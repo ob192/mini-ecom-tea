@@ -12,10 +12,10 @@ export function SuccessView() {
 
   return (
     <div className="animate-screenIn flex-1 px-[22px] pt-[70px] lg:pt-24 pb-7 flex flex-col items-center text-center min-h-[80vh] lg:max-w-[620px] lg:mx-auto">
-      <div className="w-[92px] h-[92px] rounded-full bg-green text-on-green flex items-center justify-center mb-[18px] shadow-sh-2">
+      <div className="mb-[18px] flex h-[92px] w-[92px] items-center justify-center rounded-full bg-green text-on-green">
         <CheckIcon width={42} height={42} />
       </div>
-      <h1 className="font-display font-semibold text-[27px] leading-tight text-ink max-w-[18ch]">
+      <h1 className="max-w-[18ch] font-display text-[27px] font-semibold uppercase leading-[1.1] text-ink lg:text-h1">
         Дякуємо!
         <br />
         Ваше замовлення прийнято

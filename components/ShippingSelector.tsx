@@ -47,7 +47,7 @@ const labelCls = 'font-display font-medium text-[13px] tracking-wide uppercase t
 const triggerCls =
     'font-body text-[16px] text-left bg-card rounded min-h-[48px] w-full px-3.5 py-2.5 ' +
     'border-[1.5px] border-line transition ' +
-    'focus:outline-none focus:border-green-600 focus:shadow-[0_0_0_3px_rgba(46,70,49,0.12)] ' +
+    'focus:outline-none focus:border-green focus:ring-1 focus:ring-green ' +
     'disabled:cursor-not-allowed disabled:opacity-50';
 
 /* Shared picker dialog: search input pinned at top, big scrollable rows below. */
@@ -97,7 +97,7 @@ function PickerDialog({
                             onChange={(e) => onQueryChange(e.target.value)}
                             placeholder={placeholder}
                             autoComplete="off"
-                            className="w-full bg-card border-[1.5px] border-line rounded-full pl-10 pr-3.5 py-2.5 text-[16px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-green-600 focus:shadow-[0_0_0_3px_rgba(46,70,49,0.12)]"
+                            className="w-full bg-paper border border-line rounded pl-10 pr-3.5 py-2.5 text-[16px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-green focus:ring-1 focus:ring-green"
                         />
                     </div>
                 </div>

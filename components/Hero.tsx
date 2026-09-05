@@ -1,66 +1,72 @@
 import Image from 'next/image';
-import { LeafIcon } from './Icons';
+import Link from 'next/link';
+import { ArrowIcon, LeafIcon } from './Icons';
+import { Eyebrow } from '@/design';
 
 /*
+  Hero — the `Hero` frame of the home screens in jintea.pen.
+
+  A full-bleed photograph, a scrim that fades from transparent at the top to
+  green-deep at 69% opacity at the bottom, and a 460px content column: amber
+  eyebrow, 42px display headline, body sub, and a card-filled button. The
+  desktop frame sets the column against the right edge of the 1200px content
+  width; the mobile frame drops it to the bottom-left.
+
   To use a custom banner image:
   1. Put the file in /public (e.g. /public/hero.jpg).
   2. Set NEXT_PUBLIC_HERO_IMAGE=/hero.jpg in your .env.
-  With no value set, the original green gradient banner is used.
+  With no value set, the green gradient fallback below is used — the design
+  assumes a photo, so set one in production.
 */
 const HERO_IMAGE = process.env.NEXT_PUBLIC_HERO_IMAGE || '';
 
 export function Hero() {
-    return (
-        <section className="relative min-h-[360px] md:min-h-[460px] lg:min-h-[540px] flex items-end overflow-hidden animate-screenIn">
-            {HERO_IMAGE ? (
-                <>
-                    <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover" />
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            background:
-                                'linear-gradient(to top, rgba(20,28,20,0.86) 0%, rgba(20,28,20,0.38) 46%, rgba(20,28,20,0.12) 100%)',
-                        }}
-                    />
-                </>
-            ) : (
-                <>
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(155deg, #3E5A41, #233726 70%)' }} />
-                    <div
-                        className="absolute inset-0"
-                        style={{ background: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 13px)' }}
-                    />
-                    <div
-                        className="absolute -right-[34px] top-[38px] -rotate-12 lg:right-[4%] lg:top-1/2 lg:-translate-y-1/2"
-                        style={{ color: 'rgba(243,236,221,0.10)' }}
-                    >
-                        <LeafIcon className="w-[260px] h-[260px] lg:w-[420px] lg:h-[420px]" />
-                    </div>
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            background:
-                                'linear-gradient(to top, rgba(20,28,20,0.78) 0%, rgba(20,28,20,0.30) 42%, rgba(20,28,20,0.05) 100%)',
-                        }}
-                    />
-                </>
-            )}
+  return (
+    <section className="relative flex min-h-[420px] items-end overflow-hidden lg:min-h-[640px]">
+      {HERO_IMAGE ? (
+        <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover" />
+      ) : (
+        <>
+          <div
+            className="absolute inset-0"
+            style={{ background: 'linear-gradient(155deg, #3E5A41, #233726 70%)' }}
+          />
+          <div
+            className="absolute -right-8 top-10 -rotate-12 lg:right-[6%] lg:top-1/2 lg:-translate-y-1/2"
+            style={{ color: 'rgba(243,236,221,0.10)' }}
+          >
+            <LeafIcon className="h-[260px] w-[260px] lg:h-[420px] lg:w-[420px]" />
+          </div>
+        </>
+      )}
 
-            <div className="relative z-[2] p-[26px_20px_26px] md:p-10 lg:px-16 lg:py-16 text-paper w-full">
-                <div className="max-w-[34ch] lg:max-w-[48ch]">
-                    <p className="font-display font-medium uppercase tracking-[0.18em] text-[11px] lg:text-[13px] text-amber mb-[11px]">
-                        Прямі поставки · Юньнань · Тайвань
-                    </p>
-                    <h2 className="font-display font-semibold text-[34px] md:text-[44px] lg:text-[56px] leading-[1.02] tracking-[0.01em] text-paper m-0">
-                        Чай, який варто
-                        <br />
-                        заварювати повільно
-                    </h2>
-                    <p className="mt-[11px] lg:mt-4 mb-0 text-[15px] lg:text-[18px] leading-relaxed text-paper/85 max-w-[34ch] lg:max-w-[40ch]">
-                        Колекційне листя зі старих дерев. Невеликі партії, чесне походження.
-                    </p>
-                </div>
-            </div>
-        </section>
-    );
+      {/* Scrim: --scrim-from at the top, --scrim-to at the bottom. */}
+      <div
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(to bottom, var(--scrim-from), var(--scrim-to))' }}
+      />
+
+      <div className="relative z-[1] mx-auto w-full max-w-content px-5 pb-12 lg:px-8 lg:pb-24">
+        <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-[460px]">
+          <Eyebrow tone="on-green">Сезон пуеру відкрито</Eyebrow>
+
+          <h1 className="m-0 font-display text-[34px] font-semibold leading-[1.12] text-on-green lg:text-display">
+            Прямо з гір Юньнані до вашої чашки
+          </h1>
+
+          <p className="m-0 max-w-[46ch] font-body text-body text-on-green/80">
+            Витриманий шу та живий шен пуер, зібраний зі старих чайних дерев.
+          </p>
+
+          <Link
+            href="#catalog"
+            className="inline-flex w-fit items-center gap-2 rounded bg-card px-7 py-[14px] font-body text-label uppercase text-ink transition-colors hover:bg-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-green"
+          >
+            Переглянути каталог
+            <ArrowIcon width={15} height={15} aria-hidden />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
 }

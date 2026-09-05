@@ -119,7 +119,7 @@ export default function BrewingPage() {
             Температура води
           </span>
         </h2>
-        <div className="bg-card rounded-lg shadow-sh-1 overflow-hidden mt-1">
+        <div className="bg-card rounded-lg shadow-hairline overflow-hidden mt-1">
           {temps.map((row, i) => (
             <div
               key={row.tea}

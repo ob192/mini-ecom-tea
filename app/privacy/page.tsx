@@ -361,7 +361,7 @@ export default function PrivacyPage() {
           яких є продавець.
         </p>
 
-        <nav aria-label="Зміст" className="bg-card rounded-lg shadow-sh-1 p-4 mb-7">
+        <nav aria-label="Зміст" className="bg-card rounded-lg shadow-hairline p-4 mb-7">
           <div className="font-display font-semibold text-[15.5px] text-ink mb-2">Зміст</div>
           <ol className="m-0 pl-0 list-none flex flex-col gap-1.5">
             {sections.map((s, i) => (

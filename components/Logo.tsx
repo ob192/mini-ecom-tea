@@ -1,26 +1,47 @@
 import Image from 'next/image';
 import { tone } from '@/lib/products';
-import { LeafIcon, MinusIcon, PlusIcon } from './Icons';
+import { LeafIcon } from './Icons';
 import { BRAND_NAME } from '@/lib/contacts';
 
-export function Logo({ size = 19 }: { size?: number }) {
+/*
+  Logo — the `Logo` group used in the header and footer of every frame in
+  jintea.pen: a green leaf beside the wordmark in the display face at 22px,
+  600, with 3px of tracking. The mobile frames draw it at 19px/2.5px; that is
+  the `sm` size.
+
+  `tone` inverts it for the green footer.
+*/
+export function Logo({
+  size = 'md',
+  tone: t = 'ink',
+}: {
+  size?: 'sm' | 'md';
+  tone?: 'ink' | 'on-green';
+}) {
+  const glyph = size === 'sm' ? 18 : 22;
+
   return (
     <span className="flex items-center gap-2">
-      <span className="flex text-green" aria-hidden>
-        <LeafIcon width={size + 4} height={size + 4} />
+      <span className={t === 'ink' ? 'flex text-green' : 'flex text-on-green'} aria-hidden>
+        <LeafIcon width={glyph} height={glyph} />
       </span>
       <span
-        className="font-display font-semibold text-ink leading-none whitespace-nowrap"
-        style={{ fontSize: size, letterSpacing: '0.14em' }}
+        className={`whitespace-nowrap font-display font-semibold leading-none ${
+          t === 'ink' ? 'text-ink' : 'text-on-green'
+        }`}
+        style={{
+          fontSize: size === 'sm' ? 19 : 22,
+          letterSpacing: size === 'sm' ? '2.5px' : '3px',
+        }}
       >
-        {BRAND_NAME}
+        {BRAND_NAME.toUpperCase()}
       </span>
     </span>
   );
 }
 
 /**
- * Product image with a tasteful striped placeholder when `src` is empty.
+ * Product image with a branded placeholder when `src` is empty.
  * `priority` lifts mobile LCP for above-the-fold images.
  */
 export function ProductImage({
@@ -50,14 +71,7 @@ export function ProductImage({
         className="relative w-full overflow-hidden"
         style={{ aspectRatio: ratio, borderRadius: radius }}
       >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          priority={priority}
-          className="object-cover"
-        />
+        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
       </div>
     );
   }
@@ -65,7 +79,7 @@ export function ProductImage({
   // Empty image → branded gradient placeholder.
   return (
     <div
-      className="relative w-full overflow-hidden flex items-end"
+      className="relative flex w-full items-end overflow-hidden"
       role="img"
       aria-label={alt}
       style={{
@@ -81,12 +95,15 @@ export function ProductImage({
             'repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 11px)',
         }}
       />
-      <div className="absolute inset-0 flex items-center justify-center" style={{ color: 'rgba(255,255,255,0.30)' }}>
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ color: 'rgba(255,255,255,0.30)' }}
+      >
         <LeafIcon width="42%" height="42%" />
       </div>
       {tag ? (
         <span
-          className="relative z-[1] font-mono text-[10px] tracking-wide m-2 px-[7px] py-[3px] rounded-md"
+          className="relative z-[1] m-2 rounded-sm px-[7px] py-[3px] font-body text-[10px] tracking-wide"
           style={{ color: 'rgba(255,255,255,0.82)', background: 'rgba(0,0,0,0.18)' }}
         >
           {tag}
@@ -96,47 +113,11 @@ export function ProductImage({
   );
 }
 
-export function Stepper({
-  value,
-  onDec,
-  onInc,
-  min = 1,
-  max = 99,
-  size = 'md',
-}: {
-  value: number;
-  onDec: () => void;
-  onInc: () => void;
-  min?: number;
-  max?: number;
-  size?: 'sm' | 'md';
-}) {
-  const btn =
-    size === 'sm'
-      ? 'w-9 h-9'
-      : 'w-11 h-11';
-  const val = size === 'sm' ? 'text-[15px] min-w-[24px]' : 'text-[17px] min-w-[30px]';
-  return (
-    <div className="inline-flex items-center bg-card rounded-full shadow-[inset_0_0_0_1.5px_var(--line)]">
-      <button
-        type="button"
-        onClick={onDec}
-        disabled={value <= min}
-        aria-label="Зменшити кількість"
-        className={`${btn} flex items-center justify-center rounded-full text-green hover:bg-green-tint disabled:text-ink-faint disabled:cursor-not-allowed transition-colors`}
-      >
-        <MinusIcon width={20} height={20} />
-      </button>
-      <span className={`font-display font-semibold text-center text-ink ${val}`}>{value}</span>
-      <button
-        type="button"
-        onClick={onInc}
-        disabled={value >= max}
-        aria-label="Збільшити кількість"
-        className={`${btn} flex items-center justify-center rounded-full text-green hover:bg-green-tint disabled:text-ink-faint disabled:cursor-not-allowed transition-colors`}
-      >
-        <PlusIcon width={20} height={20} />
-      </button>
-    </div>
-  );
-}
+/**
+ * Quantity stepper.
+ *
+ * The control itself moved into the design system with the jintea.pen design
+ * (design/primitives/QtyStepper.tsx). Re-exported here because the cart rows
+ * import it from this module.
+ */
+export { QtyStepper as Stepper } from '@/design/primitives/QtyStepper';

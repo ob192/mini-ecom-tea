@@ -50,7 +50,7 @@ export function CookieConsent() {
       aria-label="Повідомлення про файли cookie"
       className="animate-screenIn fixed inset-x-0 bottom-0 z-50 px-[18px] pb-[18px] pt-2 pointer-events-none"
     >
-      <div className="pointer-events-auto mx-auto w-full max-w-[560px] rounded-xl bg-green text-on-green shadow-sh-2 p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+      <div className="pointer-events-auto mx-auto w-full max-w-[560px] rounded-xl bg-green-deep text-on-green shadow-overlay p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         <p className="m-0 flex-1 text-[13.5px] leading-relaxed text-on-green/85">
           Ми використовуємо файли cookie, щоб сайт працював коректно та щоб розуміти, які чаї вам
           цікаві. Деталі —{' '}

@@ -80,7 +80,7 @@ export default function ReturnsPage() {
           Оплата доставки повернення відбувається за рахунок покупця.
         </p>
 
-        <div className="mt-3 bg-card rounded-lg shadow-sh-1 p-4 flex gap-3.5 items-start">
+        <div className="mt-3 bg-card rounded-lg shadow-hairline p-4 flex gap-3.5 items-start">
           <span className="w-10 h-10 shrink-0 rounded-full bg-green-tint text-green flex items-center justify-center">
             <AlertIcon width={19} height={19} />
           </span>
@@ -115,7 +115,7 @@ export default function ReturnsPage() {
             <a
               key={label}
               href={href}
-              className="bg-card rounded-lg shadow-sh-1 p-4 flex items-center gap-3.5 hover:bg-green-tint transition-colors"
+              className="bg-card rounded-lg shadow-hairline p-4 flex items-center gap-3.5 hover:bg-green-tint transition-colors"
             >
               <span className="w-10 h-10 shrink-0 rounded-full bg-green-tint text-green flex items-center justify-center">
                 <Icon width={19} height={19} />

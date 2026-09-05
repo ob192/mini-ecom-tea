@@ -12,14 +12,8 @@
     background: var(--paper);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
-    line-height: 1.45;
-  }
-
-  /* On wide viewports, frame the canvas against a slightly deeper page bg. */
-  @media (min-width: 1280px) {
-    body {
-      background: radial-gradient(140% 90% at 50% -20%, #efe6d3 0%, #e6dcc6 55%, #ddd0b6 100%);
-    }
+    /* The design's body line height (design/tokens/typography.ts, scale.body). */
+    line-height: 1.55;
   }
 }
 

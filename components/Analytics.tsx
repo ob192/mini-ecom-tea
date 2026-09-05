@@ -58,6 +58,7 @@ export function ContactLink({
   href,
   className,
   children,
+  ...rest
 }: {
   channel: 'phone' | 'telegram' | 'instagram' | 'email';
   /** Where on the site the link sits, e.g. "footer" / "contacts_page". */
@@ -65,7 +66,7 @@ export function ContactLink({
   href: string;
   className?: string;
   children: React.ReactNode;
-}) {
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'className' | 'children'>) {
   const external = href.startsWith('http');
   return (
     <a
@@ -74,6 +75,7 @@ export function ContactLink({
       target={external ? '_blank' : undefined}
       rel={external ? 'noreferrer' : undefined}
       onClick={() => trackContactClick(channel, location)}
+      {...rest}
     >
       {children}
     </a>

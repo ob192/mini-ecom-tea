@@ -1,76 +1,111 @@
 import Link from 'next/link';
 import { categories } from '@/lib/products';
-import { LeafIcon, PhoneIcon, InstagramIcon, TelegramIcon } from './Icons';
+import { InstagramIcon, TelegramIcon, PhoneIcon } from './Icons';
 import { ContactLink } from './Analytics';
+import { Logo } from './Logo';
 import { BRAND_NAME } from '@/lib/contacts';
 
-export function Footer() {
-  const linkCls = 'block text-[14px] leading-8 text-on-green/80 hover:text-on-green transition-colors';
-  const headCls = 'font-display font-semibold text-[13px] tracking-[0.12em] uppercase text-amber mb-1.5';
+/*
+  Footer — the `Footer` frame of every screen in jintea.pen.
 
+  A green-deep slab with the wordmark and a one-line description on the left,
+  then link columns, then a hairline and the copyright / social row. Link text
+  is `on-green` at 69% and lifts to full opacity on hover; the column headings
+  are the uppercase 12/700 label style.
+
+  The design draws a YouTube glyph as well; only the channels in lib/contacts
+  actually exist, so only those are rendered.
+*/
+function Column({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (
-    <footer className="bg-green text-on-green px-[18px] md:px-8 pt-7 lg:pt-12 pb-9 lg:pb-12">
-      <div className="lg:max-w-[1040px] lg:mx-auto lg:grid lg:grid-cols-[1.6fr_1fr_1fr_1.4fr] lg:gap-10">
-        <div className="mb-[18px] lg:mb-0">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="flex text-amber" aria-hidden>
-              <LeafIcon width={22} height={22} />
-            </span>
-            <span className="font-display font-semibold text-[19px] tracking-[0.14em]">{BRAND_NAME}</span>
+    <nav aria-label={heading} className="flex flex-col gap-3">
+      <h2 className="m-0 font-body text-[12px] font-bold uppercase tracking-[1.2px] text-on-green">
+        {heading}
+      </h2>
+      {children}
+    </nav>
+  );
+}
+
+const linkCls = 'font-body text-small text-on-green/70 transition-colors hover:text-on-green';
+
+export function Footer() {
+  return (
+    <footer className="bg-green-deep text-on-green">
+      <div className="mx-auto max-w-content px-5 pb-7 pt-14 lg:px-8">
+        <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-8">
+          <div className="flex max-w-[320px] flex-col gap-3.5">
+            <Logo tone="on-green" />
+            <p className="m-0 font-body text-small leading-[1.6] text-on-green/70">
+              Листовий китайський чай прямо з Юньнані. Розсилка та самовивіз по Україні.
+            </p>
           </div>
-          <p className="m-0 text-[13.5px] text-on-green/70 max-w-[30ch] leading-relaxed">
-            Колекційний листовий чай прямих поставок. Обсмажуємо досвід, а не листя.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-1 lg:col-span-2 lg:grid-flow-col gap-x-3.5 gap-y-[18px] mb-[22px] lg:mb-0">
-          <nav aria-label="Категорії">
-            <div className={headCls}>Магазин</div>
-            {categories.map((c) => (
-              <Link key={c.slug} href={`/?cat=${c.slug}`} className={linkCls}>
-                {c.label}
-              </Link>
-            ))}
-          </nav>
-          <nav aria-label="Інформація">
-            <div className={headCls}>Інформація</div>
-            <Link href="/about" className={linkCls}>Про нас</Link>
-            <Link href="/delivery" className={linkCls}>Оплата і доставка</Link>
-            <Link href="/returns" className={linkCls}>Обмін та повернення</Link>
-            <Link href="/privacy" className={linkCls}>Угода користувача</Link>
-            <Link href="/brewing" className={linkCls}>Як заварювати</Link>
-            <Link href="/contacts" className={linkCls}>Контакти</Link>
-          </nav>
-        </div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:flex lg:gap-16">
+            <Column heading="Каталог">
+              {categories.map((c) => (
+                <Link key={c.slug} href={`/?cat=${c.slug}`} className={linkCls}>
+                  {c.label}
+                </Link>
+              ))}
+            </Column>
 
-        <div>
-          <div className={`${headCls} hidden lg:block`}>Контакти</div>
-          <address className="not-italic flex flex-col gap-[7px] text-[13.5px] text-on-green/80">
-            <span className="flex items-center gap-2">
-              <span className="text-amber"><PhoneIcon width={15} height={15} /></span>
-              <ContactLink channel="phone" location="footer" href="tel:+380986575800" className="hover:text-on-green">
+            <Column heading="Підтримка">
+              <Link href="/delivery" className={linkCls}>Оплата і доставка</Link>
+              <Link href="/returns" className={linkCls}>Обмін та повернення</Link>
+              <Link href="/brewing" className={linkCls}>Як заварювати</Link>
+              <Link href="/privacy" className={linkCls}>Угода користувача</Link>
+            </Column>
+
+            <Column heading="Про нас">
+              <Link href="/about" className={linkCls}>Наша історія</Link>
+              <Link href="/contacts" className={linkCls}>Контакти</Link>
+              <ContactLink
+                channel="phone"
+                location="footer"
+                href="tel:+380986575800"
+                className={linkCls}
+              >
                 +38 (098) 657-58-00
               </ContactLink>
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-amber"><InstagramIcon width={15} height={15} /></span>
-              <ContactLink channel="instagram" location="footer" href="https://instagram.com/jintea.ua" className="hover:text-on-green">
-                jintea.ua
-              </ContactLink>
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-amber"><TelegramIcon width={15} height={15} /></span>
-              <ContactLink channel="telegram" location="footer" href="https://t.me/Jin_tea" className="hover:text-on-green">
-                Jin_tea
-              </ContactLink>
-            </span>
-          </address>
+            </Column>
+          </div>
         </div>
-      </div>
 
-      <div className="lg:max-w-[1040px] lg:mx-auto mt-[22px] lg:mt-10 pt-4 border-t border-on-green/20 text-[12px] text-on-green/60 flex justify-between flex-wrap gap-1.5">
-        <span>© {new Date().getFullYear()} {BRAND_NAME}</span>
-        <span>Зроблено з любов&apos;ю в Україні</span>
+        <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-on-green/15 pt-[22px]">
+          <span className="font-body text-[12px] text-on-green/50">
+            © {new Date().getFullYear()} {BRAND_NAME} · Усі права захищені
+          </span>
+          <div className="flex items-center gap-[18px] text-on-green/80">
+            <ContactLink
+              channel="instagram"
+              location="footer"
+              href="https://instagram.com/jintea.ua"
+              aria-label="Instagram"
+              className="transition-colors hover:text-on-green"
+            >
+              <InstagramIcon width={18} height={18} />
+            </ContactLink>
+            <ContactLink
+              channel="telegram"
+              location="footer"
+              href="https://t.me/Jin_tea"
+              aria-label="Telegram"
+              className="transition-colors hover:text-on-green"
+            >
+              <TelegramIcon width={18} height={18} />
+            </ContactLink>
+            <ContactLink
+              channel="phone"
+              location="footer"
+              href="tel:+380986575800"
+              aria-label="Телефон"
+              className="transition-colors hover:text-on-green"
+            >
+              <PhoneIcon width={18} height={18} />
+            </ContactLink>
+          </div>
+        </div>
       </div>
     </footer>
   );
