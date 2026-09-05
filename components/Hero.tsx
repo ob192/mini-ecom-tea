@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowIcon, LeafIcon } from './Icons';
+import { ArrowIcon } from './Icons';
 import { Eyebrow } from '@/design';
 
 /*
@@ -12,38 +12,40 @@ import { Eyebrow } from '@/design';
   desktop frame sets the column against the right edge of the 1200px content
   width; the mobile frame drops it to the bottom-left.
 
-  To use a custom banner image:
-  1. Put the file in /public (e.g. /public/hero.jpg).
-  2. Set NEXT_PUBLIC_HERO_IMAGE=/hero.jpg in your .env.
-  With no value set, the green gradient fallback below is used — the design
-  assumes a photo, so set one in production.
+  The design assumes a photograph, and with none set the section rendered as a
+  640px slab of flat green — the single worst thing on the page. It now falls
+  back to a catalogue photo that suits the treatment: a dark tea table with the
+  subject on the left, so the right-hand text column lands on dark pixels.
+  `public/banner.jpg` is deliberately NOT used — it is a promo graphic with its
+  own baked-in headline, which would collide with this one.
+
+  Override it with NEXT_PUBLIC_HERO_IMAGE=/your-photo.jpg once a purpose-shot
+  banner exists.
 */
-const HERO_IMAGE = process.env.NEXT_PUBLIC_HERO_IMAGE || '';
+const DEFAULT_HERO = '/teapot/jianshui-180ml/1.jpg';
+const HERO_IMAGE = process.env.NEXT_PUBLIC_HERO_IMAGE || DEFAULT_HERO;
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[420px] items-end overflow-hidden lg:min-h-[640px]">
-      {HERO_IMAGE ? (
-        <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover" />
-      ) : (
-        <>
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(155deg, #3E5A41, #233726 70%)' }}
-          />
-          <div
-            className="absolute -right-8 top-10 -rotate-12 lg:right-[6%] lg:top-1/2 lg:-translate-y-1/2"
-            style={{ color: 'rgba(243,236,221,0.10)' }}
-          >
-            <LeafIcon className="h-[260px] w-[260px] lg:h-[420px] lg:w-[420px]" />
-          </div>
-        </>
-      )}
+    <section className="relative flex min-h-[440px] items-end overflow-hidden lg:min-h-[600px]">
+      <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover" />
 
-      {/* Scrim: --scrim-from at the top, --scrim-to at the bottom. */}
+      {/*
+        Two scrims. The design's is vertical (--scrim-from -> --scrim-to); the
+        second darkens the right-hand side on desktop, where the text column
+        sits, so the headline keeps its contrast whatever photo is configured.
+      */}
       <div
         className="absolute inset-0"
         style={{ background: 'linear-gradient(to bottom, var(--scrim-from), var(--scrim-to))' }}
+      />
+      <div
+        className="absolute inset-0 lg:hidden"
+        style={{ background: 'linear-gradient(to top, #233726E6 20%, #23372633 75%)' }}
+      />
+      <div
+        className="absolute inset-0 hidden lg:block"
+        style={{ background: 'linear-gradient(to left, #233726E6 28%, #23372600 70%)' }}
       />
 
       <div className="relative z-[1] mx-auto w-full max-w-content px-5 pb-12 lg:px-8 lg:pb-24">

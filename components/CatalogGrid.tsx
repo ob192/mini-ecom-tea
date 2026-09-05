@@ -27,7 +27,7 @@ import { SectionHeading } from '@/design';
 function FreeDeliveryBar() {
   return (
     <div className="mx-auto max-w-content px-5 pt-6 lg:px-8">
-      <p className="m-0 flex items-center gap-2.5 rounded bg-amber-tint px-4 py-3 font-body text-small text-ink shadow-hairline">
+      <p className="m-0 inline-flex items-center gap-2.5 rounded bg-amber-tint px-3.5 py-2 font-body text-small text-ink shadow-hairline">
         <span className="flex shrink-0 text-green" aria-hidden>
           <TruckIcon width={16} height={16} />
         </span>
@@ -85,9 +85,15 @@ export function CatalogGrid({
     <>
       <FreeDeliveryBar />
 
+      {/*
+        One horizontally scrollable row on phones. Wrapping eleven categories
+        stacked them four rows deep, and this bar is sticky — so a quarter of a
+        390px screen was permanently covered by filter chips while scrolling.
+        From `lg` there is room to wrap and no scrolling is needed.
+      */}
       <div className="sticky top-[60px] z-20 border-b border-line-soft bg-paper/95 py-3 backdrop-blur-md">
         <div
-          className="mx-auto flex max-w-content flex-wrap gap-2 px-5 lg:px-8"
+          className="mx-auto flex max-w-content gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:flex-wrap lg:overflow-x-visible lg:px-8"
           role="tablist"
           aria-label="Фільтр за категорією"
         >
@@ -103,7 +109,7 @@ export function CatalogGrid({
                   setActiveCat(c.slug);
                   trackSelectCategory(c.slug, c.label);
                 }}
-                className={`min-h-[38px] rounded px-4 font-body text-nav transition-colors ${
+                className={`min-h-[38px] shrink-0 whitespace-nowrap rounded px-4 font-body text-nav transition-colors ${
                   active
                     ? 'bg-green text-on-green shadow-[inset_0_0_0_1px_var(--green)]'
                     : 'bg-card text-ink-soft shadow-hairline hover:text-ink'
@@ -131,7 +137,7 @@ export function CatalogGrid({
         groups.map((g) => (
           <section
             key={g.slug}
-            className="mx-auto max-w-content px-5 pb-12 pt-8 lg:px-8"
+            className="mx-auto max-w-content px-5 pb-10 pt-7 lg:px-8"
             aria-labelledby={`cat-${g.slug}`}
           >
             <SectionHeading
@@ -144,7 +150,7 @@ export function CatalogGrid({
               {categoryLabel(g.slug)}
             </SectionHeading>
 
-            <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4 lg:gap-x-6">
+            <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-8 lg:grid-cols-4 lg:gap-x-6">
               {g.items.map((p, i) => (
                 <ProductCard
                   key={p.slug}
