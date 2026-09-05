@@ -158,3 +158,28 @@ describe('typography', () => {
     expect(fontSize.wordmark[1].letterSpacing).toBe(`${roles.wordmark.letterSpacing}px`);
   });
 });
+
+describe('cn() class merging', () => {
+  it('keeps a type-scale utility and a colour utility together', async () => {
+    // tailwind-merge only knows Tailwind's stock font sizes; every other
+    // `text-*` it treats as a colour. That put `text-label` and `text-on-green`
+    // in one class group, so the colour was dropped and "Додати в кошик"
+    // rendered ink on green at 1.48:1. lib/utils.ts registers the scale as
+    // font sizes to keep the two apart.
+    const { cn } = await import('@/lib/utils');
+
+    for (const size of [...Object.keys(scale), 'label', 'card-title', 'section-head']) {
+      const merged = cn(`text-${size}`, 'text-on-green');
+      expect(merged, `text-${size} swallowed the colour`).toContain('text-on-green');
+      expect(merged).toContain(`text-${size}`);
+    }
+  });
+
+  it('still collapses two genuinely conflicting utilities', () => {
+    // The registration must not disable merging: a later size still wins.
+    return import('@/lib/utils').then(({ cn }) => {
+      expect(cn('text-body', 'text-h1')).toBe('text-h1');
+      expect(cn('text-ink', 'text-on-green')).toBe('text-on-green');
+    });
+  });
+});
