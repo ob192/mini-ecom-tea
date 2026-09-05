@@ -129,7 +129,7 @@ export function CatalogGrid({
       {groups.length === 0 ? (
         <div className="mx-auto max-w-content px-5 py-16 text-center font-body text-body text-ink-soft lg:px-8">
           У цій категорії поки немає товарів.{' '}
-          <Link href="/" className="text-green underline">
+          <Link href="/catalog" className="text-green underline">
             Переглянути всі
           </Link>
         </div>

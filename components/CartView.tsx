@@ -111,7 +111,7 @@ export function CartView() {
               Додайте улюблений чай — і він з&apos;явиться тут.
             </p>
             <Button asChild variant="pill" size="xl">
-              <Link href="/">
+              <Link href="/catalog">
                 <LeafIcon width={18} height={18} /> Перейти до каталогу
               </Link>
             </Button>

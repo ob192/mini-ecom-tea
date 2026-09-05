@@ -1,4 +1,5 @@
 import type { Product } from '@/lib/types';
+import type { Article } from '@/lib/journal';
 import { categoryLabel, CURRENCY } from '@/lib/products';
 import { flattenDescription } from '@/lib/format';
 import { offerId } from '@/lib/merchant-feed';
@@ -178,6 +179,38 @@ export function ProductJsonLd({ product, siteUrl }: { product: Product; siteUrl:
                 ...(product.image ? { image: product.images.map((i) => `${siteUrl}${i}`) } : {}),
                 brand: { '@type': 'Brand', name: BRAND_NAME },
                 ...(offers.length > 0 ? { offers: offers.length === 1 ? offers[0] : offers } : {}),
+            }}
+        />
+    );
+}
+
+/**
+ * Журнал articles, as structured data.
+ *
+ * `Article` rather than `BlogPosting`: these are reference pieces, not dated
+ * blog entries, and Google treats the two identically for rich results. The
+ * publisher is the shop itself — the same Organization the site-wide
+ * OrganizationJsonLd declares — so the name is imported rather than retyped.
+ */
+export function ArticleJsonLd({ article, siteUrl }: { article: Article; siteUrl: string }) {
+    return (
+        <JsonLd
+            data={{
+                '@context': 'https://schema.org',
+                '@type': 'Article',
+                headline: article.title,
+                description: article.excerpt,
+                image: `${siteUrl}${article.cover}`,
+                datePublished: article.published,
+                dateModified: article.published,
+                articleSection: article.category,
+                inLanguage: 'uk-UA',
+                mainEntityOfPage: {
+                    '@type': 'WebPage',
+                    '@id': `${siteUrl}/journal/${article.slug}`,
+                },
+                author: { '@type': 'Organization', name: BRAND_NAME },
+                publisher: { '@type': 'Organization', name: BRAND_NAME },
             }}
         />
     );

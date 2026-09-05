@@ -99,7 +99,7 @@ export default async function ProductPage({ params }: Params) {
                 siteUrl={SITE}
                 items={[
                     { name: 'Головна', path: '/' },
-                    { name: categoryLabel(product.category), path: `/?cat=${product.category}` },
+                    { name: categoryLabel(product.category), path: `/catalog?cat=${product.category}` },
                     { name: product.title, path: `/product/${product.slug}` },
                 ]}
             />
@@ -185,7 +185,7 @@ export default async function ProductPage({ params }: Params) {
                     <section className="mt-16" aria-labelledby="related">
                         <SectionHeading
                             id="related"
-                            action={<TextLink href={`/?cat=${product.category}`}>Усі товари</TextLink>}
+                            action={<TextLink href={`/catalog?cat=${product.category}`}>Усі товари</TextLink>}
                         >
                             Вам також сподобається
                         </SectionHeading>

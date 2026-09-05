@@ -59,8 +59,14 @@ first, then all three.
 - **The desktop nav carries six categories**, as the design does. The catalogue
   has eleven, and all of them unwrapped overflowed the page horizontally. The
   rest stay in the catalogue filters, the footer, and the mobile disclosure.
-- **Journal, the discover banner and the newsletter block** are drawn on the
-  home frame but have no data behind them, so they are not built.
+- **The journal** is built (`lib/journal.ts` → `/journal`), but its three
+  articles are a first draft written from general tea knowledge, not reviewed
+  copy. The **discover banner** links to `/about`; the **«ПРИЄДНУЙТЕСЬ ДО
+  РОДИНИ»** band goes to the real Instagram account rather than a mailing list,
+  because there isn't one.
+- **Cover and banner photography** is catalogue product shots. The mockup uses
+  stock imagery we do not own; swap `cover` in `lib/journal.ts` and the `src` in
+  `DiscoverBanner`/`Hero` when purpose-shot photography exists.
 - **The `ПРИГОТУВАННЯ` accordion** is filled with per-product brewing
   parameters in the mockup. `public/products.json` carries none, so rather than
   invent numbers it points at `/brewing`.

@@ -67,7 +67,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
           {navCategories.map((c) => (
             <Link
               key={c.slug}
-              href={`/?cat=${c.slug}`}
+              href={`/catalog?cat=${c.slug}`}
               className="whitespace-nowrap font-body text-nav text-ink-soft transition-colors hover:text-ink"
             >
               {c.label}
@@ -98,7 +98,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
           {categories.map((c) => (
             <Link
               key={c.slug}
-              href={`/?cat=${c.slug}`}
+              href={`/catalog?cat=${c.slug}`}
               onClick={() => setMenuOpen(false)}
               className="block py-2.5 font-body text-nav text-ink-soft transition-colors hover:text-ink"
             >

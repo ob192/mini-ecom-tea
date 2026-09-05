@@ -60,7 +60,17 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
 
 ## Routing
 
-- `/` — catalog (`app/page.tsx`), statically generated, category filter via `CatalogGrid`.
+- `/` — home (`app/page.tsx`). Follows the `Home Page` frame in jintea.pen section for
+  section: hero, the `ProductRail` («Оберіть свій чай»), the discover banner, the journal
+  teaser, the Instagram band. **It is no longer the catalogue** — it shows one curated rail
+  and links onward.
+- `/catalog` — the full, filterable catalogue (`CatalogGrid`), statically generated. This is
+  where the `?cat=` links in the header, footer and product breadcrumbs point, and where the
+  `ItemList` JSON-LD lives. It moved off `/` with the design; both are in the sitemap.
+- `/journal`, `/journal/[slug]` — Журнал. Articles are authored in `lib/journal.ts` (no CMS,
+  same shape as the catalogue); `body` is newline-separated like a product `description`, so
+  `descriptionParagraphs()` renders both. **The three articles are a first draft written from
+  general tea knowledge and have not been reviewed** — read them before publishing.
 - `/product/[...slug]` — **catch-all** route (`app/product/[...slug]/page.tsx`), because product slugs are multi-segment (`category/product-name`). `generateStaticParams` splits `Product.slug` on `/`.
 - `/cart`, `/checkout`, `/order/success` — client cart flow.
 - `/about`, `/brewing`, `/contacts`, `/delivery`, `/returns`, `/privacy` — static informational

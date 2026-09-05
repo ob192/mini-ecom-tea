@@ -61,7 +61,7 @@ export function Hero() {
           </p>
 
           <Link
-            href="#catalog"
+            href="/catalog"
             className="inline-flex w-fit items-center gap-2 rounded bg-card px-7 py-[14px] font-body text-label uppercase text-ink transition-colors hover:bg-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-green"
           >
             Переглянути каталог

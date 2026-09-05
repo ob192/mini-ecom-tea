@@ -44,7 +44,7 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:flex lg:gap-16">
             <Column heading="Каталог">
               {categories.map((c) => (
-                <Link key={c.slug} href={`/?cat=${c.slug}`} className={linkCls}>
+                <Link key={c.slug} href={`/catalog?cat=${c.slug}`} className={linkCls}>
                   {c.label}
                 </Link>
               ))}
