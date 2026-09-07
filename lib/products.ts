@@ -94,11 +94,27 @@ export function priceFor(product: Product, weight: number): number | null {
   return product.price;
 }
 
-/** The weight a "quick add" should use (prefers 50 г, else first tier, else base). */
+/**
+ * The tier a product opens on — its cheapest, and the weight a "quick add" buys.
+ *
+ * This used to prefer 50 г, which read well on a product page and badly in the
+ * catalogue: the card advertised «від 310 ₴» (the 25 г tier) while the add
+ * button bought the 510 ₴ one. The card now prices whichever tier is selected,
+ * so the opening tier *is* the headline price — and the headline price should
+ * be the lowest one, as it was before. Opening on the cheapest tier keeps that
+ * anchor and makes the price, the selected chip and the add button agree, on
+ * the card and on the product page both.
+ *
+ * Deliberately the lowest *price* rather than the lowest weight: the two agree
+ * for every product in the catalogue today (tests/pricing.test.ts pins tiers as
+ * sorted by weight and increasing in price), and if that ever stops being true
+ * it is the price the card is anchoring on.
+ */
 export function defaultWeight(product: Product): number {
   if (product.priceTiers.length > 0) {
-    const fifty = product.priceTiers.find((t) => t.weight === 50);
-    return (fifty ?? product.priceTiers[0]).weight;
+    return product.priceTiers.reduce((cheapest, t) =>
+      t.price < cheapest.price ? t : cheapest,
+    ).weight;
   }
   return product.weight ?? 0;
 }

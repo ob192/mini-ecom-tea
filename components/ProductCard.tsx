@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Product } from '@/lib/types';
-import { categoryLabel, defaultWeight, UNIT } from '@/lib/products';
+import { categoryLabel, defaultWeight, priceFor, UNIT } from '@/lib/products';
 import { uah } from '@/lib/format';
 import { useCart } from '@/context/CartContext';
 import { trackAddToCart, trackSelectItem } from '@/lib/analytics';
+import { WeightChip } from '@/design';
 import { ProductImage } from './Logo';
 import { CheckIcon, PlusIcon } from './Icons';
 
@@ -19,8 +20,16 @@ import { CheckIcon, PlusIcon } from './Icons';
   the text sits directly on paper. That is why this has no border or shadow of
   its own — adding one puts a box inside a box.
 
-  The chips are labels, not controls. Choosing a tier happens on the product
-  page; tapping the add button here adds the default tier, as it always has.
+  The chips are the tier selector, and the price above them is the price of the
+  chosen tier.
+
+  They used to be <li> labels — "choosing a tier happens on the product page" —
+  while looking exactly like the real WeightChips, one of them highlighted.
+  People pressed them and nothing moved. The highlight made it worse than
+  inert: it marked the default 50 г while the price beside it read «від 310 ₴»,
+  the 25 г tier, and the add button then put 510 ₴ of tea in the basket. Three
+  different weights implied in one card. Now one tier is selected, the price is
+  that tier's price, and the add button adds that tier.
 */
 export function ProductCard({
   product,
@@ -39,15 +48,19 @@ export function ProductCard({
   const { add } = useCart();
   const [added, setAdded] = useState(false);
 
-  const hasTiers = product.priceTiers.length > 1;
-  const base = defaultWeight(product);
+  const selectable = product.priceTiers.length > 1;
+  const [weight, setWeight] = useState(() => defaultWeight(product));
+
+  // With a tier chosen there is nothing to say «від» about — that prefix
+  // belongs to a card that cannot show you which price you are looking at.
+  const price = priceFor(product, weight) ?? product.price;
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!product.inStock) return;
-    add(product.slug, base, 1);
-    trackAddToCart(product, base, 1);
+    add(product.slug, weight, 1);
+    trackAddToCart(product, weight, 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 1300);
   };
@@ -78,7 +91,9 @@ export function ProductCard({
           onClick={handleAdd}
           disabled={!product.inStock}
           aria-label={
-            product.inStock ? `Додати ${product.title} в кошик` : `${product.title} — немає в наявності`
+            product.inStock
+              ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
+              : `${product.title} — немає в наявності`
           }
           className="absolute bottom-3 right-4 flex h-[42px] w-[42px] items-center justify-center rounded-full bg-card text-ink shadow-hairline transition-colors hover:bg-green hover:text-on-green disabled:pointer-events-none disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
@@ -102,21 +117,30 @@ export function ProductCard({
         </h3>
 
         <p className="m-0 font-body text-[15px] font-bold text-ink">
-          {product.price != null
-            ? `${hasTiers ? 'від ' : ''}${uah(product.price)}`
-            : 'Ціна за запитом'}
+          {price != null ? uah(price) : 'Ціна за запитом'}
         </p>
 
         {product.priceTiers.length > 0 ? (
-          <ul className="m-0 flex list-none flex-wrap gap-1.5 p-0 pt-1.5">
+          <ul
+            className="m-0 flex list-none flex-wrap gap-1.5 p-0 pt-1.5"
+            aria-label={`Вага — ${product.title}`}
+          >
             {product.priceTiers.map((t) => (
-              <li
-                key={t.weight}
-                className={`rounded-sm px-[9px] py-1 font-body text-[11px] text-ink-soft shadow-hairline ${
-                  t.weight === base ? 'bg-paper-deep' : 'bg-card'
-                }`}
-              >
-                {t.weight} {UNIT}
+              <li key={t.weight}>
+                {selectable ? (
+                  <WeightChip
+                    compact
+                    weight={`${t.weight} ${UNIT}`}
+                    selected={t.weight === weight}
+                    onClick={() => setWeight(t.weight)}
+                  />
+                ) : (
+                  /* One tier is not a choice; drawing it as a control invites a
+                     press that can never do anything. */
+                  <span className="inline-block rounded-sm bg-card px-[9px] py-1 font-body text-[11px] text-ink-soft shadow-hairline">
+                    {t.weight} {UNIT}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
