@@ -28,3 +28,11 @@ export const TELEGRAM_URL = 'https://t.me/Jin_tea';
 
 export const INSTAGRAM_HANDLE = 'jintea.ua';
 export const INSTAGRAM_URL = 'https://instagram.com/jintea.ua';
+
+/**
+ * Stored bare, like the other handles, so the /contacts rows read as one list
+ * rather than one row wearing an `@` the others do not. The URL keeps its `@`
+ * because TikTok's own profile URLs require it.
+ */
+export const TIKTOK_HANDLE = 'jintea.ua';
+export const TIKTOK_URL = 'https://www.tiktok.com/@jintea.ua';

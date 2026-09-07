@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { categories } from '@/lib/products';
-import { InstagramIcon, TelegramIcon, PhoneIcon } from './Icons';
+import { InstagramIcon, TikTokIcon, TelegramIcon, PhoneIcon } from './Icons';
 import { ContactLink } from './Analytics';
 import { Logo } from './Logo';
-import { BRAND_NAME } from '@/lib/contacts';
+import { BRAND_NAME, INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_URL } from '@/lib/contacts';
 
 /*
   Footer — the `Footer` frame of every screen in jintea.pen.
@@ -80,16 +80,25 @@ export function Footer() {
             <ContactLink
               channel="instagram"
               location="footer"
-              href="https://instagram.com/jintea.ua"
+              href={INSTAGRAM_URL}
               aria-label="Instagram"
               className="transition-colors hover:text-on-green"
             >
               <InstagramIcon width={18} height={18} />
             </ContactLink>
             <ContactLink
+              channel="tiktok"
+              location="footer"
+              href={TIKTOK_URL}
+              aria-label="TikTok"
+              className="transition-colors hover:text-on-green"
+            >
+              <TikTokIcon width={18} height={18} />
+            </ContactLink>
+            <ContactLink
               channel="telegram"
               location="footer"
-              href="https://t.me/Jin_tea"
+              href={TELEGRAM_URL}
               aria-label="Telegram"
               className="transition-colors hover:text-on-green"
             >

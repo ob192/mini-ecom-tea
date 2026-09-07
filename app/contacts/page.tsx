@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { PhoneIcon, InstagramIcon, TelegramIcon, MailIcon } from '@/components/Icons';
+import { PhoneIcon, InstagramIcon, TikTokIcon, TelegramIcon, MailIcon } from '@/components/Icons';
 import { ContactLink } from '@/components/Analytics';
 import {
   BRAND_NAME,
@@ -12,6 +12,8 @@ import {
   CONTACT_PHONE_HREF,
   INSTAGRAM_HANDLE,
   INSTAGRAM_URL,
+  TIKTOK_HANDLE,
+  TIKTOK_URL,
   TELEGRAM_HANDLE,
   TELEGRAM_URL,
 } from '@/lib/contacts';
@@ -20,7 +22,7 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Контакти',
-  description: `Зв’яжіться з ${BRAND_NAME} за телефоном, в Instagram або Telegram.`,
+  description: `Зв’яжіться з ${BRAND_NAME} за телефоном, в Instagram, TikTok або Telegram.`,
   alternates: { canonical: '/contacts' },
 };
 
@@ -38,6 +40,13 @@ const contacts = [
     value: INSTAGRAM_HANDLE,
     href: INSTAGRAM_URL,
     channel: 'instagram',
+  },
+  {
+    icon: TikTokIcon,
+    label: 'TikTok',
+    value: TIKTOK_HANDLE,
+    href: TIKTOK_URL,
+    channel: 'tiktok',
   },
   {
     icon: TelegramIcon,

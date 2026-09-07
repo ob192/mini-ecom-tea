@@ -3,7 +3,13 @@ import type { Article } from '@/lib/journal';
 import { categoryLabel, CURRENCY } from '@/lib/products';
 import { flattenDescription } from '@/lib/format';
 import { offerId } from '@/lib/merchant-feed';
-import { CONTACT_EMAIL, INSTAGRAM_URL, BRAND_NAME, TELEGRAM_URL } from '@/lib/contacts';
+import {
+  CONTACT_EMAIL,
+  INSTAGRAM_URL,
+  TIKTOK_URL,
+  BRAND_NAME,
+  TELEGRAM_URL,
+} from '@/lib/contacts';
 import { DELIVERY_FEE, FREE_DELIVERY_THRESHOLD, RETURN_WINDOW_DAYS } from '@/lib/shipping';
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
@@ -128,7 +134,7 @@ export function OrganizationJsonLd({ siteUrl }: { siteUrl: string }) {
                 logo: `${siteUrl}/icon.svg`,
                 email: CONTACT_EMAIL,
                 telephone: '+380986575800',
-                sameAs: [INSTAGRAM_URL, TELEGRAM_URL],
+                sameAs: [INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_URL],
             }}
         />
     );

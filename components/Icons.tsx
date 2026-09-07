@@ -95,6 +95,41 @@ export const TelegramIcon = make(Send);
 export const YoutubeIcon = make(Youtube);
 
 /*
+  TikTok is the one glyph lucide does not carry — it ships only a handful of
+  brand marks (Instagram, Youtube) and TikTok is not among them, so this is the
+  single hand-rolled icon left in the set.
+
+  Drawn as a stroke rather than the official filled mark: it sits in a row with
+  the lucide Instagram and Telegram glyphs in the footer, and one solid shape
+  among outlines reads as a mistake. Same 24x24 box, same STROKE weight,
+  currentColor, so it inherits colour and sizing like every other icon here.
+  Every place it appears is labelled «TikTok» in text or aria-label, which is
+  what carries the recognition — the glyph only has to not look foreign.
+*/
+export const TikTokIcon = (props: LucideProps) => {
+  const { width = 24, height = 24, strokeWidth = STROKE, ...rest } = props;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width={width}
+      height={height}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...rest}
+    >
+      {/* The note head, and the stem that hooks right at the top. */}
+      <circle cx="9" cy="17" r="4" />
+      <path d="M13 17V3c0 2.21 1.79 4 4 4" />
+    </svg>
+  );
+};
+TikTokIcon.displayName = 'TikTokIcon';
+
+/*
   Added with the jintea.pen design: its header, footer and product page use a
   wider glyph set than the previous design did. `BagIcon` is the shopping bag
   the design draws in the header — distinct from `CartIcon` (a trolley), which
