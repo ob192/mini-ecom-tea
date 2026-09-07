@@ -22,6 +22,14 @@ next-env.d.ts
 # One-off supplier ingestion tooling (docx/photo → products.json), not part of the app
 /images
 
+# Video masters. The hero's source is a 23 MB 4K file; only the renditions built
+# from it (public/video/hero-*) are served, and they are three orders of
+# magnitude smaller. Keep masters here so a deploy never carries one — anything
+# under public/ is fetchable by a visitor, and a stray 23 MB in a hero is the
+# exact problem the renditions exist to solve. See components/HeroVideo.tsx for
+# the ffmpeg commands that regenerate them.
+/media
+
 # Local scratch
 llm_context.txt
 .thumbnail
