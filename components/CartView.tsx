@@ -92,7 +92,7 @@ export function CartView() {
   if (!ready) {
     return (
         <>
-          <Header title="Кошик" back />
+          <Header title="Кошик" back backHref="/catalog" />
           <div className="px-[18px] py-16 text-center text-ink-faint">Завантаження…</div>
         </>
     );
@@ -101,7 +101,7 @@ export function CartView() {
   if (items.length === 0) {
     return (
         <>
-          <Header title="Кошик" back />
+          <Header title="Кошик" back backHref="/catalog" />
           <div className="animate-screenIn flex-1 flex flex-col items-center justify-center text-center px-8 py-16 gap-1.5 min-h-[60vh]">
             <div className="w-[84px] h-[84px] rounded-full bg-green-tint flex items-center justify-center text-green mb-2">
               <CartIcon width={36} height={36} />
@@ -124,7 +124,7 @@ export function CartView() {
 
   return (
       <>
-        <Header title="Кошик" back />
+        <Header title="Кошик" back backHref="/catalog" />
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
           <div className="animate-screenIn px-[18px] pt-1 pb-2 lg:px-0 lg:pt-0">
             <h1 className="m-0 font-display text-h2 uppercase text-ink">Кошик</h1>

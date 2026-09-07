@@ -38,7 +38,20 @@ import { BRAND_NAME } from '@/lib/contacts';
 const NAV_LIMIT = 6;
 const navCategories: Category[] = categories.slice(0, NAV_LIMIT);
 
-export function Header({ title, back = false }: { title?: string; back?: boolean }) {
+export function Header({
+  title,
+  back = false,
+  backHref = '/',
+}: {
+  title?: string;
+  back?: boolean;
+  /*
+    Where «Назад» goes. A real destination, not history — see
+    design/primitives/Breadcrumb.tsx for why. Pass the page's actual parent;
+    `/` is only a floor so a new `back` header can never dead-end.
+  */
+  backHref?: string;
+}) {
   const { count, ready } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -113,7 +126,7 @@ export function Header({ title, back = false }: { title?: string; back?: boolean
           className="mx-auto flex max-w-content items-center px-5 py-3 lg:px-8"
           aria-label={title}
         >
-          <Breadcrumb />
+          <Breadcrumb href={backHref} />
         </div>
       ) : null}
     </header>

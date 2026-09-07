@@ -79,7 +79,7 @@ export function CheckoutForm() {
     if (ready && items.length === 0) {
         return (
             <>
-                <Header title="Оформлення" back />
+                <Header title="Оформлення" back backHref="/cart" />
                 <div className="animate-screenIn flex flex-col items-center justify-center text-center px-8 py-16 gap-2 min-h-[60vh]">
                     <h1 className="font-display text-h2 uppercase text-ink">Кошик порожній</h1>
                     <p className="text-ink-soft text-[15px] max-w-[28ch]">
@@ -135,7 +135,7 @@ export function CheckoutForm() {
 
     return (
         <>
-            <Header title="Оформлення" back />
+            <Header title="Оформлення" back backHref="/cart" />
             <h1 className="mx-auto max-w-content px-[18px] pt-4 font-display text-h2 uppercase text-ink lg:px-8">
                 Оформлення
             </h1>

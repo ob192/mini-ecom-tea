@@ -67,7 +67,7 @@ export default async function ArticlePage({ params }: Params) {
         ]}
       />
 
-      <Header title={article.title} back />
+      <Header title={article.title} back backHref="/journal" />
 
       <article className="mx-auto max-w-content px-5 pb-16 lg:px-8">
         <header className="max-w-[70ch]">

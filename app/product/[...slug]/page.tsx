@@ -104,7 +104,7 @@ export default async function ProductPage({ params }: Params) {
                 ]}
             />
 
-            <Header back />
+            <Header back backHref={`/catalog?cat=${product.category}`} />
 
             <article className="mx-auto max-w-content animate-screenIn px-5 pb-16 lg:px-8">
                 <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-16">
