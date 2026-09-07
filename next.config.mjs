@@ -31,12 +31,33 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   async redirects() {
-    return ALIAS_HOSTS.map((host) => ({
-      source: '/:path*',
-      has: [{ type: 'host', value: host }],
-      destination: `https://${PRIMARY_HOST}/:path*`,
-      permanent: true,
-    }));
+    return [
+      ...ALIAS_HOSTS.map((host) => ({
+        source: '/:path*',
+        has: [{ type: 'host', value: host }],
+        destination: `https://${PRIMARY_HOST}/:path*`,
+        permanent: true,
+      })),
+      /*
+        `/` used to *be* the catalogue, and `?cat=` filtered it in place. The
+        redesign moved the grid to /catalog and left the home page a curated
+        rail, which does not read the parameter at all — so a `/?cat=oolong`
+        link silently stopped filtering and just dropped the visitor on the
+        home page. That URL is not hypothetical: it is the Google Ads final URL
+        for the Sales_Search campaign and was the landing page for 77 of 85
+        paid sessions in the 90 days to 2026-09-07.
+
+        Fix the Ads final URL too (see HANDOFF.md) — a redirect on every paid
+        click is a wasted round trip. This exists for the links already out in
+        the world: the ads, whatever Google has indexed, bookmarks.
+      */
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'cat', value: '(?<cat>[^&]+)' }],
+        destination: '/catalog?cat=:cat',
+        permanent: true,
+      },
+    ];
   },
 };
 export default nextConfig;

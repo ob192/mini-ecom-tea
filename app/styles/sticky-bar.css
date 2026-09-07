@@ -5,11 +5,21 @@
   its own card surface; from `lg` it is an ordinary block in the buy column.
   Radius and elevation come from the design tokens: 8px, and the only upward
   shadow the design defines.
+
+  `--cookie-notice-h` is why `bottom` is a calc(). The cookie notice
+  (components/CookieConsent.tsx) is also anchored to the bottom of the
+  viewport, and at `z-50` it sits above this bar — correctly, a notice belongs
+  above the page. What was missing is that this bar had no idea it was there:
+  on a 375x812 phone the notice covered 89% of «Додати в кошик», so a tap
+  landed on «Добре» and nothing went into the cart. Since every ad click is a
+  first-time visitor, every ad click hit that. The notice now publishes its own
+  height while it is on screen, and this bar rides above it; the variable is
+  absent (fallback 0px) once the notice is dismissed, which is the normal case.
 */
 @layer components {
   .sticky-bar {
     position: sticky;
-    bottom: 12px;
+    bottom: calc(12px + var(--cookie-notice-h, 0px));
     background: var(--card);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-up), inset 0 0 0 1px var(--line);
@@ -17,6 +27,14 @@
       calc(12px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px));
     margin: 0 -4px;
     z-index: 40;
+    /*
+      Deliberately no `transition` on `bottom`, however tempting the slide when
+      the notice is dismissed. The variable goes from unset to a length in an
+      effect just after first paint, so a transition would start from the 12px
+      fallback and spend its whole duration in exactly the covered-button state
+      this file exists to prevent. Nothing is gained for a bar the visitor has
+      not looked at yet.
+    */
   }
 
   @media (min-width: 1024px) {

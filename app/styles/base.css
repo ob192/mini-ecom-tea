@@ -6,6 +6,7 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+
   }
 
   body {
@@ -14,6 +15,17 @@
     -webkit-font-smoothing: antialiased;
     /* The design's body line height (design/tokens/typography.ts, scale.body). */
     line-height: 1.55;
+
+    /*
+      The cookie notice is fixed to the bottom of the viewport and publishes its
+      height while it is up (components/CookieConsent.tsx). Reserve that height
+      so nothing can come to rest underneath it: the buy bar and the checkout
+      submit lift themselves via `bottom` (app/styles/sticky-bar.css), but a
+      short page has no room to lift into, and the last card of a grid or the
+      footer's contact links have no such mechanism at all. Zero once the notice
+      is dismissed, which is every visit after the first.
+    */
+    padding-bottom: var(--cookie-notice-h, 0px);
   }
 
   /*
