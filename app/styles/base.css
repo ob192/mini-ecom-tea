@@ -7,6 +7,47 @@
   html {
     -webkit-text-size-adjust: 100%;
 
+    /*
+      Anchor jumps glide rather than teleport — «Читати далі» on a product page
+      drops the reader a screen and a half down to #opys, and landing there
+      without the travel gives no sense of having moved rather than navigated.
+
+      Safe to set globally: the App Router would otherwise animate its
+      scroll-to-top on every route change, but Next disables this property for
+      the duration of its own scroll and restores it afterwards. Verified that
+      navigations still jump instantly.
+    */
+    scroll-behavior: smooth;
+  }
+
+  /*
+    Someone who has asked for less motion has asked for exactly this: a page
+    that travels a screen and a half under its own power. Give them the jump.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /*
+    The header is sticky, so "scrolled into view" parks the target underneath
+    it — #opys arrives with its «ОПИС» heading hidden behind the bar. The
+    header measures 104px on the pages that carry a «Назад» row (60px bar plus
+    a 43px row, identical on mobile and desktop) and 60px on those that do not,
+    so this clears the taller case and leaves the shorter one some air.
+
+    On `[id]` rather than `:target` deliberately. `:target` only matches once
+    the fragment already points at the element, which leaves it racing the
+    scroll that Next's router performs — and a rule that usually wins is worse
+    than one that always does. Setting it unconditionally costs nothing:
+    scroll-margin has no effect until something scrolls the element into view,
+    and nothing in this app scrolls programmatically. The one other thing that
+    can — a browser scrolling an invalid checkout field into view on submit —
+    wants exactly the same clearance.
+  */
+  [id] {
+    scroll-margin-top: 116px;
   }
 
   body {
