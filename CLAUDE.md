@@ -168,6 +168,30 @@ MCP). `design/README.md` is the reference; read it before restyling anything.
   base color `stone`, `cssVariables: true`). `button`, `input` and `badge` are now
   thin re-exports of the design primitives, so the shadcn import paths keep working;
   `card` is the design's `Panel` surface with shadcn's parts.
+- **The home hero's video is a layer over the still, not a replacement.**
+  `components/HeroVideo.tsx` ships with `preload="none"` and no `<source>` in the
+  markup, so the server-rendered HTML carries no video URL at all; a client effect
+  attaches sources only after checking `prefers-reduced-motion`, `connection.saveData`
+  and `effectiveType`, then fades the clip in over the poster. Anyone excluded — or
+  with JS off, or refused autoplay — downloads zero video bytes and still sees a
+  finished hero, and the LCP element stays the next/image poster. Renditions live in
+  `public/video/` (720p for phones, 1080p above 768px, VP9 first with an H.264 twin);
+  the 4K master is in `/media`, which is gitignored, because anything under `public/`
+  ships to every deploy and is fetchable. The ffmpeg commands are in the component.
+- **`<Header back>` needs a `backHref`.** «Назад» is a real link to the page's parent,
+  not `router.back()`: history-back dead-ended on any direct landing (a pasted URL, a new
+  tab, an ad or search result pointing at a product) and, when there *was* a previous
+  entry, it was usually Google — no API distinguishes that from one of our own pages, so
+  back would have returned paid traffic to the auction. The default `/` is a floor, not
+  an answer; a product's parent is `/catalog?cat=<category>`, which must match the page's
+  `BreadcrumbList` JSON-LD. `tests/back-navigation.test.ts` pins both.
+- **Bottom-anchored layers share `--cookie-notice-h`.** `components/CookieConsent.tsx`
+  publishes the notice's height there while it is on screen; `.sticky-bar` (the mobile
+  buy bar and the checkout submit) adds it to its `bottom` and `body` reserves it as
+  `padding-bottom`. Without that handshake the notice — correctly the higher layer —
+  covered «Додати в кошик» outright on every first mobile visit, which is every ad
+  click. Anything else pinned to the bottom of the viewport must join the handshake, not
+  just pick a z-index. `tests/bottom-layers.test.ts` fails if either half goes missing.
 - The design separates surfaces with **hairlines, not shadows** (`shadow-hairline`);
   `shadow-overlay` and `shadow-up` are the only real shadows. Corners are near-square:
   `rounded-lg` is 6px, not 22px.

@@ -84,9 +84,31 @@ Enable the built-in **Event** variable, then add these **Data Layer Variables**
    accepted so a deploy can't open a gap between the site and the container.
 
 3. **GA4 event — Ecommerce** (one tag covers all of them)
-   Event Name `{{Event}}`, tick **Send Ecommerce data → Data Layer**.
+   Event Name `{{Event}}`, tick **Send Ecommerce data** *and* set the **Data
+   source** selector that appears underneath it to **Data Layer**. Both, not
+   just the tick — see the note below.
    Trigger: *Custom Event*, "use regex matching":
    `^(view_item_list|select_item|view_item|add_to_cart|remove_from_cart|view_cart|begin_checkout|add_shipping_info)$`
+
+   > **Why the Data source matters — an incident, fixed 2026-09-07 (container
+   > version 8).** Ticking *Send Ecommerce data* is only half of it. The
+   > `__gaawe` runtime branches on a separate key: `getEcommerceDataFrom ===
+   > 'dataLayer'` reads the event model, anything else reads the variable named
+   > in `ecommerceMacroData`. Live version 7 had `sendEcommerceData:true` and
+   > **neither** key, so it took the second branch and attached nothing.
+   >
+   > The symptom was silent: the site pushed a correct `items[]`, the tag fired,
+   > and the hit reaching GA4 carried `en=view_item` with no `pr1=` and no `cu`.
+   > GA4 reported `itemsViewed`, `itemsAddedToCart` and `itemsCheckedOut` as
+   > **0** for the whole catalogue over 90 days and `itemListName` as empty,
+   > while the server-side `purchase` — which does not go through GTM — was the
+   > only source of item data in the property. Google Ads had no product-level
+   > or add-to-cart signal to optimise against for the entire Sales_Search run.
+   >
+   > Verified fixed on the live site: `pr1=idpuer/gongting-gongbing-shu~nm…~va50
+   > г~pr510~qt1`, `cu=UAH`, `epn.value=510`. **Item metrics before 2026-09-07
+   > are zero for reasons of instrumentation, not behaviour — do not read them
+   > as "nobody looked at the products".**
 
 4. **GA4 event — Behaviour** (one tag)
    Event Name `{{Event}}`, parameters `contact_channel`, `contact_location`,
@@ -105,6 +127,16 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
 - **Enhanced measurement**: keep scrolls, outbound clicks, site search, file downloads.
   **Turn OFF "Page changes based on browser history events"** — the app pushes its own
   `page_view` on route changes, and leaving both on double counts every SPA navigation.
+
+  > **Still ON as of 2026-09-07** (`pageChangesEnabled: true` on stream
+  > `15359362854`). Measured on the live site by intercepting the hits: **one
+  > SPA navigation sends four identical `page_view` hits** to GA4, same `dl`,
+  > same session. Pageview counts, pages/session and engagement rate are all
+  > inflated by roughly that factor — 891 `page_view` events across 180 sessions
+  > in the 90 days to 2026-09-07 is instrumentation, not reading. Event counts
+  > that are pushed once by the app (`add_to_cart`, `begin_checkout`,
+  > `purchase`) are unaffected, so the conversion funnel in `HANDOFF.md` still
+  > stands. Fixing it is a property setting, not a repo change.
 - `purchase` is a key event by default. Mark `begin_checkout` and `contact_click` as key
   events too if you want them in conversion reports.
 - The stream URL (`https://jintea.restreto-labs.com`) matches `NEXT_PUBLIC_SITE_URL`.
