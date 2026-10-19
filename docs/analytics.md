@@ -149,6 +149,90 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
   `next.config.mjs` — see CLAUDE.md → Routing. Historical data stays split; sessions from
   before the redirect can't be rewritten.
 
+## Meta pixel / Conversions API
+
+Pixel (dataset) `1480203177363951` — "JinTea", business `757878937371527`
+(Oleksandr Bunin FOP). Connected **2026-10-19** from Events Manager's GTM
+integration, which published **container version 9** by itself.
+
+### Where it lives: GTM, not this repo
+
+Unlike GA4, the Meta pixel has **no code in this repository and no env var for
+the browser half**. Meta's wizard installed, into the live container:
+
+| Id | What |
+|---|---|
+| tag 36 | `…-Web-Tag-GA4_Config` — a second `googtag` for `G-5PCX5S995S`, DOM-Ready, `send_page_view: true` |
+| tag 37 | `…-Web-Tag-GA4_Event` — a `gaawe` tag carrying `user_data`, `x-fb-ck-fbp`/`-fbc` |
+| tag 39 | `…-Web-Tag-Pixel_Template` — the actual Meta pixel template, `useGA4Ecommerce: true` |
+| trigger 23 | DOM Ready |
+| trigger 24 | every custom event whose name does not contain `gtm.` |
+| variables 25–35 | pixel id, event-name lookup, `_fbp`/`_fbc` cookies, ecommerce fields |
+
+It reuses our existing GA4 ecommerce dataLayer rather than needing its own
+pushes, so `lib/analytics.ts` did not change and does not need to.
+
+Verified firing on the live site on 2026-10-19 by hooking `window.fbq`:
+`trackSingle 1480203177363951 AddToCart` and `… PageView` both observed, and
+`_fbp` is set. (Events Manager read "Never received event" at the time simply
+because the container had been published minutes earlier with no traffic since.)
+
+### `Purchase` is server-side, and has to be
+
+Tag 39's event-name lookup (variable 35) maps GA4 names to Meta's standard set:
+
+```
+view_item      → ViewContent      page_view  → PageView
+add_to_cart    → AddToCart        gtm.dom    → PageView
+begin_checkout → InitiateCheckout purchase   → Purchase
+```
+
+**That last row is wired to an event this site never pushes.** `purchase` is
+server-side only — see "Why `purchase` is server-side" above — so GTM alone
+gives Meta the whole funnel and no conversions. `lib/meta-capi.ts` closes it,
+posting `Purchase` to the Graph API from `app/api/order/route.ts` beside the
+GA4 Measurement Protocol call, with the same recomputed total.
+
+- `event_id` is the order id, so a browser-side `Purchase` would dedupe against
+  it. Don't add one anyway — the reasons in `lib/analytics.ts` still apply.
+- `content_ids` are **product slugs**, matching the `item_id` the browser events
+  already send. The Google feed uses `offerId()` (`puer-…-25g`) instead, on
+  purpose. If a Meta catalogue is ever created, both sides must move together.
+- `_fbp` / `_fbc` are read off the order request's `Cookie` header, plus the
+  client IP and user agent. `_fbc` is legitimately absent for organic visitors.
+- A honeypot-flagged order still reports a Purchase, because the honeypot flags
+  rather than drops (`route.ts:76`) — consistent with the GA4 purchase.
+- Never throws, 3s timeout: analytics cannot fail an accepted order.
+
+Advanced matching (hashed phone in `user_data.ph`) is **off** unless
+`META_CAPI_ADVANCED_MATCHING=1`. It improves attribution but sends customer
+data to Meta, so it needs a line on `/privacy` first — a disclosure decision,
+not a default. `tests/meta-capi.test.ts` pins that the raw number never appears
+in the payload either way.
+
+### Known rough edges in the generated container
+
+Not yet fixed — all three are GTM-side edits, which means a republish:
+
+1. **The FB tags have no blocking trigger.** Every GA4 tag is blocked on
+   trigger 11/12 (`localhost|\.vercel\.app$`); tags 36/37/39 are not, so dev
+   and every Vercel preview send real events into the dataset. See "Don't track
+   yourself" — the Meta side currently doesn't.
+2. **Unmapped events become custom Meta events.** Variable 35 defaults to
+   `{{Event}}`, so `view_cart`, `spa_page_view`, `select_item`,
+   `view_item_list`, `remove_from_cart`, `add_shipping_info`, `contact_click`,
+   `select_category`, `checkout_error` — and GTM's own `scroll` — arrive as
+   custom events. Observed live: `trackSingleCustom … view_cart`,
+   `… spa_page_view`, `… scroll`. Harmless but noisy. Note `spa_page_view`
+   should *not* be mapped to `PageView`: the pixel already tracks SPA
+   navigations itself (a `PageView` was observed on history change), so mapping
+   it would double-count.
+3. **Tag 36 is a second Google tag for `G-5PCX5S995S`** with
+   `send_page_view: true`, firing at DOM Ready alongside tag 16 (Initialization).
+   Worth confirming in GA4 DebugView that document loads still produce one
+   `page_view`, not two — this file's whole "Not needed here"/double-count
+   warning exists because that failure mode is invisible in aggregate.
+
 ## Verifying
 
 > **Publishing a container version does not take effect immediately in a browser

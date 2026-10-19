@@ -3,6 +3,7 @@ import { getProduct, priceFor, categoryLabel, CURRENCY, UNIT } from '@/lib/produ
 import { uah, isValidUaPhone, normalizeUaPhone, siteUrl } from '@/lib/format';
 import { rateLimit, clientKey } from '@/lib/rate-limit';
 import { readGaCookies, sendPurchase } from '@/lib/ga4-server';
+import { readFbCookies, sendMetaPurchase } from '@/lib/meta-capi';
 import type { OrderPayload, CartItem } from '@/lib/types';
 import { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE } from '@/lib/shipping';
 
@@ -224,6 +225,31 @@ export async function POST(request: Request) {
         })),
       },
       readGaCookies(request.headers.get('cookie'), process.env.GA4_MEASUREMENT_ID ?? ''),
+  );
+
+  // Meta `Purchase` — also server-side, and for a second reason on top of
+  // GA4's: the GTM container maps a dataLayer `purchase` to Meta's `Purchase`,
+  // but this site never pushes one, so without this call Meta sees the funnel
+  // up to InitiateCheckout and no conversions at all. See `lib/meta-capi.ts`.
+  await sendMetaPurchase(
+      {
+        orderId,
+        value: total,
+        currency: CURRENCY,
+        phone,
+        eventSourceUrl: `${siteUrl()}/order/success`,
+        items: lines.map((l) => ({
+          // product slug — the same id the browser events carry.
+          id: l.slug,
+          quantity: l.qty,
+          item_price: l.price,
+        })),
+      },
+      {
+        ...readFbCookies(request.headers.get('cookie')),
+        clientIp: (request.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || null,
+        userAgent: request.headers.get('user-agent'),
+      },
   );
 
   log('OK', { orderId, total, flagged: honeypot !== '' });

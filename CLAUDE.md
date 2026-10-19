@@ -105,7 +105,10 @@ instead of creating a loop. Adding a domain means adding it to `ALIAS_HOSTS`, no
 Delivery is Nova Poshta only, either to a branch/postomat (`np_warehouse`, needs a warehouse) or by courier to a street address (`np_courier`). `lib/checkout-schema.ts` (Zod) validates the form client-side via `react-hook-form`; `app/api/order/route.ts` re-validates everything server-side and **never trusts client-submitted prices or totals** — it recomputes line items and the total from `public/products.json` via `getProduct`/`priceFor`.
 
 - `lib/nova-poshta.ts` is a server-only client (`NOVA_POSHTA_API_KEY` never reaches the browser); all NP traffic is proxied through `app/api/np/cities` and `app/api/np/warehouses`, which apply a much looser rate limit (60/min) than order submission, plus a 30-minute in-process cache keyed by query (and by city for warehouses).
-- `app/api/order/route.ts` has a honeypot field (`company`): if filled, it returns a fake success without sending anything, to silently drop bot submissions.
+- `app/api/order/route.ts` has a honeypot field (`botField` — deliberately *not* named
+  `company`, which browsers autofilled): if filled, the order is **flagged, not dropped**.
+  It still reaches Telegram, with a warning banner, and still reports `purchase` to GA4 and
+  Meta. Dropping silently is what ate real orders once; see `lib/checkout-schema.ts`.
 - `lib/rate-limit.ts` is an in-memory fixed-window limiter stored on `globalThis` (survives HMR in dev). It is **per-process**, not shared across serverless instances — fine as a basic guard, not a hard limit in a multi-instance deployment.
 
 ## Analytics
@@ -124,6 +127,18 @@ GTM (`GTM-MKJP47L5`) + GA4 (`G-5PCX5S995S`). Full setup and the GTM container re
 - `purchase` is the exception: sent server-side from `app/api/order/route.ts` via the
   Measurement Protocol (`lib/ga4-server.ts`), using the recomputed total and the visitor's
   `_ga` cookies. Never add a client-side `purchase` — it would double count.
+
+## Meta pixel
+
+Pixel `1480203177363951`. The **browser** half lives entirely in the GTM container
+(tags 36/37/39, version 9, added 2026-10-19 by Events Manager's own wizard) and reuses
+our GA4 ecommerce dataLayer — there is no pixel code in this repo and no public env var.
+`Purchase` is the exception and must be server-side: GTM maps a dataLayer `purchase` to
+Meta's `Purchase`, but this site never pushes one, so `lib/meta-capi.ts` posts it from
+the order route beside the GA4 call, keyed `event_id = orderId` for dedup. Hashed-phone
+advanced matching is opt-in via `META_CAPI_ADVANCED_MATCHING`, because it sends customer
+data to Meta and `/privacy` says nothing about it yet. Full reference, including three
+known rough edges in the generated container: `docs/analytics.md`.
 
 ## Google Merchant Center feed
 
