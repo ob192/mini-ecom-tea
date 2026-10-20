@@ -9,7 +9,9 @@ can go stale — re-check before relying on it. The commits and decisions are du
 ## TL;DR
 
 Four commits are on `origin/main` fixing Google Merchant Center feed defects and SEO.
-**None of them are deployed.** The feed Google currently fetches is still the broken one.
+~~None of them are deployed.~~ **Deployed** — verified 2026-10-20 against the Vercel API:
+production is `dpl_GWnKkS5zNCC6xw5gC3CWwtT9zeCD`, commit `8732d40`, which is downstream of
+all four. The feed Google fetches is the fixed one.
 
 Since 2026-09-07 there is a second, larger problem: **the shop has taken no real orders.**
 See "Why nobody buys" below. The site-side fixes are on `design/pencil-export` and not
@@ -172,10 +174,13 @@ also means an accidental publish is one API call away. Treat it accordingly.
   (`app/api/order/route.ts` via the Measurement Protocol), the route in is to **link
   GA4 → Google Ads and import `purchase`**, not to add a client-side Ads conversion tag —
   there is no client event to hang one on.
-- **`GA4_API_SECRET` in production is unverified.** Set in `.env.local`; the Vercel MCP
-  servers need OAuth, so production env could not be read. Confirm it is set, and that
-  **`GA4_MP_DEBUG` is NOT set in production** — it is `1` locally, and if it leaked to prod
-  every purchase would be validated and silently discarded instead of recorded.
+- ~~**`GA4_API_SECRET` in production is unverified.**~~ **Resolved 2026-10-20.** Read via
+  the Vercel API: `GA4_API_SECRET` is set on Production and Preview, and `GA4_MP_DEBUG` is
+  present but set to **`0`** — `lib/ga4-server.ts` tests `=== '1'`, so debug mode is off and
+  purchases are recorded normally. Note the convention this establishes: flags here are
+  switched off **by value, not by absence**. `lib/meta-capi.ts` treats `"0"` as off for
+  `META_CAPI_TEST_EVENT_CODE` for exactly that reason; anything new reading an env flag
+  should do the same, or a `"0"` will read as "on".
 - **No legal entity details** (ФОП/ЄДРПОУ, registered address) are published. Deliberate,
   but the most likely remaining Misrepresentation trigger once ad spend starts.
 

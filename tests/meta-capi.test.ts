@@ -147,6 +147,24 @@ describe('sendMetaPurchase', () => {
     expect(JSON.stringify(sent[0].body)).not.toContain('380986575800');
   });
 
+  /*
+    GA4_MP_DEBUG is "0" in production, not empty — this repo switches flags off
+    by value, not by absence. A truthiness check on the test code would read
+    that convention as a live TEST code and route every Purchase to the Test
+    Events tab, where Meta validates it and never records it.
+  */
+  it.each(['0', '', '   '])('treats META_CAPI_TEST_EVENT_CODE=%o as off', async (v) => {
+    process.env.META_CAPI_TEST_EVENT_CODE = v;
+    await sendMetaPurchase(purchase, ids);
+    expect(sent[0].body).not.toHaveProperty('test_event_code');
+  });
+
+  it('sends a real test code through', async () => {
+    process.env.META_CAPI_TEST_EVENT_CODE = 'TEST12345';
+    await sendMetaPurchase(purchase, ids);
+    expect(sent[0].body.test_event_code).toBe('TEST12345');
+  });
+
   it('does nothing when the pixel id or token is unset', async () => {
     delete process.env.META_CAPI_ACCESS_TOKEN;
     await sendMetaPurchase(purchase, ids);

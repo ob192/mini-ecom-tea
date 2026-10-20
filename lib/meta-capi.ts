@@ -130,6 +130,15 @@ export async function sendMetaPurchase(
     console.warn('[meta] no fbp/fbc/ip/ua on the order request — Purchase sent unattributed');
   }
 
+  // A value of "0" or blank means "off", not "a test code called 0". This repo
+  // sets boolean-ish env vars to "0" rather than leaving them empty
+  // (GA4_MP_DEBUG is "0" in production), and a truthiness check would read that
+  // as a live test code — which routes every Purchase to the Test Events tab,
+  // where it is validated and never recorded. That is the silent-revenue-loss
+  // failure HANDOFF.md warns about for GA4_MP_DEBUG; same trap, same shape.
+  const testCode = (process.env.META_CAPI_TEST_EVENT_CODE ?? '').trim();
+  const testEventCode = testCode && testCode !== '0' ? testCode : null;
+
   const body = {
     data: [
       {
@@ -150,9 +159,7 @@ export async function sendMetaPurchase(
         },
       },
     ],
-    ...(process.env.META_CAPI_TEST_EVENT_CODE
-      ? { test_event_code: process.env.META_CAPI_TEST_EVENT_CODE }
-      : {}),
+    ...(testEventCode ? { test_event_code: testEventCode } : {}),
   };
 
   const url = `https://graph.facebook.com/${GRAPH_VERSION}/${encodeURIComponent(
@@ -170,7 +177,7 @@ export async function sendMetaPurchase(
       // Graph errors are descriptive (bad token, unhashed PII, stale pixel) and
       // invisible otherwise — the Events Manager just shows nothing arriving.
       console.error('[meta] CAPI responded', res.status, await res.text().catch(() => ''));
-    } else if (process.env.META_CAPI_TEST_EVENT_CODE) {
+    } else if (testEventCode) {
       console.info('[meta] CAPI test response', res.status, await res.text().catch(() => ''));
     }
   } catch (err) {
