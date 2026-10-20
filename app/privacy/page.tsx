@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 const PDPA_URL = 'http://zakon5.rada.gov.ua/laws/show/2297-17';
+const META_POLICY_URL = 'https://www.facebook.com/privacy/policy';
 
 /**
  * The policy is authored as data rather than as one long JSX blob: the numbered
@@ -24,7 +25,13 @@ const PDPA_URL = 'http://zakon5.rada.gov.ua/laws/show/2297-17';
 type Block =
   | { p: string }
   | { list: string[] }
-  | { terms: [term: string, definition: string][] };
+  | { terms: [term: string, definition: string][] }
+  /**
+   * A paragraph carrying one external link. Two sections need one (the PDPA
+   * citation in 10.1 and Meta's own policy in 11.5), so the markup lives in
+   * `Blocks` rather than as a per-section conditional under the loop.
+   */
+  | { p: string; link: { href: string; label: string }; tail?: string };
 
 interface Section {
   id: string;
@@ -303,10 +310,58 @@ const sections: Section[] = [
   },
   {
     id: 'derzhreyestratsiya',
-    // 10.1 carries an external link, so it is rendered separately below rather
-    // than as a plain `p` block.
     title: 'Державна реєстрація бази персональних даних',
-    blocks: [],
+    blocks: [
+      {
+        p: '10.1. Державна реєстрація баз персональних даних здійснюється відповідно до статті 9 Закону України «',
+        link: { href: PDPA_URL, label: 'Про захист персональних даних' },
+        tail: '».',
+      },
+    ],
+  },
+  {
+    id: 'meta-pixel',
+    title: 'Передача даних компанії Meta (Facebook) у статистичних та рекламних цілях',
+    blocks: [
+      {
+        p: '11.1. На сайті встановлено піксель Meta (Meta Pixel, набір даних 1480203177363951) — інструмент компанії Meta Platforms Ireland Limited. Продавець використовує його, щоб оцінювати ефективність власної реклами у Facebook та Instagram і розуміти, якими товарами цікавляться відвідувачі.',
+      },
+      {
+        p: '11.2. Під час перегляду сайту браузер відвідувача передає компанії Meta такі події: PageView (відкриття сторінки), ViewContent (перегляд сторінки товару), AddToCart (додавання товару в кошик), InitiateCheckout (початок оформлення замовлення). Разом із подією передаються:',
+      },
+      {
+        list: [
+          'файл cookie _fbp, який піксель створює у браузері відвідувача під час першого візиту;',
+          'файл cookie _fbc — лише якщо відвідувач перейшов на сайт за рекламним посиланням, що містить параметр fbclid;',
+          'технічні дані, які будь-який браузер повідомляє під час звернення до сервера: IP-адреса та дані про браузер (user agent).',
+        ],
+      },
+      {
+        p: '11.3. Після успішного оформлення замовлення сервер продавця окремо передає компанії Meta подію Purchase (покупка). У ній містяться:',
+      },
+      {
+        list: [
+          'номер замовлення;',
+          'сума замовлення та валюта;',
+          'перелік позицій замовлення — ідентифікатор товару, кількість і ціна;',
+          'файли cookie _fbp та _fbc, якщо вони присутні у запиті;',
+          'IP-адреса відвідувача та дані про його браузер (user agent).',
+        ],
+      },
+      {
+        p: '11.4. Продавець не передає компанії Meta імені, прізвища, номера телефону, адреси електронної пошти, адреси доставки чи інших контактних даних покупця — ні у відкритому, ні в зашифрованому (хешованому) вигляді. Технічна можливість передавати хешований номер телефону для точнішого звіряння (advanced matching) передбачена, але вимкнена; її увімкнення вимагатиме попереднього оновлення цього Положення.',
+      },
+      {
+        p: '11.5. Дані, перелічені у пунктах 11.2 і 11.3, обробляються з метою вимірювання результатів реклами та показу релевантних рекламних повідомлень. Компанія Meta обробляє їх як самостійний володілець відповідно до власних правил: ',
+        link: { href: META_POLICY_URL, label: 'Політика конфіденційності Meta' },
+        tail: '.',
+      },
+      {
+        p: '11.6. Відвідувач може обмежити таку обробку: видалити або заблокувати файли cookie в налаштуваннях свого браузера, змінити налаштування рекламних переваг у власному акаунті Facebook чи Instagram, а також звернутися до продавця за адресою ' +
+          `${CONTACT_EMAIL} ` +
+          'у порядку, визначеному розділами 8 і 9 цього Положення.',
+      },
+    ],
   },
 ];
 
@@ -314,6 +369,22 @@ function Blocks({ blocks }: { blocks: Block[] }) {
   return (
     <>
       {blocks.map((block, i) => {
+        if ('link' in block) {
+          return (
+            <p key={i} className="m-0 mt-3 text-ink-soft text-[15px] leading-relaxed">
+              {block.p}
+              <a
+                href={block.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green underline underline-offset-2"
+              >
+                {block.link.label}
+              </a>
+              {block.tail}
+            </p>
+          );
+        }
         if ('p' in block) {
           return (
             <p key={i} className="m-0 mt-3 text-ink-soft text-[15px] leading-relaxed">
@@ -384,21 +455,6 @@ export default function PrivacyPage() {
               {i + 1}. {s.title}
             </h2>
             <Blocks blocks={s.blocks} />
-            {s.id === 'derzhreyestratsiya' && (
-              <p className="m-0 mt-3 text-ink-soft text-[15px] leading-relaxed">
-                10.1. Державна реєстрація баз персональних даних здійснюється відповідно до статті 9
-                Закону України «
-                <a
-                  href={PDPA_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green underline underline-offset-2"
-                >
-                  Про захист персональних даних
-                </a>
-                ».
-              </p>
-            )}
           </section>
         ))}
 
