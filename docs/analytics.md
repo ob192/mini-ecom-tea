@@ -210,28 +210,68 @@ data to Meta, so it needs a line on `/privacy` first — a disclosure decision,
 not a default. `tests/meta-capi.test.ts` pins that the raw number never appears
 in the payload either way.
 
-### Known rough edges in the generated container
+### Container version 10 — what was wrong and what was done
 
-Not yet fixed — all three are GTM-side edits, which means a republish:
+Meta's wizard published version 9 by itself on 2026-10-19. Three things in it
+were wrong; version 10 (published 2026-10-19) fixes all three.
 
-1. **The FB tags have no blocking trigger.** Every GA4 tag is blocked on
-   trigger 11/12 (`localhost|\.vercel\.app$`); tags 36/37/39 are not, so dev
-   and every Vercel preview send real events into the dataset. See "Don't track
-   yourself" — the Meta side currently doesn't.
-2. **Unmapped events become custom Meta events.** Variable 35 defaults to
-   `{{Event}}`, so `view_cart`, `spa_page_view`, `select_item`,
-   `view_item_list`, `remove_from_cart`, `add_shipping_info`, `contact_click`,
-   `select_category`, `checkout_error` — and GTM's own `scroll` — arrive as
-   custom events. Observed live: `trackSingleCustom … view_cart`,
-   `… spa_page_view`, `… scroll`. Harmless but noisy. Note `spa_page_view`
-   should *not* be mapped to `PageView`: the pixel already tracks SPA
-   navigations itself (a `PageView` was observed on history change), so mapping
-   it would double-count.
-3. **Tag 36 is a second Google tag for `G-5PCX5S995S`** with
-   `send_page_view: true`, firing at DOM Ready alongside tag 16 (Initialization).
-   Worth confirming in GA4 DebugView that document loads still produce one
-   `page_view`, not two — this file's whole "Not needed here"/double-count
-   warning exists because that failure mode is invisible in aggregate.
+**1. Tags 36 and 37 were inflating GA4 and giving Meta nothing — now paused.**
+Measured on one product-page load under version 9, hits to `G-5PCX5S995S`:
+
+| event | v9 | should be | v10 |
+|---|---|---|---|
+| `page_view` | 3 | 1 | **1** |
+| `view_item` | 2 | 1 | **1** |
+| `gtm.dom` | 1 | 0 | **0** |
+
+Tag 36 was a *second* `googtag` config for the same measurement ID with
+`send_page_view: true` on DOM Ready, alongside tag 16 on Initialization; tag 37
+was a `gaawe` tag firing on both triggers with `eventName: {{Event}}`, which
+duplicated every event and sent `gtm.dom` to GA4 as an event name. GA4 data
+between ~10:00 and ~21:00 on 2026-10-19 is inflated accordingly.
+
+They cost nothing to pause: that pair implements Meta's CAPI-via-GA4 transport,
+which is **inert here** — `gateway_status` is `NOT_ONBOARDED` and tag 36's
+`transport_url` is empty, so nothing was being routed to Meta through it. Every
+Meta event comes from tag 39. If the first-party CAPI gateway is ever onboarded,
+un-pause them *and* re-check the GA4 counts above.
+
+**2. Tag 39 had no blocking trigger — now blocked on 11 + 12.** Every GA4 tag is
+blocked on `localhost|\.vercel\.app$`; the pixel was not, so dev and preview
+traffic landed in the real dataset. (Some of the 2026-10-19 events are exactly
+that, from this work.)
+
+**3. Trigger 24 matched every non-`gtm.` event — now narrowed** to
+`^(view_item|add_to_cart|begin_checkout|purchase)$`, the events variable 35
+actually maps. Under version 9 everything else fell through to the default
+(`{{Event}}`) and reached Meta as a *custom* event: in one hour,
+`gtag.config` 24, `spa_page_view` 12, `view_item_list` 10, `form_start` 8,
+`scroll` 6, `form_submit` 4, `view_cart` 4, `add_shipping_info` 2,
+`select_item` 2 — 72 of 120 events were noise. Verified after publishing: an
+add-to-cart now produces exactly one `trackSingle … AddToCart` and nothing else.
+
+`purchase` is in that regex for safety; the site still does not push one, and
+should not — `lib/meta-capi.ts` sends it server-side.
+
+### Open — not yet resolved
+
+- **SPA navigation fires three GA4 `page_view` hits.** Measured on v10 after one
+  client-side navigation to `/cart`: `page_view` ×3, all `tid=G-5PCX5S995S`.
+  The document load is clean (1), so this is separate from the tag 36/37 problem
+  and was not measured before the publish, so it is not attributable to it. The
+  likely cause is GA4 Enhanced Measurement's "page changes based on browser
+  history events" being ON, which this file has always said must be OFF (tag 17
+  already sends the SPA `page_view`). **Check GA4 → Admin → Data streams →
+  Enhanced measurement.** That is a property setting; no container change fixes it.
+- **Whether Meta still receives `PageView` on SPA navigation is unconfirmed.**
+  Under v9 a `trackSingle … PageView` was observed after a history change; under
+  v10 it was not seen through a `window.fbq` hook, but fbevents' own pushState
+  tracking would not route through that hook, so the hook cannot settle it.
+  Document-load PageView is unaffected (trigger 23, untouched). Confirm against
+  the dataset's hourly `PageView` count once it aggregates; if SPA PageViews are
+  gone and they are wanted, add `spa_page_view` to trigger 24 *and* map it to
+  `PageView` in variable 35 — do not add it to the trigger alone, or it returns
+  as a custom event.
 
 ## Verifying
 

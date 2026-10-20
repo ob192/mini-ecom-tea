@@ -131,14 +131,18 @@ GTM (`GTM-MKJP47L5`) + GA4 (`G-5PCX5S995S`). Full setup and the GTM container re
 ## Meta pixel
 
 Pixel `1480203177363951`. The **browser** half lives entirely in the GTM container
-(tags 36/37/39, version 9, added 2026-10-19 by Events Manager's own wizard) and reuses
-our GA4 ecommerce dataLayer — there is no pixel code in this repo and no public env var.
+(tag 39, container version 10, 2026-10-19) and reuses our GA4 ecommerce dataLayer — there is no pixel code in this repo and no public env var.
 `Purchase` is the exception and must be server-side: GTM maps a dataLayer `purchase` to
 Meta's `Purchase`, but this site never pushes one, so `lib/meta-capi.ts` posts it from
 the order route beside the GA4 call, keyed `event_id = orderId` for dedup. Hashed-phone
 advanced matching is opt-in via `META_CAPI_ADVANCED_MATCHING`, because it sends customer
-data to Meta and `/privacy` says nothing about it yet. Full reference, including three
-known rough edges in the generated container: `docs/analytics.md`.
+data to Meta and `/privacy` says nothing about it yet.
+
+The wizard's version 9 also added tags 36/37, a second GA4 config that tripled
+`page_view` and duplicated every event while routing nothing to Meta (the CAPI gateway
+is `NOT_ONBOARDED`). Version 10 pauses them, blocks non-production from the pixel, and
+narrows trigger 24 to the events Meta's lookup maps. Two things remain open, including
+SPA `page_view` firing three times — see `docs/analytics.md`.
 
 ## Google Merchant Center feed
 
