@@ -1,21 +1,29 @@
 # Handoff
 
-**State as of 2026-08-20**, with a conversion investigation added 2026-09-07.
-Everything under "Live state" was verified by probing the real site on those dates and
-can go stale — re-check before relying on it. The commits and decisions are durable.
+**State as of 2026-10-21.** Earlier layers: 2026-08-20 (Merchant Center / SEO) and a
+conversion investigation on 2026-09-07. Everything under "Live state" was verified by
+probing the real site or its APIs on the date given and can go stale — re-check before
+relying on it. The commits and decisions are durable.
 
 ---
 
 ## TL;DR
 
-Four commits are on `origin/main` fixing Google Merchant Center feed defects and SEO.
-~~None of them are deployed.~~ **Deployed** — verified 2026-10-20 against the Vercel API:
-production is `dpl_GWnKkS5zNCC6xw5gC3CWwtT9zeCD`, commit `8732d40`, which is downstream of
-all four. The feed Google fetches is the fixed one.
+**Everything in this repo is deployed.** Production is `58f6b15`
+(`dpl_4iMJBWXvEV2V1e8k5kGCKU9tqwWS`, 2026-10-20). That includes the four Merchant
+Center / SEO commits, the Meta Conversions API, and the `/privacy` disclosure. The feed
+Google fetches is the fixed one.
 
-Since 2026-09-07 there is a second, larger problem: **the shop has taken no real orders.**
-See "Why nobody buys" below. The site-side fixes are on `design/pencil-export` and not
-yet deployed; the GA4 item-data fix is already live (GTM container version 8).
+**Meta is fully wired as of 2026-10-20** — pixel `1480203177363951`, GTM container
+version 10, and a server-side `Purchase`. Confirmed end to end against Meta's own stats;
+see "Meta pixel" below.
+
+**The shop still has no real orders.** That has not changed since 2026-09-07 and is the
+only thing that matters. On 2026-10-20, a full day with the pixel live, Meta recorded
+real traffic reaching checkout — `InitiateCheckout` 4 and 2 in two separate hours — and
+exactly **one** `Purchase`, which was a test order placed from this project. Measurement
+is now correct; the funnel is not. The site-side fixes are on `design/pencil-export` and
+still not merged.
 
 ---
 
@@ -169,11 +177,17 @@ also means an accidental publish is one API call away. Treat it accordingly.
 
 ## Not set up
 
-- **Google Ads.** No `AW-` conversion ID anywhere — not in code, not in the GTM container.
-  Nothing tracks conversions for Ads. Because `purchase` is server-side only
-  (`app/api/order/route.ts` via the Measurement Protocol), the route in is to **link
-  GA4 → Google Ads and import `purchase`**, not to add a client-side Ads conversion tag —
-  there is no client event to hang one on.
+- **Google Ads — partly corrected 2026-10-20.** The claim "no `AW-` anywhere" was true of
+  the repo and the GTM container, and is still true of both. But the live site *does* talk
+  to Google Ads account **`18362523479`**: reading resource timing on a product page shows
+  `googleads.g.doubleclick.net/pagead/viewthroughconversion/18362523479/`,
+  `google.com/rmkt/collect/18362523479/` and `pagead/1p-user-list/18362523479/`. Those come
+  from the Google tag's **linked destinations**, configured in the Google/GA4 UI rather
+  than in GTM, which is why grepping the repo and the container found nothing. So
+  remarketing and audiences are flowing; **conversion import is still the open piece.**
+  Because `purchase` is server-side only (`app/api/order/route.ts` via the Measurement
+  Protocol), the route in remains **link GA4 → Google Ads and import `purchase`**, not a
+  client-side Ads conversion tag — there is no client event to hang one on.
 - ~~**`GA4_API_SECRET` in production is unverified.**~~ **Resolved 2026-10-20.** Read via
   the Vercel API: `GA4_API_SECRET` is set on Production and Preview, and `GA4_MP_DEBUG` is
   present but set to **`0`** — `lib/ga4-server.ts` tests `=== '1'`, so debug mode is off and
@@ -183,6 +197,59 @@ also means an accidental publish is one API call away. Treat it accordingly.
   should do the same, or a `"0"` will read as "on".
 - **No legal entity details** (ФОП/ЄДРПОУ, registered address) are published. Deliberate,
   but the most likely remaining Misrepresentation trigger once ad spend starts.
+
+---
+
+## Meta pixel + Conversions API (2026-10-19 → 2026-10-20)
+
+Dataset / pixel `1480203177363951` ("JinTea"), business `757878937371527`
+(Oleksandr Bunin FOP). Full reference: `docs/analytics.md`. The short version of what
+happened and what it cost, because two of these were traps rather than tasks:
+
+**It works, confirmed against Meta's own numbers.** 2026-10-20, 02:00 PDT bucket:
+`PageView` 15, `ViewContent` 2, `AddToCart` 2, `InitiateCheckout` 2, **`Purchase` 1** —
+that last one is order `TC-981360`, 620 ₴, placed as a live test from this project. The
+whole chain is proven: browser pixel → GTM → server-side CAPI → Meta.
+
+**Trap 1 — the wizard's container inflated GA4.** Connecting the pixel from Events
+Manager published container **version 9** by itself, adding tags 36 and 37 alongside the
+pixel. Tag 36 was a *second* `googtag` config for `G-5PCX5S995S` with
+`send_page_view: true`; tag 37 duplicated every event. Measured: one product-page load
+produced `page_view` ×3, `view_item` ×2 and a junk `gtm.dom` event. **GA4 numbers between
+roughly 10:00 and 21:00 UTC on 2026-10-19 are inflated** — discount them. Version 10
+pauses both tags. They cost nothing to lose: that pair is Meta's CAPI-via-GA4 transport,
+which is inert here (`gateway_status: NOT_ONBOARDED`, `transport_url` empty).
+
+**Trap 2 — `purchase` can never fire from the browser.** The container maps a dataLayer
+`purchase` to Meta's `Purchase`, but this site never pushes one (see `lib/analytics.ts`).
+So the mapping was wired to an event that cannot arrive, and Meta would have had the whole
+funnel and zero conversions forever. `lib/meta-capi.ts` closes it server-side. **Do not
+"fix" this by adding a client-side purchase push.**
+
+**Trap 3 — flags are switched off by value here.** `GA4_MP_DEBUG` is `"0"` in production,
+not absent. `lib/ga4-server.ts` tests `=== '1'`, so that is safe, but any new env flag read
+with a truthiness check would read `"0"` as ON. `META_CAPI_TEST_EVENT_CODE` had exactly
+that bug and was fixed in `a2e9bfd`; a stray value there sends every `Purchase` to the Test
+Events tab, where Meta validates it and never records it.
+
+### Open, and only a human can do these
+
+- **GA4 Enhanced Measurement is probably double-counting SPA views.** One client-side
+  navigation produced **three** `page_view` hits to `G-5PCX5S995S` (document loads are
+  clean at one). `PageViewTracker` + tag 17 already send the SPA view, so
+  **GA4 → Admin → Data streams → Enhanced measurement → "page changes based on browser
+  history events" must be OFF.** This was measured on version 10 and not before it, so it
+  is not attributable to the container change. No container edit fixes it.
+- **`META_CAPI_ACCESS_TOKEN` is stored as type `encrypted`, not `sensitive`.** Vercel
+  itself flags it `securityIssues: ["readable-secret"]` — the value can be read back
+  through the dashboard or API. Switch it to Sensitive. (A first token was pasted into a
+  chat transcript on 2026-10-20 and rotated; this is the replacement.)
+- **Advanced matching is OFF and should stay off until decided.**
+  `META_CAPI_ADVANCED_MATCHING=1` would send the customer's SHA-256 phone to Meta.
+  `/privacy` §11.4 currently states in writing that no such data is sent, so enabling it
+  means editing that section in the same change.
+- **`/privacy` still says nothing about GA4/GTM or cookies generally**, although the cookie
+  notice links to it. Predates all of the above; Meta is documented, Google is not.
 
 ---
 

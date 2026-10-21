@@ -253,25 +253,52 @@ add-to-cart now produces exactly one `trackSingle … AddToCart` and nothing els
 `purchase` is in that regex for safety; the site still does not push one, and
 should not — `lib/meta-capi.ts` sends it server-side.
 
+### Confirmed working (2026-10-20)
+
+End to end, against Meta's own dataset stats rather than browser-side inference — the
+distinction matters, because `fbq()` being *called* and an event being *received* are not
+the same thing, and resource timing cannot see `navigator.sendBeacon`, which is how
+fbevents ships. The 02:00 PDT bucket:
+
+| event | count |
+|---|---|
+| PageView | 15 |
+| ViewContent | 2 |
+| AddToCart | 2 |
+| InitiateCheckout | 2 |
+| **Purchase** | **1** |
+
+That `Purchase` is order `TC-981360` (620 ₴), placed as a live test. The Vercel logs for
+the same request show the route completing with no `[meta]` line between "Telegram
+accepted" and "OK" — and `lib/meta-capi.ts` logs on any non-2xx, any throw and the 3 s
+timeout, so silence there is success.
+
+Note the aggregation rule that makes this confusing to check: **an hourly bucket only
+publishes after the hour closes.** An order at 02:04 is invisible until after 03:00. A
+dataset that looks empty is usually a date range that excludes today plus a bucket that
+has not closed — that is exactly what the "Never received event" panic on 2026-10-19 was.
+
+Across all of 2026-10-20 the dataset contains **no** unmapped custom events — no
+`gtag.config`, no `spa_page_view`, no `scroll`. Compare 2026-10-19 under version 9, where
+72 of 120 events were noise. The trigger-24 narrowing holds.
+
 ### Open — not yet resolved
 
-- **SPA navigation fires three GA4 `page_view` hits.** Measured on v10 after one
-  client-side navigation to `/cart`: `page_view` ×3, all `tid=G-5PCX5S995S`.
-  The document load is clean (1), so this is separate from the tag 36/37 problem
-  and was not measured before the publish, so it is not attributable to it. The
-  likely cause is GA4 Enhanced Measurement's "page changes based on browser
-  history events" being ON, which this file has always said must be OFF (tag 17
-  already sends the SPA `page_view`). **Check GA4 → Admin → Data streams →
-  Enhanced measurement.** That is a property setting; no container change fixes it.
-- **Whether Meta still receives `PageView` on SPA navigation is unconfirmed.**
-  Under v9 a `trackSingle … PageView` was observed after a history change; under
-  v10 it was not seen through a `window.fbq` hook, but fbevents' own pushState
-  tracking would not route through that hook, so the hook cannot settle it.
-  Document-load PageView is unaffected (trigger 23, untouched). Confirm against
-  the dataset's hourly `PageView` count once it aggregates; if SPA PageViews are
-  gone and they are wanted, add `spa_page_view` to trigger 24 *and* map it to
-  `PageView` in variable 35 — do not add it to the trigger alone, or it returns
-  as a custom event.
+- **SPA navigation fires three GA4 `page_view` hits.** Measured on v10: one client-side
+  navigation to `/cart` produced `page_view` ×3, all `tid=G-5PCX5S995S`. Document loads
+  are clean at one, so this is separate from the tag 36/37 problem, and it was not
+  measured before the publish, so it is not attributable to it. Almost certainly GA4
+  Enhanced Measurement's "page changes based on browser history events" being ON, which
+  this file has always said must be OFF since tag 17 already sends the SPA `page_view`.
+  **GA4 → Admin → Data streams → Enhanced measurement.** No container change fixes it.
+- **Meta `PageView` on SPA navigation: still not isolated, but no sign of loss.** A
+  `window.fbq` hook cannot observe fbevents' own pushState tracking, so the original test
+  was incapable of answering this. Circumstantially, `PageView` volume across 2026-10-20
+  stayed well above the `ViewContent` count (33 vs 10 in one hour, 30 vs 0 in another),
+  which is the shape of SPA views being counted rather than document loads alone — but
+  that is inference, not proof. If it ever needs settling, the fix if they *are* missing
+  is to add `spa_page_view` to trigger 24 **and** map it to `PageView` in variable 35;
+  adding it to the trigger alone brings it back as a custom event.
 
 ## Verifying
 

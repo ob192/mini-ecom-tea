@@ -136,7 +136,10 @@ Pixel `1480203177363951`. The **browser** half lives entirely in the GTM contain
 Meta's `Purchase`, but this site never pushes one, so `lib/meta-capi.ts` posts it from
 the order route beside the GA4 call, keyed `event_id = orderId` for dedup. Hashed-phone
 advanced matching is opt-in via `META_CAPI_ADVANCED_MATCHING`, because it sends customer
-data to Meta and `/privacy` says nothing about it yet.
+data to Meta. `/privacy` §11 documents the Meta data flow, and §11.4 states in writing that
+no name, phone, email or address is sent — in plaintext or hashed — so **turning advanced
+matching on means editing that section in the same change.** Confirmed working end to end
+on 2026-10-20: Meta recorded `Purchase` for order `TC-981360`.
 
 The wizard's version 9 also added tags 36/37, a second GA4 config that tripled
 `page_view` and duplicated every event while routing nothing to Meta (the CAPI gateway
