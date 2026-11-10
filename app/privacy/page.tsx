@@ -432,7 +432,7 @@ export default function PrivacyPage() {
           яких є продавець.
         </p>
 
-        <nav aria-label="Зміст" className="bg-card rounded-xl border border-border p-4 mb-7">
+        <nav aria-label="Зміст" className="rounded-xl bg-card p-4 mb-7">
           <div className="font-semibold text-base text-foreground mb-2">Зміст</div>
           <ol className="m-0 pl-0 list-none flex flex-col gap-1.5">
             {sections.map((s, i) => (

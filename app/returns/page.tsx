@@ -81,8 +81,8 @@ export default function ReturnsPage() {
           Оплата доставки повернення відбувається за рахунок покупця.
         </p>
 
-        <div className="mt-3 bg-card rounded-xl border border-border p-4 flex gap-3.5 items-start">
-          <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+        <div className="mt-3 rounded-xl bg-card p-4 flex gap-3.5 items-start">
+          <span className="size-10 shrink-0 rounded-full bg-background text-muted-foreground flex items-center justify-center">
             <AlertCircle className="size-5" />
           </span>
           <p className="m-0 text-muted-foreground text-base leading-relaxed">
@@ -116,9 +116,9 @@ export default function ReturnsPage() {
             <a
               key={label}
               href={href}
-              className="bg-card rounded-xl border border-border p-4 flex items-center gap-3.5 hover:bg-primary-subtle transition-colors"
+              className="rounded-xl bg-card p-4 flex items-center gap-3.5 hover:bg-foreground/5 transition-colors"
             >
-              <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+              <span className="size-10 shrink-0 rounded-full bg-background text-muted-foreground flex items-center justify-center">
                 <Icon className="size-5" />
               </span>
               <div className="min-w-0">

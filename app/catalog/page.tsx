@@ -49,7 +49,7 @@ export default function CatalogPage() {
       <Header title="Каталог" back />
 
       <main>
-        <h1 className="mx-auto max-w-6xl px-5 pt-4 text-2xl uppercase text-foreground lg:px-8">
+        <h1 className="mx-auto max-w-6xl px-4 pt-4 sm:px-6 text-2xl text-foreground lg:px-8">
           Каталог
         </h1>
         <Suspense

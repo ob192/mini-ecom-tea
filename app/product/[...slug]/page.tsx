@@ -129,7 +129,7 @@ export default async function ProductPage({ params }: Params) {
                             {product.subtitle ? ` · ${product.subtitle}` : ''}
                         </Eyebrow>
 
-                        <h1 className="mt-2 text-3xl font-semibold uppercase text-foreground lg:text-3xl">
+                        <h1 className="mt-2 text-3xl font-semibold text-foreground lg:text-3xl">
                             {product.title}
                         </h1>
 

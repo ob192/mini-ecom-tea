@@ -3,6 +3,7 @@ import { Footer } from '@/components/Footer';
 import { Hero } from '@/components/Hero';
 import { ProductRail } from '@/components/ProductRail';
 import { DiscoverBanner } from '@/components/DiscoverBanner';
+import { StarterSetOffer } from '@/components/StarterSetOffer';
 import { ArticleCard } from '@/components/ArticleCard';
 import { JoinFamily } from '@/components/JoinFamily';
 import { SectionHeading } from '@/components/ui/section-heading';
@@ -14,12 +15,19 @@ import { articlesByDate } from '@/lib/journal';
 export const dynamic = 'force-static';
 
 /*
-  Home — the `Home Page` frame in jintea.pen, section for section:
+  Home, section for section:
 
-    Header · Hero · Explore · Discover Banner · Journal · Join Family · Footer
+    Header · Hero · Оберіть свій чай · Стартовий набір · Discover · Журнал ·
+    Join Family · Footer
 
-  Note what is NOT here: the filterable catalogue. The design's home page shows
-  one curated row and hands off with «УСІ ТОВАРИ →», so the full grid lives at
+  The hero leads with the starter set and the offer band repeats it further
+  down, after the rail: the hero sells it to someone who has just arrived, the
+  band to someone who has scrolled past a row of single teas and is still
+  deciding. The band is the one that names all seven teas with their tasting
+  notes.
+
+  Note what is NOT here: the filterable catalogue. The home page shows one
+  curated row and hands off with «Усі товари →», so the full grid lives at
   /catalog, and the ItemList structured data went with it.
 
   The rail is deliberately fed more products than fit — the design draws four,
@@ -62,10 +70,12 @@ export default function HomePage() {
         listName="Головна · Оберіть свій чай"
       />
 
+      <StarterSetOffer />
+
       <DiscoverBanner />
 
       <section
-        className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16"
+        className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8"
         aria-labelledby="journal"
       >
         <SectionHeading id="journal" action={<TextLink href="/journal">Усі статті</TextLink>}>

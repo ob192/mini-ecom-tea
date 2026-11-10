@@ -33,7 +33,7 @@ function Steps({ items }: { items: string[] }) {
     <ol className={ol}>
       {items.map((s, i) => (
         <li key={i} className="flex gap-3">
-          <span className="shrink-0 size-6 rounded-full bg-primary-subtle text-primary font-semibold text-xs flex items-center justify-center mt-0.5">
+          <span className="shrink-0 size-6 rounded-full bg-background text-muted-foreground font-semibold text-xs flex items-center justify-center mt-0.5">
             {i + 1}
           </span>
           <span className="text-muted-foreground text-base leading-relaxed">{s}</span>
@@ -119,7 +119,7 @@ export default function BrewingPage() {
             Температура води
           </span>
         </h2>
-        <div className="bg-card rounded-xl border border-border overflow-hidden mt-1">
+        <div className="rounded-xl bg-card overflow-hidden mt-1">
           {temps.map((row, i) => (
             <div
               key={row.tea}

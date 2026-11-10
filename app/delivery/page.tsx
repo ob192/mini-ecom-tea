@@ -54,7 +54,7 @@ export default function DeliveryPage() {
         </p>
 
         <h2 className="font-semibold text-xl text-foreground mb-2.5">Оплата</h2>
-        <div className="bg-card rounded-xl border border-border p-4 mb-6">
+        <div className="rounded-xl bg-card p-4 mb-6">
           <p className="m-0 text-muted-foreground text-base leading-relaxed">
             Оплата — <strong className="font-semibold text-foreground">накладеним платежем Нової Пошти</strong>{' '}
             при отриманні замовлення, або за реквізитами. Спосіб оплати уточнюємо разом із менеджером
@@ -65,8 +65,8 @@ export default function DeliveryPage() {
         <h2 className="font-semibold text-xl text-foreground mb-2.5">Доставка по Україні</h2>
         <div className="flex flex-col gap-2.5">
           {delivery.map(({ icon: Icon, title, text }) => (
-            <div key={title} className="bg-card rounded-xl border border-border p-4 flex gap-3.5 items-start">
-              <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+            <div key={title} className="rounded-xl bg-card p-4 flex gap-3.5 items-start">
+              <span className="size-10 shrink-0 rounded-full bg-background text-muted-foreground flex items-center justify-center">
                 <Icon className="size-5" />
               </span>
               <div>
