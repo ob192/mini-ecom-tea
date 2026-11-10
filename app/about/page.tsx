@@ -79,7 +79,7 @@ export default function AboutPage() {
 
         <Link
           href="/brewing"
-          className="inline-flex items-center gap-1.5 mt-1 font-medium text-sm text-primary hover:text-primary transition-colors"
+          className="mt-1 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors hover:text-primary-subtle-foreground"
         >
           Детальніше про способи заварювання
           <ArrowRight className="size-4" />

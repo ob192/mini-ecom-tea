@@ -30,7 +30,7 @@ export function ArticleCard({ article, priority = false }: { article: Article; p
           {article.category}
         </p>
 
-        <h3 className="m-0 text-xl normal-case tracking-normal text-foreground transition-colors group-hover:text-primary">
+        <h3 className="m-0 text-xl normal-case tracking-normal text-foreground transition-colors group-hover:text-primary-subtle-foreground">
           {article.title}
         </h3>
 

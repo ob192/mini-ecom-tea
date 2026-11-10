@@ -76,7 +76,7 @@ export function StarterSetOffer() {
           <ul className="grid list-none gap-x-6 gap-y-1.5 sm:grid-cols-2">
             {TEAS.map(([name]) => (
               <li key={name} className="flex items-start gap-2 text-sm">
-                <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                <Check className="mt-0.5 size-4 shrink-0 text-primary-subtle-foreground" />
                 <span className="text-pretty">{name}</span>
               </li>
             ))}

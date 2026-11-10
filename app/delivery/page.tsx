@@ -81,7 +81,7 @@ export default function DeliveryPage() {
         <p className="m-0 text-muted-foreground text-base leading-relaxed">
           Товар можна обміняти або повернути протягом 14 днів згідно із Законом України «Про захист
           прав споживачів». Умови та порядок —{' '}
-          <Link href="/returns" className="text-primary underline underline-offset-2">
+          <Link href="/returns" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
             Обмін та повернення
           </Link>
           .

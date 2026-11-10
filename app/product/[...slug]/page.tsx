@@ -179,7 +179,7 @@ export default async function ProductPage({ params }: Params) {
                         <p className="m-0 max-w-prose text-base text-muted-foreground">
                             Загальні пропорції, температура води та кількість проливів для кожного
                             типу чаю зібрані в нашому гіді.{' '}
-                            <Link href="/brewing" className="text-primary underline underline-offset-4">
+                            <Link href="/brewing" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground underline-offset-4">
                                 Як заварювати
                             </Link>
                             .

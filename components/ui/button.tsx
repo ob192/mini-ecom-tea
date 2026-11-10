@@ -47,7 +47,7 @@ const buttonVariants = cva(
         ghost: 'text-foreground hover:bg-foreground/5 active:bg-foreground/10',
         inverse: 'bg-inverse text-inverse-foreground hover:bg-inverse/90 active:bg-inverse/80',
         destructive: 'bg-error text-error-foreground hover:bg-error/90 active:bg-error/80',
-        link: 'h-auto px-0 text-foreground underline underline-offset-4 hover:text-primary',
+        link: 'h-auto px-0 text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground',
       },
       size: {
         /* 44px is the touch floor (M1); the smaller steps grow to it on a coarse pointer. */
