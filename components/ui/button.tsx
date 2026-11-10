@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -16,7 +18,13 @@ import { cn } from '@/lib/utils';
 
   `pending` is the one place a button draws a spinner (S6, F16): the label stays
   so the width does not jump, presses are ignored, and focus is kept on the
-  control (`aria-disabled`, not `disabled`).
+  control (`aria-disabled`, not `disabled`) — `disabled` would move focus away
+  from the thing the visitor just pressed.
+
+  That is also why this is a client component. Swallowing the press needs a
+  handler, and a handler cannot be handed to a client component from a server
+  one; `disabled` would need no JavaScript but loses the focus. A static page
+  that only renders a link-shaped button pays about two kilobytes for it.
 */
 const buttonVariants = cva(
   [

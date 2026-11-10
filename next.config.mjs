@@ -22,6 +22,26 @@ const ALIAS_HOSTS = ['jintea.shop', 'www.jintea.shop', 'jintea.restreto-labs.com
   (host) => host !== PRIMARY_HOST,
 );
 
+/**
+ * `/playground` is the design-system reference and the exploration pages: a
+ * development tool, never part of the shop. The pages call `notFound()`
+ * themselves, which renders the 404 markup — but by then the playground layout
+ * has already begun streaming, so the response is stuck at HTTP 200 with a 404
+ * page in the body. Measured on a production build, with the guard in the page
+ * and in the layout, static and dynamic: 200 every time, only `/nope` returned
+ * a real 404.
+ *
+ * A rewrite settles it before anything renders. In a production build the whole
+ * subtree is sent to a path no route matches, so Next answers with its own 404 —
+ * right status, right page, no playground HTML on the wire at all. In
+ * development the list is empty and `/playground` is itself.
+ *
+ * It has to be `beforeFiles`. A bare array from `rewrites()` means `afterFiles`,
+ * which Next only consults once no page has matched — and `/playground` is a
+ * page, so the rule never fired and the route kept answering 200.
+ */
+const PLAYGROUND_IS_DEV_ONLY = process.env.NODE_ENV === 'production';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -29,6 +49,18 @@ const nextConfig = {
   images: {
     remotePatterns: [],
     formats: ['image/avif', 'image/webp'],
+  },
+  async rewrites() {
+    return {
+      beforeFiles: PLAYGROUND_IS_DEV_ONLY
+        ? [
+            { source: '/playground', destination: '/_playground-is-dev-only' },
+            { source: '/playground/:path*', destination: '/_playground-is-dev-only' },
+          ]
+        : [],
+      afterFiles: [],
+      fallback: [],
+    };
   },
   async redirects() {
     return [
