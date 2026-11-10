@@ -17,14 +17,13 @@ import Link from 'next/link';
 */
 export const dynamic = 'force-dynamic';
 
-/** Open explorations. Each one is deleted once the owner has chosen from it. */
-const EXPLORATIONS: [string, string][] = [
-  ['/playground/hero', 'Перший екран'],
-  ['/playground/card', 'Картка товару'],
-  ['/playground/buy', 'Блок покупки'],
-  ['/playground/checkout', 'Поля оформлення'],
-  ['/playground/offer', 'Стартовий набір'],
-];
+/*
+  Open explorations. Each is deleted once the owner has chosen from it — the
+  five that led to the current design (hero, card, buy, checkout, offer) were
+  decided on 2026-11-10 and are gone.
+*/
+const EXPLORATIONS: [string, string][] = [];
+
 
 export const metadata: Metadata = {
   title: 'Playground',
@@ -39,17 +38,22 @@ export default function PlaygroundLayout({ children }: { children: React.ReactNo
           <Link href="/playground" className="shrink-0 text-sm font-semibold">
             Playground
           </Link>
-          <nav aria-label="Дослідження" className="flex min-w-0 items-center gap-1 overflow-x-auto text-sm">
-            {EXPLORATIONS.map(([href, label]) => (
-              <Link
-                key={href}
-                href={href}
-                className="inline-flex min-h-11 shrink-0 items-center rounded-md px-3 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+          {EXPLORATIONS.length > 0 ? (
+            <nav
+              aria-label="Дослідження"
+              className="flex min-w-0 items-center gap-1 overflow-x-auto text-sm"
+            >
+              {EXPLORATIONS.map(([href, label]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="inline-flex min-h-11 shrink-0 items-center rounded-md px-3 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          ) : null}
           <Link
             href="/"
             className="ml-auto inline-flex min-h-11 items-center rounded-md px-3 text-sm text-muted-foreground hover:bg-foreground/5 hover:text-foreground"

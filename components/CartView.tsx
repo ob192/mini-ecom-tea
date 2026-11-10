@@ -38,7 +38,7 @@ function CartRow({
           <div className="flex justify-between gap-2">
             <Link
                 href={`/product/${p.slug}`}
-                className="text-lg uppercase text-foreground"
+                className="text-lg font-medium"
             >
               {p.title}
             </Link>
@@ -104,10 +104,10 @@ export function CartView() {
         <>
           <Header title="Кошик" back backHref="/catalog" />
           <div className="flex flex-1 flex-col items-center justify-center gap-1.5 px-6 py-24 text-center">
-            <div className="size-20 rounded-full bg-primary-subtle flex items-center justify-center text-primary mb-2">
+            <div className="size-20 rounded-full bg-card flex items-center justify-center text-muted-foreground mb-2">
               <ShoppingBag className="size-9" />
             </div>
-            <h1 className="text-2xl uppercase text-foreground">Кошик порожній</h1>
+            <h1 className="text-2xl text-foreground">Кошик порожній</h1>
             <p className="m-0 mb-4 text-muted-foreground text-base max-w-[26ch]">
               Додайте улюблений чай — і він з&apos;явиться тут.
             </p>
@@ -128,14 +128,14 @@ export function CartView() {
         <Header title="Кошик" back backHref="/catalog" />
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 lg:py-6">
           <div className="px-4 pt-1 pb-2 lg:px-0 lg:pt-0">
-            <h1 className="m-0 text-2xl uppercase text-foreground">Кошик</h1>
+            <h1 className="m-0 text-2xl text-foreground">Кошик</h1>
             <div className="text-muted-foreground text-sm pt-1.5 pb-0.5">
               {count} {plural(count, 'товар', 'товари', 'товарів')} у кошику
             </div>
             <div>
               {items.map((it, i) => (
                   <Fragment key={`${it.slug}|${it.weight}`}>
-                    {i > 0 && <hr className="divider" />}
+                    {i > 0 ? <hr className="border-t border-border" /> : null}
                     <CartRow item={it} onDec={dec} onInc={inc} onRemove={handleRemove} />
                   </Fragment>
               ))}
@@ -159,7 +159,7 @@ export function CartView() {
                     Безкоштовна доставка від {uah(freeDeliveryThreshold)} — додайте ще {uah(remaining)}
                   </div>
               ) : null}
-              <hr className="divider" />
+              <hr className="border-t border-border" />
               <div className="flex justify-between items-baseline font-semibold text-xl text-foreground">
                 <span>Разом</span>
                 <span>{uah(total)}</span>

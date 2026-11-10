@@ -82,9 +82,9 @@ export default function ContactsPage() {
               channel={channel}
               location="contacts_page"
               href={href}
-              className="bg-card rounded-xl border border-border p-4 flex items-center gap-3.5 hover:bg-primary-subtle transition-colors"
+              className="rounded-xl bg-card p-4 flex items-center gap-3.5 hover:bg-foreground/5 transition-colors"
             >
-              <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+              <span className="size-10 shrink-0 rounded-full bg-background text-muted-foreground flex items-center justify-center">
                 <Icon className="size-5" />
               </span>
               <div>

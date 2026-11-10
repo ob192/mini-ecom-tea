@@ -192,7 +192,7 @@ function CityPickerDialog({
                             <button
                                 type="button"
                                 onClick={() => onPick(c)}
-                                className="w-full text-left px-4 py-3.5 min-h-14 flex flex-col justify-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
+                                className="w-full text-left px-4 py-3.5 min-h-14 flex flex-col justify-center border-b border-border active:bg-foreground/10 hover:bg-foreground/5 transition-colors"
                             >
                                 <span className="text-base text-foreground font-medium">{c.name}</span>
                                 {c.area ? <span className="text-sm text-muted-foreground mt-0.5">{c.area}</span> : null}
@@ -279,7 +279,7 @@ function WarehousePickerDialog({
                             <button
                                 type="button"
                                 onClick={() => onPick(w)}
-                                className="w-full text-left px-4 py-3.5 min-h-14 flex items-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
+                                className="w-full text-left px-4 py-3.5 min-h-14 flex items-center border-b border-border active:bg-foreground/10 hover:bg-foreground/5 transition-colors"
                             >
                                 <span className="text-base text-foreground leading-snug">{w.description}</span>
                             </button>

@@ -36,7 +36,9 @@ export const WeightChip = React.forwardRef<HTMLButtonElement, WeightChipProps>(
         'inline-flex items-center justify-center gap-1.5 rounded-md border transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         'disabled:pointer-events-none disabled:opacity-50',
-        compact ? 'h-7 px-2 text-xs' : 'h-11 min-w-16 flex-col gap-0 px-3.5',
+        /* The compact chip is still the tier selector, so it is still pressed with
+           a thumb: it grows to the 44px floor on a coarse pointer (M1). */
+        compact ? 'h-8 px-2 text-xs pointer-coarse:h-11 pointer-coarse:px-3' : 'h-11 min-w-16 flex-col gap-0 px-3.5',
         selected
           ? 'border-primary bg-primary text-primary-foreground'
           : 'border-input bg-background text-foreground hover:border-border-strong hover:bg-foreground/5',

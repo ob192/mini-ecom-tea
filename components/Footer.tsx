@@ -21,7 +21,7 @@ import { BRAND_NAME, INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_URL } from '@/lib/conta
 function Column({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (
     <nav aria-label={heading} className="flex flex-col gap-3">
-      <h2 className="text-xs font-semibold uppercase tracking-wide">{heading}</h2>
+      <h2 className="text-xs font-semibold tracking-wide">{heading}</h2>
       {children}
     </nav>
   );

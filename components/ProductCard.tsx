@@ -2,34 +2,34 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Check } from 'lucide-react';
+
 import type { Product } from '@/lib/types';
 import { categoryLabel, defaultWeight, priceFor, UNIT } from '@/lib/products';
 import { uah } from '@/lib/format';
 import { useCart } from '@/context/CartContext';
 import { trackAddToCart, trackSelectItem } from '@/lib/analytics';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { WeightChip } from '@/components/ui/weight-chip';
 import { ProductImage } from './Logo';
-import { Check, Plus } from 'lucide-react';
 
 /*
-  ProductCard — the `component/Product Card` reusable component in jintea.pen.
+  ProductCard — «Картка», the owner's choice from /playground/card on
+  2026-11-10.
 
-  A 6:5 photo with a 6px radius and a hairline, a circular add button inset in
-  its bottom-right corner, then category / title / price / weight chips at a
-  6px rhythm. There is no card surface behind it: the photo is the card, and
-  the text sits directly on paper. That is why this has no border or shadow of
-  its own — adding one puts a box inside a box.
+  Everything sits on the `card` surface and the action is a full-width button
+  that says what it does. The previous card put the action in a wordless round
+  «+» inset into the photograph: it is smaller, it is only found by someone
+  already looking for it, and adding to the cart from a phone is precisely what
+  was not happening.
 
   The chips are the tier selector, and the price above them is the price of the
-  chosen tier.
-
-  They used to be <li> labels — "choosing a tier happens on the product page" —
-  while looking exactly like the real WeightChips, one of them highlighted.
-  People pressed them and nothing moved. The highlight made it worse than
-  inert: it marked the default 50 г while the price beside it read «від 310 ₴»,
-  the 25 г tier, and the add button then put 510 ₴ of tea in the basket. Three
-  different weights implied in one card. Now one tier is selected, the price is
-  that tier's price, and the add button adds that tier.
+  chosen tier. They used to be list items styled exactly like real chips with
+  one highlighted, so people pressed them and nothing moved — and the highlight
+  marked 50 г while the price read «від 310 ₴» (the 25 г tier) and the add
+  button put the 50 г pack in the basket. Three weights implied by one card. Now
+  one tier is selected, its price is shown, and that tier is added.
 */
 export function ProductCard({
   product,
@@ -55,9 +55,7 @@ export function ProductCard({
   // belongs to a card that cannot show you which price you are looking at.
   const price = priceFor(product, weight) ?? product.price;
 
-  const handleAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleAdd = () => {
     if (!product.inStock) return;
     add(product.slug, weight, 1);
     trackAddToCart(product, weight, 1);
@@ -68,61 +66,46 @@ export function ProductCard({
   const handleSelect = () => trackSelectItem(product, listId, listName, index);
 
   return (
-    <article className="flex flex-col">
-      <div className="relative">
-        <Link
-          href={`/product/${product.slug}`}
-          aria-label={product.title}
-          onClick={handleSelect}
-          className="block overflow-hidden rounded-xl border border-border"
-        >
-          <ProductImage
-            src={product.image}
-            category={product.category}
-            alt={`${product.title} — ${product.subtitle}`}
-            ratio="6 / 5"
-            priority={priority}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
-          />
-        </Link>
+    <article className="flex flex-col gap-3 rounded-xl bg-card p-3">
+      <Link
+        href={`/product/${product.slug}`}
+        aria-label={product.title}
+        onClick={handleSelect}
+        className="relative block overflow-hidden rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+      >
+        <ProductImage
+          src={product.image}
+          category={product.category}
+          alt={`${product.title} — ${product.subtitle}`}
+          ratio="6 / 5"
+          priority={priority}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
+        />
+        {!product.inStock ? (
+          <Badge variant="error" className="absolute left-2 top-2">
+            Немає
+          </Badge>
+        ) : null}
+      </Link>
 
-        <button
-          type="button"
-          onClick={handleAdd}
-          disabled={!product.inStock}
-          aria-label={
-            product.inStock
-              ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
-              : `${product.title} — немає в наявності`
-          }
-          className="absolute bottom-3 right-4 flex size-10 items-center justify-center rounded-full bg-card text-foreground border border-border transition-colors hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {added ? <Check className="size-5" /> : <Plus className="size-5" />}
-        </button>
-      </div>
-
-      <div className="flex flex-col gap-1.5 px-0.5 pt-4">
-        <p className="m-0 text-xs uppercase text-foreground">
+      <div className="flex flex-1 flex-col gap-1.5 px-1">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {categoryLabel(product.category)}
         </p>
 
-        <h3 className="m-0">
+        <h3>
           <Link
             href={`/product/${product.slug}`}
             onClick={handleSelect}
-            className="text-lg uppercase text-foreground transition-colors hover:text-primary"
+            className="text-lg font-medium text-balance transition-colors hover:text-primary"
           >
             {product.title}
           </Link>
         </h3>
 
-        <p className="m-0 text-base font-bold text-foreground">
-          {price != null ? uah(price) : 'Ціна за запитом'}
-        </p>
-
         {product.priceTiers.length > 0 ? (
           <ul
-            className="m-0 flex list-none flex-wrap gap-1.5 p-0 pt-1.5"
+            className="flex list-none flex-wrap gap-1.5 pt-0.5"
             aria-label={`Вага — ${product.title}`}
           >
             {product.priceTiers.map((t) => (
@@ -137,7 +120,7 @@ export function ProductCard({
                 ) : (
                   /* One tier is not a choice; drawing it as a control invites a
                      press that can never do anything. */
-                  <span className="inline-block rounded-sm bg-card px-2 py-1 text-xs text-muted-foreground border border-border">
+                  <span className="inline-flex h-7 items-center rounded-md border border-border px-2 text-xs text-muted-foreground">
                     {t.weight} {UNIT}
                   </span>
                 )}
@@ -145,7 +128,25 @@ export function ProductCard({
             ))}
           </ul>
         ) : null}
+
+        <p className="mt-auto pt-2 text-xl font-semibold tabular-nums">
+          {price != null ? uah(price) : 'Ціна за запитом'}
+        </p>
       </div>
+
+      <Button
+        className="w-full"
+        onClick={handleAdd}
+        disabled={!product.inStock}
+        aria-label={
+          product.inStock
+            ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
+            : `${product.title} — немає в наявності`
+        }
+      >
+        {added ? <Check /> : null}
+        {added ? 'Додано' : product.inStock ? 'У кошик' : 'Немає в наявності'}
+      </Button>
     </article>
   );
 }

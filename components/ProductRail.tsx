@@ -72,7 +72,7 @@ export function ProductRail({
   };
 
   return (
-    <section className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16" aria-labelledby="explore">
+    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8" aria-labelledby="explore">
       <SectionHeading
         id="explore"
         action={

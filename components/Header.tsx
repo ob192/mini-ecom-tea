@@ -63,7 +63,7 @@ export function Header({
           aria-label="Категорії"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((o) => !o)}
-          className="-ml-2 flex size-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:hidden"
+          className="-ml-2 grid size-11 place-items-center rounded-md text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
         >
           <Menu className="size-5" />
         </button>
@@ -71,7 +71,7 @@ export function Header({
         <Link
           href="/"
           aria-label={`${BRAND_NAME} — на головну`}
-          className="flex items-center lg:mr-auto"
+          className="-mx-2 flex min-h-11 items-center rounded-md px-2 transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:mr-auto"
         >
           <Logo />
         </Link>
@@ -91,7 +91,7 @@ export function Header({
         <Link
           href="/cart"
           aria-label={`Кошик${ready && count > 0 ? `, ${count} товарів` : ''}`}
-          className="relative -mr-2 flex size-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:ml-auto"
+          className="relative -mr-2 grid size-11 place-items-center rounded-md text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:ml-auto"
         >
           <ShoppingBag className="size-5" />
           {ready && count > 0 ? (

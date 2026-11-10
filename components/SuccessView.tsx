@@ -15,7 +15,7 @@ export function SuccessView() {
       <div className="mb-4 flex size-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
         <Check className="size-10" />
       </div>
-      <h1 className="max-w-[18ch] text-3xl font-semibold uppercase text-foreground lg:text-3xl">
+      <h1 className="max-w-[18ch] text-3xl font-semibold text-foreground lg:text-3xl">
         Дякуємо!
         <br />
         Ваше замовлення прийнято

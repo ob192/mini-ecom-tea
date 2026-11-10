@@ -13,21 +13,59 @@ import { uah } from '@/lib/format';
 import { trackAddShippingInfo, trackBeginCheckout, trackCheckoutError } from '@/lib/analytics';
 import { checkoutSchema, type CheckoutValues } from '@/lib/checkout-schema';
 import { Header } from '@/components/Header';
-import { AlertCircle } from 'lucide-react';
+import { Banknote, Check, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
+import { Radio, RadioGroup } from '@/components/ui/radio-group';
 import { ShippingSelector, type ShippingValue } from '@/components/ShippingSelector';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
+
+/*
+  One numbered step of the form («Три кроки», the owner's choice from
+  /playground/checkout on 2026-11-10). Same page, same single submit — the form
+  is not a wizard. What the steps buy is a sense of how much is left, and the
+  discovery that step three is empty: «оплата при отриманні, вводити нічого не
+  треба» is the biggest fear on a cash-on-delivery shop, and answering it costs
+  one card.
+*/
+function Step({
+    n,
+    title,
+    icon,
+    children,
+}: {
+    n: number;
+    title: string;
+    icon: React.ReactNode;
+    children: React.ReactNode;
+}) {
+    return (
+        <section className="flex flex-col gap-4 rounded-xl bg-card p-5 sm:p-6">
+            <h2 className="flex items-center gap-3 text-lg font-medium">
+                <span
+                    aria-hidden
+                    className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground tabular-nums"
+                >
+                    {n}
+                </span>
+                <span className="flex items-center gap-2">
+                    {icon}
+                    {title}
+                </span>
+            </h2>
+            {children}
+        </section>
+    );
+}
 
 export function CheckoutForm() {
     const router = useRouter();
@@ -81,7 +119,7 @@ export function CheckoutForm() {
             <>
                 <Header title="Оформлення" back backHref="/cart" />
                 <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 py-24 text-center">
-                    <h1 className="text-2xl uppercase text-foreground">Кошик порожній</h1>
+                    <h1 className="text-2xl text-foreground">Кошик порожній</h1>
                     <p className="text-muted-foreground text-base max-w-[28ch]">
                         Додайте товари, щоб оформити замовлення.
                     </p>
@@ -136,57 +174,56 @@ export function CheckoutForm() {
     return (
         <>
             <Header title="Оформлення" back backHref="/cart" />
-            <h1 className="mx-auto max-w-6xl px-4 pt-4 text-2xl uppercase text-foreground lg:px-8">
-                Оформлення
-            </h1>
-            <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 lg:py-6">
+            <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:px-8">
                 {/* order summary (right column on desktop) */}
-                <div className="px-4 pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-24">
-                    <h2 className="mb-2.5 mt-2 text-xs uppercase text-muted-foreground lg:mt-0">
-                        Ваше замовлення
-                    </h2>
-                    <Card className="p-4 mb-5 lg:mb-0">
+                <div className="lg:order-2 lg:sticky lg:top-20">
+                    <Card className="p-5 sm:p-6">
+                        <h2 className="mb-3 text-lg font-medium">Ваше замовлення</h2>
                         {items.map((it) => {
                             const p = getProduct(it.slug);
                             if (!p) return null;
                             const unitPrice = priceFor(p, it.weight) ?? 0;
                             return (
-                                <div key={`${it.slug}|${it.weight}`} className="flex justify-between gap-2.5 py-1.5 text-sm">
-                  <span className="text-muted-foreground">
-                    <span className="mr-1.5 font-bold text-foreground">
-                      {it.qty}×
-                    </span>
-                      {p.title}
-                  </span>
-                                    <span className="whitespace-nowrap font-bold text-foreground">
-                    {uah(unitPrice * it.qty)}
-                  </span>
+                                <div
+                                    key={`${it.slug}|${it.weight}`}
+                                    className="flex justify-between gap-3 py-1.5 text-sm"
+                                >
+                                    <span className="min-w-0 text-pretty text-muted-foreground">
+                                        <span className="mr-1.5 font-medium text-foreground tabular-nums">
+                                            {it.qty}×
+                                        </span>
+                                        {p.title}
+                                    </span>
+                                    <span className="shrink-0 font-medium tabular-nums">
+                                        {uah(unitPrice * it.qty)}
+                                    </span>
                                 </div>
                             );
                         })}
-                        <hr className="divider my-2.5" />
-                        <div className="flex justify-between items-baseline text-base text-muted-foreground mb-1.5">
-                            <span>Доставка</span>
-                            <span className={delivery === 0 ? 'text-success-subtle-foreground' : 'text-foreground'}>
-                {delivery === 0 ? 'Безкоштовно' : uah(delivery)}
-              </span>
+                        <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-border pt-3 text-sm">
+                            <span className="text-muted-foreground">Доставка</span>
+                            <span className="tabular-nums">
+                                {delivery === 0 ? 'безкоштовно' : uah(delivery)}
+                            </span>
                         </div>
-                        <div className="flex justify-between items-baseline font-semibold text-xl text-foreground">
-                            <span>Разом</span>
-                            <span>{uah(total)}</span>
+                        <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-border pt-3">
+                            <span className="font-medium">Разом</span>
+                            <span className="text-2xl font-semibold tabular-nums">{uah(total)}</span>
                         </div>
                     </Card>
                 </div>
 
                 {/* delivery form (left column on desktop) */}
-                <div className="px-4 pb-6 lg:px-0 lg:pt-0 lg:order-1">
-                    <h2 className="text-sm tracking-widest uppercase text-primary mb-3">
-                        Дані для доставки
-                    </h2>
+                <div className="lg:order-1">
+                    <h1 className="mb-5 text-3xl font-semibold">Оформлення</h1>
 
                     <Form {...form}>
                         {/* No native onSubmit navigation quirks — the sticky button drives it. */}
-                        <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} noValidate>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit, onInvalid)}
+                            noValidate
+                            className="flex max-w-lg flex-col gap-4"
+                        >
                             {/* Honeypot — hidden from users, bait for bots.
                                 No label and a meaningless field name: browsers autofill
                                 by name/label (company, organization, …) even with
@@ -202,23 +239,24 @@ export function CheckoutForm() {
                                 />
                             </div>
 
+                            <Step
+                                n={1}
+                                title="Хто отримує"
+                                icon={<Check className="size-5 text-muted-foreground" />}
+                            >
+                            <div className="grid gap-5 sm:grid-cols-2">
                             <FormField
                                 control={form.control}
                                 name="first"
                                 render={({ field }) => (
-                                    <FormItem className="mb-3.5">
+                                    <FormItem>
                                         <FormLabel>
                                             Ім&apos;я <span className="text-foreground">*</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input placeholder="Олена" autoComplete="given-name" {...field} />
                                         </FormControl>
-                                        <FormMessage className="[&_svg]:hidden">
-                      <span className="flex items-center gap-1.5">
-                        <AlertCircle className="size-3.5" />
-                          {form.formState.errors.first?.message}
-                      </span>
-                                        </FormMessage>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -227,28 +265,25 @@ export function CheckoutForm() {
                                 control={form.control}
                                 name="last"
                                 render={({ field }) => (
-                                    <FormItem className="mb-3.5">
+                                    <FormItem>
                                         <FormLabel>
                                             Прізвище <span className="text-foreground">*</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input placeholder="Коваленко" autoComplete="family-name" {...field} />
                                         </FormControl>
-                                        <FormMessage className="[&_svg]:hidden">
-                      <span className="flex items-center gap-1.5">
-                        <AlertCircle className="size-3.5" />
-                          {form.formState.errors.last?.message}
-                      </span>
-                                        </FormMessage>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
+
+                            </div>
 
                             <FormField
                                 control={form.control}
                                 name="phone"
                                 render={({ field }) => (
-                                    <FormItem className="mb-3.5">
+                                    <FormItem>
                                         <FormLabel>
                                             Телефон <span className="text-foreground">*</span>
                                         </FormLabel>
@@ -261,57 +296,51 @@ export function CheckoutForm() {
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage className="[&_svg]:hidden">
-                      <span className="flex items-center gap-1.5">
-                        <AlertCircle className="size-3.5" />
-                          {form.formState.errors.phone?.message}
-                      </span>
-                                        </FormMessage>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            {/* delivery method toggle */}
-                            <div className="mb-3.5">
-                <span className="font-medium text-sm tracking-wide uppercase text-muted-foreground">
-                  Спосіб доставки
-                </span>
-                                <div className="flex gap-2 mt-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => form.setValue('deliveryMethod', 'np_warehouse', { shouldValidate: true })}
-                                        aria-pressed={deliveryMethod === 'np_warehouse'}
-                                        className={`flex-1 rounded-md min-h-11 px-4 text-sm transition-colors ${
- deliveryMethod ==='np_warehouse'
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'bg-card text-muted-foreground border border-border hover:text-foreground'
-                                        }`}
-                                    >
-                                        Відділення / поштомат
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => form.setValue('deliveryMethod', 'np_courier', { shouldValidate: true })}
-                                        aria-pressed={deliveryMethod === 'np_courier'}
-                                        className={`flex-1 rounded-md min-h-11 px-4 text-sm transition-colors ${
- deliveryMethod ==='np_courier'
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'bg-card text-muted-foreground border border-border hover:text-foreground'
-                                        }`}
-                                    >
+                            </Step>
+
+                            <Step
+                                n={2}
+                                title="Куди доставити"
+                                icon={<Truck className="size-5 text-muted-foreground" />}
+                            >
+                            {/*
+                              Two visible options are a radio group, not a pair of
+                              buttons wearing `aria-pressed` (F9). Radix gives the
+                              group one tab stop, arrow-key movement and
+                              `aria-checked`, and the chosen row is marked by a
+                              filled disc as well as by colour (C11).
+                            */}
+                            <fieldset>
+                                <legend className="text-sm font-medium">Спосіб доставки</legend>
+                                <RadioGroup
+                                    className="mt-2"
+                                    value={deliveryMethod}
+                                    onValueChange={(v) =>
+                                        form.setValue('deliveryMethod', v as CheckoutValues['deliveryMethod'], {
+                                            shouldValidate: true,
+                                        })
+                                    }
+                                >
+                                    <Radio value="np_warehouse" hint="Нова пошта: відділення або поштомат">
+                                        У відділення
+                                    </Radio>
+                                    <Radio value="np_courier" hint="Кур&apos;єр привезе на адресу">
                                         Кур&apos;єром
-                                    </button>
-                                </div>
-                            </div>
+                                    </Radio>
+                                </RadioGroup>
+                            </fieldset>
 
                             {/* Nova Poshta city + warehouse picker */}
-                            <div className="mb-3.5">
-                                <ShippingSelector
-                                    value={shippingValue}
-                                    showWarehouse={deliveryMethod === 'np_warehouse'}
-                                    onChange={handleShippingChange}
-                                />
-                            </div>
+                            <ShippingSelector
+                                value={shippingValue}
+                                showWarehouse={deliveryMethod === 'np_warehouse'}
+                                onChange={handleShippingChange}
+                            />
 
                             {/* courier-only street address */}
                             {deliveryMethod === 'np_courier' ? (
@@ -319,59 +348,60 @@ export function CheckoutForm() {
                                     control={form.control}
                                     name="address"
                                     render={({ field }) => (
-                                        <FormItem className="mb-3.5">
+                                        <FormItem>
                                             <FormLabel>
                                                 Адреса доставки <span className="text-foreground">*</span>
                                             </FormLabel>
                                             <FormControl>
                                                 <Textarea autoComplete="street-address" placeholder="Вулиця, будинок, квартира" {...field} />
                                             </FormControl>
-                                            <FormMessage className="[&_svg]:hidden">
-                        <span className="flex items-center gap-1.5">
-                          <AlertCircle className="size-3.5" />
-                            {form.formState.errors.address?.message}
-                        </span>
-                                            </FormMessage>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
                             ) : null}
 
-                            <FormDescription className="mt-0.5">
-                                Менеджер зателефонує для підтвердження. Оплата при отриманні або за реквізитами.
-                            </FormDescription>
+                            </Step>
 
-                            <div className="sticky-bar flex items-center gap-3.5 lg:mt-6 lg:pt-6 lg:border-t lg:border-border">
+                            <Step
+                                n={3}
+                                title="Оплата"
+                                icon={<Banknote className="size-5 text-muted-foreground" />}
+                            >
+                                <p className="text-base text-pretty">
+                                    Оплата при отриманні — готівкою або карткою у відділенні. Вводити
+                                    нічого не треба: менеджер зателефонує, щоб підтвердити замовлення.
+                                </p>
+                            </Step>
+
+                            <div className="sticky-bar flex items-center gap-4">
                                 <div className="flex flex-col">
                                     <span className="text-xs text-muted-foreground">До сплати</span>
-                                    <span className="font-semibold text-xl text-foreground">
-                    {uah(total)}
-                  </span>
+                                    <span className="text-xl font-semibold tabular-nums">{uah(total)}</span>
                                 </div>
                                 <Button
                                     type="submit"
-                                    
                                     size="lg"
-                                    disabled={submitting}
-                                    className="flex-1 disabled:cursor-wait"
+                                    pending={submitting}
+                                    className="flex-1"
                                 >
-                                    {submitting ? 'Надсилаємо…' : 'Підтвердити замовлення'}
+                                    Підтвердити замовлення
                                 </Button>
                             </div>
 
                             {/* Merchant Center expects the delivery and return terms to be
                                 reachable from checkout, not only from the footer. */}
-                            <p className="m-0 mt-3 text-xs text-muted-foreground leading-relaxed">
+                            <p className="text-sm text-muted-foreground text-pretty">
                                 Підтверджуючи замовлення, ви погоджуєтесь з умовами{' '}
-                                <Link href="/delivery" className="underline underline-offset-2 hover:text-foreground">
+                                <Link href="/delivery" className="underline underline-offset-4 hover:text-primary">
                                     оплати і доставки
                                 </Link>
                                 ,{' '}
-                                <Link href="/returns" className="underline underline-offset-2 hover:text-foreground">
+                                <Link href="/returns" className="underline underline-offset-4 hover:text-primary">
                                     обміну та повернення
                                 </Link>{' '}
                                 і{' '}
-                                <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">
+                                <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
                                     Угодою користувача
                                 </Link>
                                 .
