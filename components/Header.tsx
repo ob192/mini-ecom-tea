@@ -106,7 +106,7 @@ export function Header({
       {menuOpen ? (
         <nav
           aria-label="Категорії"
-          className="border-t border-border bg-card px-5 pb-4 pt-2 lg:hidden"
+          className="border-t border-border bg-card px-4 pb-4 pt-2 sm:px-6 lg:hidden"
         >
           {categories.map((c) => (
             <Link
@@ -121,13 +121,19 @@ export function Header({
         </nav>
       ) : null}
 
+      {/*
+        A `<nav>`, not a div: `aria-label` on a plain div with no role is
+        ignored by most screen readers, so the row's name went nowhere (axe
+        `aria-prohibited-attr`, on every page that carries a back row). A
+        landmark takes a name, and the page title makes each one distinct (NV14).
+      */}
       {back ? (
-        <div
-          className="mx-auto flex max-w-6xl items-center px-5 py-3 lg:px-8"
-          aria-label={title}
+        <nav
+          aria-label={title ? `${title} — навігація` : 'Навігація сторінкою'}
+          className="mx-auto flex w-full max-w-6xl items-center px-4 py-3 sm:px-6 lg:px-8"
         >
           <BackLink href={backHref} />
-        </div>
+        </nav>
       ) : null}
     </header>
   );

@@ -83,6 +83,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="uk" className={geist.variable}>
       <body className="font-sans antialiased">
+        {/*
+          The skip link, first in the DOM so it is the first thing Tab reaches
+          (NV14). Off-screen until focused, then a real control at the top-left.
+          Every page gives its content a `<main id="main">`; four of them had no
+          `main` landmark at all until the axe scan said so.
+        */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:inline-flex focus:h-11 focus:items-center focus:rounded-md focus:bg-primary focus:px-5 focus:text-sm focus:font-medium focus:text-primary-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+        >
+          Перейти до вмісту
+        </a>
         <GoogleTagManagerNoScript />
         <GoogleTagManager />
         <Suspense fallback={null}>

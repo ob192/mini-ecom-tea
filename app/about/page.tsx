@@ -38,7 +38,7 @@ export default function AboutPage() {
   return (
     <>
       <Header title="Про нас" back />
-      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+      <main id="main" className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
         <h1 className="font-semibold text-2xl text-foreground leading-tight mb-4">Про нас</h1>
 
         <div className="flex flex-col gap-3.5 text-muted-foreground text-base leading-relaxed">

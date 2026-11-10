@@ -284,6 +284,22 @@ Primitives live in [`components/ui`](components/ui) (kebab-case files, shadcn
   `BackLink`, `InfoRow`, `Eyebrow`, `Label`, and the react-hook-form bridge in
   `form.tsx`.
 
+### Landmarks and the skip link
+
+Every page gives its content a `<main id="main">`, and `app/layout.tsx` puts a
+skip link first in the DOM so it is the first thing Tab reaches (NV14). Four
+pages — the home page, the cart, the checkout and a product — had no `main`
+landmark at all until an axe scan said so, which also meant the skip link had
+nothing to aim at.
+
+`main` is a plain block with `[&>*]:w-full`, never `flex`: a flex `main` would
+make every section a flex item, and `mx-auto` on a flex item is the collapse the
+shell already guards against.
+
+The header's «Назад» row is a `<nav>` named after the page, not a `div` wearing
+an `aria-label` — on a div with no role, `aria-label` is ignored by most screen
+readers.
+
 ### `<Header back>` needs a `backHref`
 
 «Назад» is a real link to the page's parent, never `router.back()`.
