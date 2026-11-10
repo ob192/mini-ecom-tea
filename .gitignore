@@ -34,3 +34,9 @@ next-env.d.ts
 llm_context.txt
 .thumbnail
 /coverage
+
+# Local API-key toolkits and raw supplier media. tools/runware/.env holds the
+# Runware API key; telegram_media/ is unprocessed HEIC/MOV straight off a phone.
+# Neither belongs in a deploy, and the key must never reach the history.
+/tools/runware/.env
+/telegram_media
