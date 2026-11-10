@@ -171,6 +171,33 @@ export function CheckoutForm() {
   const onInvalid = (errors: FieldErrors<CheckoutValues>) => {
     trackCheckoutError('validation:' + Object.keys(errors).join(','));
     toast.error('Перевірте виділені поля.');
+
+    /*
+      react-hook-form focuses the first invalid field for us, but only fields it
+      holds a ref for. The city and the warehouse are hand-built trigger buttons
+      driven by `setValue`, so RHF has no ref and cannot move to them: on a phone
+      their message can render a screen and a half below the submit, leaving the
+      toast telling the customer to check fields they cannot see. Scroll to the
+      first message that nothing else will reach.
+    */
+    const unreachable = ['cityRef', 'warehouseRef'] as const;
+    if (unreachable.some((k) => errors[k])) {
+      /*
+        `setTimeout`, not `requestAnimationFrame`: a backgrounded tab never
+        fires an animation frame, and this runs on a submit the customer may
+        have left the tab after. A macrotask is late enough for React to have
+        flushed the error render and always runs.
+      */
+      setTimeout(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // The two messages carry stable ids, so aim at the one that is showing
+        // rather than at whatever happens to be the first invalid thing.
+        const target =
+          document.getElementById('np-city-error') ??
+          document.getElementById('np-warehouse-error');
+        target?.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      }, 0);
+    }
   };
 
   return (
@@ -341,6 +368,8 @@ export function CheckoutForm() {
                     value={shippingValue}
                     showWarehouse={deliveryMethod === 'np_warehouse'}
                     onChange={handleShippingChange}
+                    cityError={form.formState.errors.cityRef?.message}
+                    warehouseError={form.formState.errors.warehouseRef?.message}
                   />
 
                   {/* courier-only street address */}
