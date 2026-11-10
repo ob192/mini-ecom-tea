@@ -1,0 +1,20 @@
+{
+  "taskType": "imageInference",
+  "model": "bytedance:seedream@5.0-pro",
+  "width": 1424,
+  "height": 800,
+  "outputFormat": "JPG",
+  "outputQuality": 97,
+  "outputType": "URL",
+  "includeCost": true,
+  "deliveryMethod": "async",
+  "_referenceImages": [
+    "../../media/hero-motion/ref/small-pouch.jpg",
+    "../../media/hero-motion/ref/small-tray.jpg"
+  ],
+  "positivePrompt": "A realistic photograph, shot from high above at a steep three-quarter overhead angle, of a traditional Chinese tea table. The table is the dark carved hardwood tea tray from the reference images: near-black wenge wood, a slatted draining top and deep-carved cloud and ruyi motifs along its edge, the grain catching a thin rim of warm light. Seven small white porcelain tea cups stand in a slow, uneven arc across the middle of the frame, each filled to the brim with a different brewed tea liquor. Read from the left, the liquor steps through the real colours of a tasting set: pale jade green, clear light gold, deep honey gold, warm amber, bright copper red, dark chestnut brown, and a final cup so dark it is almost black and mirrors the light as a single bright point. Fine threads of steam lift from the cups and curl into the shadow above them. Behind the cups, set back and softly out of focus, seven glossy chartreuse-green foil zip pouches lie in a loose overlapping row, each with a small plain white paper label, the labels turned away and unreadable. At the near lower edge a white teardrop-shaped porcelain tea dish holds dry twisted dark leaves. Lighting is low, warm and directional, coming from the upper left like late window light, leaving the lower and right side of the table in deep shadow. Rich dark-wood and green palette, fine ceramic and liquid detail, shallow depth of field, 50mm lens, cinematic colour, high dynamic range, photographed, not illustrated. No people and no hands anywhere in the frame. No text, no lettering, no numbers, no readable writing on the labels or the packaging, no logo and no watermark. Nothing is spilled and no cup is broken or duplicated.",
+  "settings": {
+    "thinking": false
+  },
+  "_comment": "settings.thinking is off deliberately. With it on (the model default) this exact request sat in 'processing' for over 25 minutes and never returned, while still billing $0.0418; with it off the same prompt and references come back in about 20 seconds. The references are two 768px crops of the shop's own photographs so the pouches, the carved tray and the white cha-he match what actually ships."
+}
