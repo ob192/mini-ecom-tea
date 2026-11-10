@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Forms
@@ -9,7 +9,7 @@ Forms and inputs.
 
 ## Before writing
 
-- The form primitives in `src/shared/components/ui` (`Field`, `Input`, `Button`, …). Where a rule needs a piece the project lacks (a field wrapper that wires ids, a label, an input group), build it once as a primitive, not inline in the form; propose it to the user first.
+- The form primitives in `components/ui` (`Field`, `Input`, `Button`, …). Where a rule needs a piece the project lacks (a field wrapper that wires ids, a label, an input group), build it once as a primitive, not inline in the form; propose it to the user first.
 - DESIGN.md: Components, Shapes, Colors, Voice.
 - How forms submit (a server action, an API route) and validate, and the `autoComplete` values existing forms use.
 - Labels, hints and errors are written in the site's language and voice.

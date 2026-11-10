@@ -1,8 +1,3 @@
----
-paths:
-  - "src/shared/components/ui/**"
----
-
 # Shared UI (`src/shared/components/ui/`)
 
 Примитивы дизайн-системы: кнопки, поля, бейджи, вкладки, диалог, шторка, карусель. Сделаны по образцу shadcn/ui

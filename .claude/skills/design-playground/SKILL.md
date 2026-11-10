@@ -14,8 +14,8 @@ Everything here is built from the project's own tokens and primitives. A variant
 
 ## 1. Orient
 
-1. Find the playground: `src/pages/playground*` (Pages Router) or `src/app/**/playground/**` (App Router). Note the router, how the page is kept out of production, and the explorations that exist.
-2. Read DESIGN.md, the tokens in the project's CSS file, and the primitives in the `ui` directory (the `ui` alias in `components.json`, else `src/shared/components/ui`).
+1. Find the playground: `app/playground/**` (App Router; this repo has no Pages Router). Note the router, how the page is kept out of production, and the explorations that exist.
+2. Read DESIGN.md, the tokens in the project's CSS file, and the primitives in the `ui` directory (the `ui` alias in `components.json`, else `components/ui`).
 3. Pick the mode: **create** (no playground), **update** (tokens or primitives changed, or the reference misses something), **explore** (a decision needs options), **clean** (an exploration was decided or abandoned).
 
 Done when you can state the playground's path and guard, the explorations that exist with their status, and the mode.

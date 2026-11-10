@@ -10,7 +10,7 @@ Severity is the default; the shared protocol says when to raise or lower it. An 
 
 **A2 · P1 — Every page has its own title.** (2.4.2) `<title>` names the page first and the school second, in Ukrainian, and differs between pages: the privacy page says it is the privacy policy, Ichnia names the town. How to check: `__axe()` returns `title`; compare across the sample and the four locales.
 
-**A3 · P0 — The language is declared.** (3.1.1, 3.1.2) `<html lang>` is `uk` (`src/app/layout.tsx`). A passage in another language carries its own `lang` — a Russian or English quote, a brand name read as a word. Hyphenation (`hyphens-auto`) depends on the right `lang`. How to check: `__axe()` returns `lang` on each locale; the tree and the code for parts.
+**A3 · P0 — The language is declared.** (3.1.1, 3.1.2) `<html lang>` is `uk` (`app/layout.tsx`). A passage in another language carries its own `lang` — a Russian or English quote, a brand name read as a word. Hyphenation (`hyphens-auto`) depends on the right `lang`. How to check: `__axe()` returns `lang` on each locale; the tree and the code for parts.
 
 **A4 · P0 — Everything works from the keyboard.** (2.1.1, 2.1.2, 2.1.4) Every action a mouse can do, a keyboard can: the mobile menu, the sign-up modal and its form, price tabs or toggles, anything that opens on click. Focus never gets stuck: Tab and Shift+Tab leave every component except a modal, which Esc closes (O3, O5). Single-key shortcuts, if any, can be turned off or work only with focus. Header and menu navigation is NV13. How to check: the walk reaches each control (`notReached` is empty), then operate each widget (SKILL.md, step 4.2).
 

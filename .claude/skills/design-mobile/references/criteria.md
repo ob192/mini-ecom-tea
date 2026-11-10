@@ -75,7 +75,7 @@ htmlFor>` или обёртка). Иконка-кнопка закрытия д�
   margin, или псевдоэлемент `relative after:absolute after:-inset-2`. Перекрытая другой целью
   площадь не засчитывается — расширенные зоны соседей не должны налезать друг на друга.
 - **Источники размера** — примитивы в `ui`-папке проекта (алиас `ui` в `components.json`, иначе
-  `src/shared/components/ui`): `button` (все `size`, включая `icon-*`), `badge`, пункты меню, опции
+  `components/ui`): `button` (все `size`, включая `icon-*`), `badge`, пункты меню, опции
   комбобоксов, пагинация, вкладки, крестик закрытия в `dialog`/`sheet`, `switch`, шрифт в `input` и
   `textarea`. Правка размера в примитиве под `pointer-coarse:` чинит все места разом и не трогает
   десктоп.
@@ -223,7 +223,7 @@ grep -rnE '(group|peer)?-?hover:(opacity-100|visible|block|flex|inline|pointer-e
 grep -rnE '\b(min-h|h|max-h)-screen\b|100vh' src
 
 # Viewport, safe area, touch-action
-grep -rn -A6 'export const viewport\|name="viewport"' src/app/layout.tsx src/pages/_document.* src/pages/_app.* src/components 2>/dev/null
+grep -rn -A6 'export const viewport\|name="viewport"' app/layout.tsx components 2>/dev/null
 grep -rnE 'safe-area|viewportFit|touch-action|touch-manipulation' src
 
 # Слайдеры и карусели: стрелки, скрытые на телефоне (остаётся только свайп)

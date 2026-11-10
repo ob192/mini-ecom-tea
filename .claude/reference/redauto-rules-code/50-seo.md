@@ -1,12 +1,3 @@
----
-paths:
-  - "src/app/**"
-  - "src/shared/**/seo.ts"
-  - "src/shared/**/json-ld.ts"
-  - "src/shared/components/json-ld.tsx"
-  - "src/shared/constants/site.ts"
----
-
 # Метаданные и JSON-LD
 
 Сайт — локальный бизнес в Чернигове. Разметка и метаданные описывают **только офис в Чернигове**; филиалы

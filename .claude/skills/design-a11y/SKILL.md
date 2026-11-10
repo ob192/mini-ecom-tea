@@ -28,7 +28,7 @@ From the request. A full audit of the site samples, each in its base state plus 
 
 | Page | States |
 |---|---|
-| Home `/` (sections in `src/widgets/home`) | the mobile menu (`Sheet`) open; the sign-up form empty, with errors, sent (on dev only) |
+| Home `/` (sections in `components`) | the mobile menu (`Sheet`) open; the sign-up form empty, with errors, sent (on dev only) |
 | Privacy `/privacy` | the mobile menu open |
 
 The site is Ukrainian only (`<html lang="uk">`). `/playground` is a specimen page: check it only when asked.
@@ -37,12 +37,13 @@ Done when there is a list "page → states" with no "etc.".
 
 ## 2. Bench
 
-- The dev server through `preview_start` (`redauto-dev`, or `redauto-dev-3001`); reuse one that runs. Production only read-only.
-- **Read only.** Never send a sign-up form on production — it reaches the school through `src/app/api/lead/route.ts`; never type real personal data. Typing test values to trigger validation is fine.
-- Serve the scripts and axe-core locally — axe-core is the version `pnpm-lock.yaml` pins (it comes with `eslint-plugin-jsx-a11y`; pnpm keeps it under `node_modules/.pnpm/axe-core@*/node_modules/axe-core`), nothing is downloaded:
+- The dev server through `preview_start` (`dev`); reuse one that runs. Production only read-only.
+- **Read only.** Never submit the checkout on production — it posts a real order to the shop's Telegram chat through `app/api/order/route.ts`; never type real personal data. Typing test values to trigger validation is fine.
+- Serve the scripts and axe-core locally — axe-core comes with `eslint-plugin-jsx-a11y` under `node_modules/axe-core` (npm hoists it; pnpm keeps it under `node_modules/.pnpm/axe-core@*/node_modules/axe-core`), nothing is downloaded:
   ```bash
   A11Y=<scratchpad>/a11y-serve; mkdir -p $A11Y
-  ln -sf <this skill>/scripts/*.js $(ls -d node_modules/.pnpm/axe-core@*/node_modules/axe-core | head -1)/axe.min.js $A11Y/
+  AXE=$(ls -d node_modules/axe-core node_modules/.pnpm/axe-core@*/node_modules/axe-core 2>/dev/null | head -1)
+  ln -sf <this skill>/scripts/*.js "$AXE/axe.min.js" $A11Y/
   python3 -m http.server 8766 --bind 127.0.0.1 --directory $A11Y   # in the background
   ```
   After each page load, load them in the browser's JavaScript tool (a script tag needs no CORS):
@@ -88,7 +89,7 @@ Done when each sampled page ran all three modes and the motion search is read.
 
 ## 7. Cause in code
 
-Trace each finding to a file and line, then up to the source: a class at the use site, a primitive in `src/shared/components/ui`, a token in `src/app/globals.css`, or the content (text and images in `src/content`). One fix in a primitive or a token clears dozens of findings — those go first.
+Trace each finding to a file and line, then up to the source: a class at the use site, a primitive in `components/ui`, a token in `app/globals.css`, or the content (text and images in `src/content`). One fix in a primitive or a token clears dozens of findings — those go first.
 
 Done when every finding has `file:line` or names its data source.
 

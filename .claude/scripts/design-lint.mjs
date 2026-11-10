@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Design linter: the rules in .claude/rules/design/ that a search can settle.
 //
-//   node .claude/scripts/design-lint.mjs [files…]   lint these files (default: every .tsx/.jsx under src/)
+//   node .claude/scripts/design-lint.mjs [files…]   lint these files (default: every .tsx/.jsx under the UI roots)
 //   node .claude/scripts/design-lint.mjs --hook     PostToolUse hook: lint the edited file, exit 2 on findings
 //
 // Keep a finding on purpose with `design-lint-ignore <ID> — <reason>` in a comment on its line or the line above.
@@ -10,13 +10,15 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dirname, "../..");
-const CSS = join(ROOT, "src/app/globals.css");
-// Code that is not held to the rules yet. Empty: v1 and /ichnia are gone.
+const CSS = join(ROOT, "app/globals.css");
+// This repo is root-level App Router: no `src/`, UI lives in app/, components/ and context/.
+const UI_ROOTS = ["app", "components", "context"];
+// Code that is not held to the rules yet.
 const LEGACY = [];
 // Specimen pages show palette shades on purpose (design-audit review.md, "Specimen pages").
-const SPECIMEN = ["src/app/playground/", "src/widgets/playground/"];
-const ICON_SET = "react-icons/lu";
-const PRIMITIVES = "src/shared/components/ui/";
+const SPECIMEN = ["app/playground/", "components/playground/"];
+const ICON_SET = "lucide-react";
+const PRIMITIVES = "components/ui/";
 
 // Palette families: `--color-<family>-<step>` in the CSS file. Their shades belong in tokens, not components.
 function paletteFamilies() {
@@ -127,7 +129,7 @@ function childTags(body) {
 
 function importChecks(src, report) {
 	for (const m of src.matchAll(/from\s+["']((?:react-icons\/[a-z0-9]+)|lucide-react|@heroicons\/[^"']+|@tabler\/icons-react|@phosphor-icons\/[^"']+)["']/g)) {
-		if (m[1] !== ICON_SET && m[1] !== "react-icons/lib")
+		if (m[1] !== ICON_SET)
 			report("I1", "P1", m.index, `icon from \`${m[1]}\`. Fix: the project's set, \`${ICON_SET}\``);
 	}
 }
@@ -193,7 +195,8 @@ if (args[0] === "--hook") {
 	const path = input.tool_input?.file_path;
 	if (!path || !/\.(tsx|jsx)$/.test(path)) process.exit(0);
 	const abs = resolve(path);
-	if (!relative(ROOT, abs).startsWith("src/") || !existsSync(abs)) process.exit(0);
+	const rel = relative(ROOT, abs);
+	if (!UI_ROOTS.some((r) => rel === r || rel.startsWith(`${r}/`)) || !existsSync(abs)) process.exit(0);
 	const findings = lintFile(abs);
 	if (!findings.length) process.exit(0);
 	process.stderr.write(
@@ -202,7 +205,9 @@ if (args[0] === "--hook") {
 	process.exit(2);
 }
 
-const files = args.length ? args.map((a) => resolve(a)) : walk(join(ROOT, "src"));
+const files = args.length
+	? args.map((a) => resolve(a))
+	: UI_ROOTS.flatMap((r) => (existsSync(join(ROOT, r)) ? walk(join(ROOT, r)) : []));
 const findings = files.filter((f) => existsSync(f) && /\.(tsx|jsx)$/.test(f)).flatMap(lintFile);
 if (findings.length) {
 	console.log(format(findings));

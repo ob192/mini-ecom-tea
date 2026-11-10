@@ -1,8 +1,3 @@
----
-paths:
-  - "src/app/**"
----
-
 # App Router (`src/app`)
 
 ## `layout.tsx` — технический файл, а не вёрстка

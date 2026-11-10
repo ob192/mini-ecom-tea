@@ -41,7 +41,7 @@ Borders for structure, one soft shadow for overlays only.
 Radius: `rounded-md` controls, `rounded-lg` cards and dialogs, `rounded-full` only for avatars and badges.
 
 ## Components
-Where to find them (`src/shared/components/ui`) and project-specific variants worth knowing.
+Where to find them (`components/ui`) and project-specific variants worth knowing.
 
 ## Do's and Don'ts
 Short, concrete, from decisions the user made: "Do: one primary action per view." "Don't: tint card backgrounds."

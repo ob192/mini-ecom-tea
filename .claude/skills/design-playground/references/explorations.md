@@ -5,9 +5,9 @@ How to build `/playground/<topic>`: a page that shows 2–5 variants of one thin
 ## Files
 
 ```
-src/app/playground/<topic>/page.tsx                               page: guard, stacked variants
-src/widgets/playground/playground-<topic>/ui/Playground<Topic>*.tsx one file per variant, plus shared pieces
-public/playground/<topic>/                                        media made for the exploration
+app/playground/<topic>/page.tsx                    page: guard, stacked variants
+components/playground/<topic>/*.tsx                one file per variant, plus shared pieces
+public/playground/<topic>/                         media made for the exploration
 ```
 
 Nothing outside these paths changes for an exploration, except a new primitive or token the user agreed to.
@@ -31,5 +31,5 @@ Open the page, run `design-audit` on every variant and screenshot it at 375, 768
 
 ## Cleaning
 
-- **Before a new exploration:** list `src/app/playground/*/` and `src/widgets/playground/*` (other than `playground-reference`) and `public/playground/*`; delete what was decided or abandoned, saying what you deleted.
+- **Before a new exploration:** list `app/playground/*/` and `components/playground/*` (other than `playground-reference`) and `public/playground/*`; delete what was decided or abandoned, saying what you deleted.
 - **After a choice:** move the chosen variant to its real component, move kept assets to their real public path, delete the rest of the exploration.
