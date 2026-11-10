@@ -38,7 +38,7 @@ export const Radio = React.forwardRef<React.ElementRef<typeof RadioGroupPrimitiv
       ref={ref}
       className={cn(
         'group flex w-full min-h-11 items-start gap-3 rounded-md py-2 text-left transition-colors',
-        'hover:bg-foreground/5',
+        'hover:bg-foreground/5 active:bg-foreground/10',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         'disabled:cursor-not-allowed disabled:opacity-50',
         className,

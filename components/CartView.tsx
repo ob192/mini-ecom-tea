@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Fragment, useEffect, useRef } from "react";
-import { useCart } from "@/context/CartContext";
-import { getProduct, priceFor, UNIT } from "@/lib/products";
-import { uah, plural } from "@/lib/format";
-import { trackRemoveFromCart, trackViewCart } from "@/lib/analytics";
-import { Header } from "@/components/Header";
-import { ProductImage } from "@/components/Logo";
-import { QtyStepper } from "@/components/ui/qty-stepper";
-import { Leaf, ShoppingBag, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import type { CartItem } from "@/lib/types";
+import Link from 'next/link';
+import { Fragment, useEffect, useRef } from 'react';
+import { useCart } from '@/context/CartContext';
+import { getProduct, priceFor, UNIT } from '@/lib/products';
+import { uah, plural } from '@/lib/format';
+import { trackRemoveFromCart, trackViewCart } from '@/lib/analytics';
+import { Header } from '@/components/Header';
+import { ProductImage } from '@/components/Logo';
+import { QtyStepper } from '@/components/ui/qty-stepper';
+import { Leaf, ShoppingBag, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import type { CartItem } from '@/lib/types';
 
 function CartRow({
   item,
@@ -31,17 +31,8 @@ function CartRow({
 
   return (
     <div className="flex gap-3 py-3.5 items-start">
-      <Link
-        href={`/product/${p.slug}`}
-        className="w-16 shrink-0 rounded-xl overflow-hidden"
-      >
-        <ProductImage
-          src={p.image}
-          category={p.category}
-          alt={p.title}
-          ratio="1 / 1"
-          tag=""
-        />
+      <Link href={`/product/${p.slug}`} className="w-16 shrink-0 rounded-xl overflow-hidden">
+        <ProductImage src={p.image} category={p.category} alt={p.title} ratio="1 / 1" tag="" />
       </Link>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between gap-2">
@@ -58,7 +49,7 @@ function CartRow({
           </button>
         </div>
         <div className="text-muted-foreground text-xs mt-0.5 mb-2.5">
-          {item.weight ? `${item.weight} ${UNIT} · ` : ""}
+          {item.weight ? `${item.weight} ${UNIT} · ` : ''}
           {uah(unit)}
         </div>
         <div className="flex items-center justify-between">
@@ -68,9 +59,7 @@ function CartRow({
             onDec={() => onDec(item.slug, item.weight)}
             onInc={() => onInc(item.slug, item.weight)}
           />
-          <span className="text-base font-bold text-foreground">
-            {uah(unit * item.qty)}
-          </span>
+          <span className="text-base font-bold text-foreground">{uah(unit * item.qty)}</span>
         </div>
       </div>
     </div>
@@ -111,9 +100,7 @@ export function CartView() {
       <>
         <Header title="Кошик" back backHref="/catalog" />
         <main id="main" className="flex flex-1 flex-col [&>*]:w-full">
-          <div className="px-4 py-16 text-center text-muted-foreground">
-            Завантаження…
-          </div>
+          <div className="px-4 py-16 text-center text-muted-foreground">Завантаження…</div>
         </main>
       </>
     );
@@ -153,18 +140,13 @@ export function CartView() {
           <div className="px-4 pt-1 pb-2 lg:px-0 lg:pt-0">
             <h1 className="m-0 text-2xl text-foreground">Кошик</h1>
             <div className="text-muted-foreground text-sm pt-1.5 pb-0.5">
-              {count} {plural(count, "товар", "товари", "товарів")} у кошику
+              {count} {plural(count, 'товар', 'товари', 'товарів')} у кошику
             </div>
             <div>
               {items.map((it, i) => (
                 <Fragment key={`${it.slug}|${it.weight}`}>
                   {i > 0 ? <hr className="border-t border-border" /> : null}
-                  <CartRow
-                    item={it}
-                    onDec={dec}
-                    onInc={inc}
-                    onRemove={handleRemove}
-                  />
+                  <CartRow item={it} onDec={dec} onInc={inc} onRemove={handleRemove} />
                 </Fragment>
               ))}
             </div>
@@ -174,26 +156,20 @@ export function CartView() {
             <Card className="p-4 mt-3.5 lg:mt-0 flex flex-col gap-3">
               <div className="flex justify-between items-baseline text-base text-muted-foreground">
                 <span>Сума</span>
-                <span className="font-semibold text-foreground">
-                  {uah(subtotal)}
-                </span>
+                <span className="font-semibold text-foreground">{uah(subtotal)}</span>
               </div>
               <div className="flex justify-between items-baseline text-base text-muted-foreground">
                 <span>Доставка</span>
                 <span
-                  className={
-                    delivery === 0
-                      ? "text-success-subtle-foreground"
-                      : "text-foreground"
-                  }
+                  className={delivery === 0 ? 'text-success-subtle-foreground' : 'text-foreground'}
                 >
-                  {delivery === 0 ? "Безкоштовно" : uah(delivery)}
+                  {delivery === 0 ? 'Безкоштовно' : uah(delivery)}
                 </span>
               </div>
               {delivery > 0 && remaining > 0 ? (
                 <div className="text-xs text-muted-foreground -mt-1">
-                  Безкоштовна доставка від {uah(freeDeliveryThreshold)} —
-                  додайте ще {uah(remaining)}
+                  Безкоштовна доставка від {uah(freeDeliveryThreshold)} — додайте ще{' '}
+                  {uah(remaining)}
                 </div>
               ) : null}
               <hr className="border-t border-border" />

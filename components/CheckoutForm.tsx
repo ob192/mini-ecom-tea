@@ -1,32 +1,25 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useForm, type FieldErrors } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useForm, type FieldErrors } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
-import { useCart } from "@/context/CartContext";
-import { getProduct, priceFor } from "@/lib/products";
-import { uah } from "@/lib/format";
-import {
-  trackAddShippingInfo,
-  trackBeginCheckout,
-  trackCheckoutError,
-} from "@/lib/analytics";
-import { checkoutSchema, type CheckoutValues } from "@/lib/checkout-schema";
-import { Header } from "@/components/Header";
-import { Banknote, Check, Truck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Radio, RadioGroup } from "@/components/ui/radio-group";
-import {
-  ShippingSelector,
-  type ShippingValue,
-} from "@/components/ShippingSelector";
+import { useCart } from '@/context/CartContext';
+import { getProduct, priceFor } from '@/lib/products';
+import { uah } from '@/lib/format';
+import { trackAddShippingInfo, trackBeginCheckout, trackCheckoutError } from '@/lib/analytics';
+import { checkoutSchema, type CheckoutValues } from '@/lib/checkout-schema';
+import { Header } from '@/components/Header';
+import { Banknote, Check, Truck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Radio, RadioGroup } from '@/components/ui/radio-group';
+import { ShippingSelector, type ShippingValue } from '@/components/ShippingSelector';
 import {
   Form,
   FormControl,
@@ -34,7 +27,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 
 /*
   One numbered step of the form («Три кроки», the owner's choice from
@@ -80,18 +73,18 @@ export function CheckoutForm() {
 
   const form = useForm<CheckoutValues>({
     resolver: zodResolver(checkoutSchema),
-    mode: "onBlur",
+    mode: 'onBlur',
     defaultValues: {
-      first: "",
-      last: "",
-      phone: "",
-      deliveryMethod: "np_warehouse",
-      cityRef: "",
-      cityName: "",
-      warehouseRef: "",
-      warehouse: "",
-      address: "",
-      botField: "",
+      first: '',
+      last: '',
+      phone: '',
+      deliveryMethod: 'np_warehouse',
+      cityRef: '',
+      cityName: '',
+      warehouseRef: '',
+      warehouse: '',
+      address: '',
+      botField: '',
     },
   });
 
@@ -103,13 +96,13 @@ export function CheckoutForm() {
     trackBeginCheckout(items);
   }, [ready, items]);
 
-  const deliveryMethod = form.watch("deliveryMethod");
+  const deliveryMethod = form.watch('deliveryMethod');
 
   const shippingValue: ShippingValue = {
-    cityRef: form.watch("cityRef") ?? "",
-    cityName: form.watch("cityName") ?? "",
-    warehouseRef: form.watch("warehouseRef") ?? "",
-    warehouse: form.watch("warehouse") ?? "",
+    cityRef: form.watch('cityRef') ?? '',
+    cityName: form.watch('cityName') ?? '',
+    warehouseRef: form.watch('warehouseRef') ?? '',
+    warehouse: form.watch('warehouse') ?? '',
   };
 
   const handleShippingChange = (patch: Partial<ShippingValue>) => {
@@ -131,7 +124,7 @@ export function CheckoutForm() {
             <p className="text-muted-foreground text-base max-w-[28ch]">
               Додайте товари, щоб оформити замовлення.
             </p>
-            <Button size="lg" className="mt-2" onClick={() => router.push("/")}>
+            <Button size="lg" className="mt-2" onClick={() => router.push('/')}>
               До каталогу
             </Button>
           </div>
@@ -145,32 +138,28 @@ export function CheckoutForm() {
     // add_shipping_info rides along with the submit.
     trackAddShippingInfo(
       items,
-      values.deliveryMethod === "np_courier"
-        ? "Нова Пошта — кур'єр"
-        : "Нова Пошта — відділення",
+      values.deliveryMethod === 'np_courier' ? "Нова Пошта — кур'єр" : 'Нова Пошта — відділення',
     );
 
     try {
-      const res = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, items }),
       });
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         trackCheckoutError(String(data?.error ?? `http_${res.status}`));
-        toast.error(
-          data?.error || "Не вдалося надіслати замовлення. Спробуйте ще раз.",
-        );
+        toast.error(data?.error || 'Не вдалося надіслати замовлення. Спробуйте ще раз.');
         return;
       }
 
       clear();
-      const id = encodeURIComponent(data?.orderId ?? "");
-      router.push(`/order/success${id ? `?id=${id}` : ""}`);
+      const id = encodeURIComponent(data?.orderId ?? '');
+      router.push(`/order/success${id ? `?id=${id}` : ''}`);
     } catch {
-      trackCheckoutError("network");
+      trackCheckoutError('network');
       toast.error("Помилка мережі. Перевірте з'єднання та спробуйте ще раз.");
     }
   };
@@ -180,8 +169,8 @@ export function CheckoutForm() {
   // `errors` comes from the handler, not formState — the latter is a proxy
   // that only tracks the fields read during render.
   const onInvalid = (errors: FieldErrors<CheckoutValues>) => {
-    trackCheckoutError("validation:" + Object.keys(errors).join(","));
-    toast.error("Перевірте виділені поля.");
+    trackCheckoutError('validation:' + Object.keys(errors).join(','));
+    toast.error('Перевірте виділені поля.');
   };
 
   return (
@@ -217,14 +206,12 @@ export function CheckoutForm() {
               <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-border pt-3 text-sm">
                 <span className="text-muted-foreground">Доставка</span>
                 <span className="tabular-nums">
-                  {delivery === 0 ? "безкоштовно" : uah(delivery)}
+                  {delivery === 0 ? 'безкоштовно' : uah(delivery)}
                 </span>
               </div>
               <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-border pt-3">
                 <span className="font-medium">Разом</span>
-                <span className="text-2xl font-semibold tabular-nums">
-                  {uah(total)}
-                </span>
+                <span className="text-2xl font-semibold tabular-nums">{uah(total)}</span>
               </div>
             </Card>
           </div>
@@ -251,7 +238,7 @@ export function CheckoutForm() {
                     tabIndex={-1}
                     autoComplete="off"
                     aria-hidden="true"
-                    {...form.register("botField")}
+                    {...form.register('botField')}
                   />
                 </div>
 
@@ -270,11 +257,7 @@ export function CheckoutForm() {
                             Ім&apos;я <span className="text-foreground">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Олена"
-                              autoComplete="given-name"
-                              {...field}
-                            />
+                            <Input placeholder="Олена" autoComplete="given-name" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -290,11 +273,7 @@ export function CheckoutForm() {
                             Прізвище <span className="text-foreground">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Коваленко"
-                              autoComplete="family-name"
-                              {...field}
-                            />
+                            <Input placeholder="Коваленко" autoComplete="family-name" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -338,26 +317,17 @@ export function CheckoutForm() {
                               filled disc as well as by colour (C11).
                             */}
                   <fieldset>
-                    <legend className="text-sm font-medium">
-                      Спосіб доставки
-                    </legend>
+                    <legend className="text-sm font-medium">Спосіб доставки</legend>
                     <RadioGroup
                       className="mt-2"
                       value={deliveryMethod}
                       onValueChange={(v) =>
-                        form.setValue(
-                          "deliveryMethod",
-                          v as CheckoutValues["deliveryMethod"],
-                          {
-                            shouldValidate: true,
-                          },
-                        )
+                        form.setValue('deliveryMethod', v as CheckoutValues['deliveryMethod'], {
+                          shouldValidate: true,
+                        })
                       }
                     >
-                      <Radio
-                        value="np_warehouse"
-                        hint="Нова пошта: відділення або поштомат"
-                      >
+                      <Radio value="np_warehouse" hint="Нова пошта: відділення або поштомат">
                         У відділення
                       </Radio>
                       <Radio value="np_courier" hint="Кур'єр привезе на адресу">
@@ -369,20 +339,19 @@ export function CheckoutForm() {
                   {/* Nova Poshta city + warehouse picker */}
                   <ShippingSelector
                     value={shippingValue}
-                    showWarehouse={deliveryMethod === "np_warehouse"}
+                    showWarehouse={deliveryMethod === 'np_warehouse'}
                     onChange={handleShippingChange}
                   />
 
                   {/* courier-only street address */}
-                  {deliveryMethod === "np_courier" ? (
+                  {deliveryMethod === 'np_courier' ? (
                     <FormField
                       control={form.control}
                       name="address"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            Адреса доставки{" "}
-                            <span className="text-foreground">*</span>
+                            Адреса доставки <span className="text-foreground">*</span>
                           </FormLabel>
                           <FormControl>
                             <Textarea
@@ -404,27 +373,17 @@ export function CheckoutForm() {
                   icon={<Banknote className="size-5 text-muted-foreground" />}
                 >
                   <p className="text-base text-pretty">
-                    Оплата при отриманні — готівкою або карткою у відділенні.
-                    Вводити нічого не треба: менеджер зателефонує, щоб
-                    підтвердити замовлення.
+                    Оплата при отриманні — готівкою або карткою у відділенні. Вводити нічого не
+                    треба: менеджер зателефонує, щоб підтвердити замовлення.
                   </p>
                 </Step>
 
                 <div className="sticky-bar flex items-center gap-4">
                   <div className="flex flex-col">
-                    <span className="text-xs text-muted-foreground">
-                      До сплати
-                    </span>
-                    <span className="text-xl font-semibold tabular-nums">
-                      {uah(total)}
-                    </span>
+                    <span className="text-xs text-muted-foreground">До сплати</span>
+                    <span className="text-xl font-semibold tabular-nums">{uah(total)}</span>
                   </div>
-                  <Button
-                    type="submit"
-                    size="lg"
-                    pending={submitting}
-                    className="flex-1"
-                  >
+                  <Button type="submit" size="lg" pending={submitting} className="flex-1">
                     Підтвердити замовлення
                   </Button>
                 </div>
@@ -432,21 +391,21 @@ export function CheckoutForm() {
                 {/* Merchant Center expects the delivery and return terms to be
                                 reachable from checkout, not only from the footer. */}
                 <p className="text-sm text-muted-foreground text-pretty">
-                  Підтверджуючи замовлення, ви погоджуєтесь з умовами{" "}
+                  Підтверджуючи замовлення, ви погоджуєтесь з умовами{' '}
                   <Link
                     href="/delivery"
                     className="underline underline-offset-4 hover:text-primary-subtle-foreground"
                   >
                     оплати і доставки
                   </Link>
-                  ,{" "}
+                  ,{' '}
                   <Link
                     href="/returns"
                     className="underline underline-offset-4 hover:text-primary-subtle-foreground"
                   >
                     обміну та повернення
-                  </Link>{" "}
-                  і{" "}
+                  </Link>{' '}
+                  і{' '}
                   <Link
                     href="/privacy"
                     className="underline underline-offset-4 hover:text-primary-subtle-foreground"

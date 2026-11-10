@@ -199,6 +199,38 @@ first-time visitor, so every ad click hit it. **Anything else pinned to the
 bottom of the viewport joins the handshake, not just picks a z-index.**
 `tests/bottom-layers.test.ts` fails if either half goes missing.
 
+What the handshake does **not** cover is ordinary page content that happens to be
+under the notice at some scroll position. Measured on `/catalog` at 375×812, the
+notice sits over two «У кошик» buttons in the grid; they scroll out from under it
+and the notice is dismissed by one 44px tap, so it is left as it is. The incident
+the handshake exists for was different in kind: the buy bar is *sticky*, so it was
+covered at every scroll position and there was no way to reach it at all.
+
+### The sticky budget
+
+At most one bar is pinned to the top. The header is split: the 56px bar with the
+menu, the wordmark and the cart is `sticky`, and the «Назад» row below it scrolls
+away with the page — it is a link to a parent, not something anyone needs twice.
+Pinning both cost 15% of a 375×812 screen before any content; the bar alone costs
+7%. `/catalog` adds its category row (`sticky top-14`, 8%), which is the one place
+a second pinned strip earns its height, and that row is a single horizontally
+scrolling line — eleven chips wrapped four rows deep.
+
+`scroll-padding-top` in `app/globals.css` is the height of what is actually
+pinned (4.5rem), and `tests/anchor-scroll.test.ts` pins it. Keep the sum of
+pinned heights under a quarter of the screen.
+
+### Every control states its own press
+
+Tailwind's preflight sets `-webkit-tap-highlight-color: transparent`, which
+removes the grey flash a phone browser draws on a tap. Nothing replaces it by
+default, so a control with only a `hover:` state gives a touch visitor no
+acknowledgement at all — on a phone `hover:` either never fires or sticks after
+the finger leaves. Every control therefore carries an `active:` state beside its
+hover, defined in the primitive. Interactive elements also take
+`touch-action: manipulation` (set once in the base layer), so a quick second tap
+is a second tap and not double-tap-to-zoom.
+
 ## Elevation & Depth
 
 Flat. Depth is the surface step (`background` → `subtle` → `card`) and a

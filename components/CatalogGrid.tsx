@@ -109,10 +109,10 @@ export function CatalogGrid({
                   setActiveCat(c.slug);
                   trackSelectCategory(c.slug, c.label);
                 }}
-                className={`min-h-11 shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors ${
- active
- ?'bg-primary text-primary-foreground ring-1 ring-primary'
-                    : 'bg-card text-muted-foreground border border-border hover:text-foreground'
+                className={`min-h-11 shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  active
+                    ? 'bg-primary text-primary-foreground ring-1 ring-foreground active:bg-primary-strong'
+                    : 'bg-card text-muted-foreground hover:bg-foreground/5 hover:text-foreground active:bg-foreground/10'
                 }`}
               >
                 {c.label}

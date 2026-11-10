@@ -134,7 +134,7 @@ export function ProductBuy({
                     className={`flex min-h-14 w-full items-center gap-3 rounded-md border px-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                       on
                         ? 'border-foreground bg-primary-subtle'
-                        : 'border-input hover:border-border-strong hover:bg-foreground/5'
+                        : 'border-input hover:border-border-strong hover:bg-foreground/5 active:bg-foreground/10'
                     }`}
                   >
                     <span

@@ -129,21 +129,28 @@ export function CookieConsent() {
       aria-label="Повідомлення про файли cookie"
       className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[calc(18px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none"
     >
-      {/* A notice is not an advert: it sits on the popover surface, not on a
-          panel of brand colour, and the brand is on its one button (C5, C7). */}
-      <div className="pointer-events-auto mx-auto flex w-full max-w-xl flex-col gap-3 rounded-xl bg-popover p-4 text-popover-foreground shadow-xl sm:flex-row sm:items-center sm:gap-4">
-        <p className="flex-1 text-sm text-muted-foreground text-pretty">
-          Ми використовуємо файли cookie, щоб сайт працював коректно та щоб розуміти, які чаї вам
-          цікаві. Деталі —{' '}
+      {/*
+        A notice is not an advert: it sits on the popover surface, not on a panel
+        of brand colour, and the brand is on its one button (C5, C7).
+
+        The copy is two lines on a phone, not four. Measured: the notice was
+        175px tall, and with the sticky header it put 46% of a 375×812 screen
+        under pinned panels on a first visit — which is every ad click. It is now
+        a row even on a phone, so it costs about 90px, and the sentence says the
+        same thing in fewer words.
+      */}
+      <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-3 rounded-xl bg-popover p-3 text-popover-foreground shadow-xl sm:gap-4 sm:p-4">
+        <p className="min-w-0 flex-1 text-sm text-muted-foreground text-pretty">
+          Ми використовуємо cookie, щоб сайт працював і щоб розуміти, які чаї вам цікаві.{' '}
           <Link
             href="/privacy"
-            className="text-foreground underline underline-offset-2 hover:text-primary-subtle-foreground"
+            className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground"
           >
-            в Угоді користувача
+            Деталі
           </Link>
           .
         </p>
-        <Button onClick={accept} className="shrink-0 sm:w-auto">
+        <Button onClick={accept} size="sm" className="shrink-0">
           Добре
         </Button>
       </div>

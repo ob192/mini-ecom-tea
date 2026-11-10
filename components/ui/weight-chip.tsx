@@ -40,8 +40,8 @@ export const WeightChip = React.forwardRef<HTMLButtonElement, WeightChipProps>(
            a thumb: it grows to the 44px floor on a coarse pointer (M1). */
         compact ? 'h-8 px-2 text-xs pointer-coarse:h-11 pointer-coarse:px-3' : 'h-11 min-w-16 flex-col gap-0 px-3.5',
         selected
-          ? 'border-foreground bg-primary text-primary-foreground'
-          : 'border-input bg-background text-foreground hover:border-border-strong hover:bg-foreground/5',
+          ? 'border-foreground bg-primary text-primary-foreground active:bg-primary-strong'
+          : 'border-input bg-background text-foreground hover:border-border-strong hover:bg-foreground/5 active:bg-foreground/10',
         className,
       )}
       {...props}

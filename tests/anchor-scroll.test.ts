@@ -37,9 +37,12 @@ describe('in-page anchors', () => {
     expect(anchorOffset, 'no scroll-padding-top in globals.css').toBeGreaterThan(0);
 
     /*
-      The header is a 56px bar plus, on pages that carry one, a 44px «Назад»
-      row. Read the bar height back out of the component so raising it fails
-      here rather than silently tucking every anchor target behind the header.
+      Only the bar is sticky now — the «Назад» row scrolls away with the page,
+      because a pinned header plus a pinned back row plus the cookie notice came
+      to 46% of a 375×812 phone. So the offset has to clear the bar, and the bar
+      is the only thing it has to clear. Read its height back out of the
+      component, so raising it fails here rather than silently tucking every
+      anchor target behind the header.
     */
     const barHeight = Number(header.match(/\bh-(\d+)\b/)?.[1]) * 4;
     expect(barHeight, 'header bar height not found in Header.tsx').toBeGreaterThan(0);
