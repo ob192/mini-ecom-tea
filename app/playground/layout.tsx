@@ -30,14 +30,6 @@ export default function PlaygroundLayout({ children }: { children: React.ReactNo
           <Link href="/playground" className="text-sm font-semibold">
             Playground
           </Link>
-          <nav aria-label="Playground" className="flex items-center gap-1 text-sm">
-            <Link
-              href="/playground/brand"
-              className="inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-            >
-              Напрям бренду
-            </Link>
-          </nav>
           <Link
             href="/"
             className="ml-auto inline-flex min-h-11 items-center rounded-md px-3 text-sm text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
