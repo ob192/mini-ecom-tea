@@ -68,15 +68,6 @@ export default function PlaygroundReference() {
             </Link>
           ))}
         </nav>
-        <Alert variant="warning" className="mt-8" title="Напрям бренду ще не обрано">
-          <p>
-            <PgCode>--primary</PgCode> тимчасово тримає нинішній зелений магазину. Три варіанти —{' '}
-            <Link href="/playground/brand" className="underline underline-offset-4">
-              на сторінці «Напрям бренду»
-            </Link>
-            .
-          </p>
-        </Alert>
       </div>
 
       {/* ── 2. Colour ─────────────────────────────────────────────────────── */}

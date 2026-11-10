@@ -18,11 +18,11 @@ page.
 Values live in [`app/globals.css`](app/globals.css) — one file, three layers.
 This file holds the decisions. The live reference is `/playground` (dev only).
 
-> **The brand direction is not settled.** `--primary` and its four companions
-> currently hold the shop's existing tea green, so the site keeps looking like
-> itself. `/playground/brand` renders the three candidates; picking one changes
-> five lines in `:root` and five in `.dark`, and the two palettes he rejects get
-> deleted. Everything else in this file is decided.
+The brand hue is **amber** — the colour of a brewed liquor — chosen by the owner
+on 2026-11-10 from three rendered candidates. The tea green the shop used before
+and a terracotta were the two it was chosen over; both palettes are deleted, not
+left lying in the file. Green has not disappeared from the site, it has moved to
+where it belongs: the photography.
 
 ## Colors
 
@@ -37,9 +37,9 @@ they use the roles below. An opacity modifier on a token is still that token
 | `subtle` | a quiet band | sections that alternate with `background` |
 | `card` | a surface | product cards, summaries, panels; no border, no shadow |
 | `muted-foreground` | secondary text | captions, meta, hints, footer links (6.8:1 on the page, 6.0:1 on a card) |
-| `primary` | the main action | one filled button per view, the selected weight chip, the active state, the leaf in the wordmark — and nothing else |
+| `primary` | the main action | one filled button per view, the selected weight chip, the active state, the leaf in the wordmark — and nothing else. Amber takes **ink**, not white: at 6.1:1 the dark label is the readable pair, and it keeps the button from reading as a warning sign. One shade serves both modes |
 | `primary-strong` | pressed | `hover:` and `active:` on `bg-primary` |
-| `primary-subtle` / `-foreground` | a tinted area | a highlighted row or badge; never a saturated fill at that size |
+| `primary-subtle` / `-foreground` | a tinted area | a highlighted row or badge; never a saturated fill at that size. A step deeper than a status tint would be, so a gold area reads as the brand |
 | `secondary` | the second button | beside the main action |
 | `accent` | hover surface | shadcn's highlight role, **not** a brand colour. A ghost control instead darkens whatever is under it (`foreground/5`, pressed `/10`), so it works on every surface |
 | `inverse` / `-foreground` | a dark chip or bar on a light page | small things only; a whole dark band is a `.dark` block instead |
@@ -47,11 +47,26 @@ they use the roles below. An opacity modifier on a token is still that token
 | `border-strong` | a stronger line | hover on a field or an outline control |
 | `input` | a field's boundary | 3.9:1 against the page and 3.4:1 on a card, because a field has to be seen (WCAG 1.4.11) |
 | `ring` | focus | blue, deliberately not the brand hue, so focus survives a change of brand: 5.0:1 light, 7.4:1 dark |
-| `error` `success` `warning` `info` (+ `-foreground`, `-subtle`, `-subtle-foreground`) | status | field errors, alerts, stock badges. `destructive` aliases `error` |
+| `error` `success` `info` (+ `-foreground`, `-subtle`, `-subtle-foreground`) | status | field errors, alerts, stock badges. `destructive` aliases `error` |
+| `warning` (+ the same family) | caution | see below — it has no tint of its own |
 
 Every pair above is measured, and the ratio is written beside the token in
 `app/globals.css`. `/playground` recomputes them from the resolved colours in the
 browser, so a value that drifts shows there rather than in a review.
+
+### Warning has no tinted surface
+
+The brand owns amber, so a caution cannot have a pale amber banner: measured,
+`warning-subtle` as a pale amber against `primary-subtle` is 1.1:1, and the old
+`warn-500` against the brand's `honey-500` is 1.3:1 — the same colour to any
+eye. So `warning-subtle` **is the card surface**, and the caution is carried by
+the deep end of the amber ramp in its icon and its text (6.1:1 on the card),
+plus the word itself. C11 asks for that anyway: colour is never the only signal.
+The saturated step survives for a small indicator and is dark enough (2.5:1
+against the brand) not to be mistaken for an action.
+
+If a warning ever needs to shout, it borrows `error`. Do not invent a fourth
+warm hue — the page already carries amber, red and green.
 
 ### The dark block (`.dark`)
 
@@ -66,10 +81,10 @@ token is white in one brand direction and ink in another, which would put
 near-black text on a dark photograph.
 
 In the dark block the page is `neutral-950` (#12110e, warm near-black), a card a
-step up at `neutral-900`, hairlines `neutral-800`, and the brand steps **up** to
-`leaf-300` with ink text — `leaf-700` is 1.9:1 against a near-black page, so a
-green button would simply vanish on it. `input` keeps its light value: one shade
-clears 3:1 against both pages.
+step up at `neutral-900`, hairlines `neutral-800`. The brand needs no dark twin
+at all: amber is 6.6:1 against the near-black page and still takes ink — one
+shade, both modes, which is one of the reasons it was chosen. `input` keeps its
+light value too: one shade clears 3:1 against both pages.
 
 ## Typography
 

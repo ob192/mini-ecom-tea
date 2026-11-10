@@ -186,11 +186,13 @@ is no longer upstream of anything.
   changing a token goes through the `design-system` skill and through all three
   layers in one edit, and `node .claude/skills/design-system/scripts/audit.mjs .`
   has to come back clean.
-- **The brand direction is still open.** `--primary` and its companions hold the
-  shop's existing tea green provisionally; the palette also ships `honey` and
-  `clay`. `/playground/brand` renders all three. Choosing one changes five lines
-  in `:root` and five in `.dark`, after which the two rejected families get
-  deleted. Do not pick for the owner.
+- **The brand is amber** (`honey-*`), chosen by the owner on 2026-11-10 over the
+  shop's old tea green and a terracotta; both of those palettes are deleted. It
+  takes **ink**, not white, on the fill, and one shade serves the light page and
+  the dark block. Green survives only in the photography. One consequence worth
+  knowing: `warning` has no tinted surface of its own, because a pale amber
+  banner and a pale brand banner measure 1.1:1 apart — DESIGN.md says what it
+  uses instead.
 - `components/ui/*` are real shadcn/ui components (`components.json`: style
   `new-york`, base colour `stone`, `cssVariables: true`) on the new tokens, with
   Radix underneath where one needs it, plus the project's own composites
