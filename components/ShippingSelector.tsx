@@ -7,6 +7,7 @@ import {
     DialogContent,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 interface CityOpt {
     ref: string;
@@ -33,6 +34,28 @@ export interface ShippingValue {
 const cityCache = new Map<string, CityOpt[]>();
 const warehouseCache = new Map<string, WhOpt[]>();
 
+/*
+  A failed lookup is not an empty one.
+
+  Both pickers used to read `data.items ?? []` straight off the response, so a
+  502 from Nova Poshta — or a dropped connection, or our own 60/min limiter —
+  reached the customer as «Місто не знайдено»: we told them their city does not
+  exist. Worse, that empty array was written into the cache above, so retyping
+  the same letters replayed the lie for the rest of the visit, long after Nova
+  Poshta had recovered. Throwing instead leaves the cache untouched and lets the
+  dialog say what actually happened and offer a retry.
+*/
+async function npLookup<T>(url: string, body: unknown): Promise<T[]> {
+    const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    });
+    const data = await r.json().catch(() => null);
+    if (!r.ok || data?.error || !Array.isArray(data?.items)) throw new Error('np_lookup_failed');
+    return data.items as T[];
+}
+
 function useDebounced<T>(value: T, delay = 280): T {
     const [debounced, setDebounced] = useState(value);
     useEffect(() => {
@@ -44,10 +67,19 @@ function useDebounced<T>(value: T, delay = 280): T {
 
 const labelCls = 'font-medium text-sm tracking-wide uppercase text-muted-foreground';
 
+/*
+  `data-invalid`, not `aria-invalid`: these triggers are plain buttons, and
+  `aria-invalid` is only defined on widgets that take input — a screen reader
+  ignores it on a button, and jsx-a11y rightly flags it. The error still reaches
+  assistive technology through `aria-describedby` on the trigger and `role=alert`
+  on the message; this attribute only carries the colour, so that the toast's
+  «Перевірте виділені поля» has something highlighted to point at.
+*/
 const triggerCls =
     'text-base text-left bg-card rounded-md min-h-12 w-full px-3.5 py-2.5 ' +
     'border border-border transition ' +
     'focus:outline-none focus:border-border-strong focus:ring-2 focus:ring-ring ' +
+    'data-[invalid]:border-error data-[invalid]:bg-error-subtle ' +
     'disabled:cursor-not-allowed disabled:opacity-50';
 
 /* Shared picker dialog: search input pinned at top, big scrollable rows below. */
@@ -59,6 +91,8 @@ function PickerDialog({
                           query,
                           onQueryChange,
                           loading,
+                          failed,
+                          onRetry,
                           children,
                       }: {
     open: boolean;
@@ -68,6 +102,8 @@ function PickerDialog({
     query: string;
     onQueryChange: (v: string) => void;
     loading: boolean;
+    failed?: boolean;
+    onRetry?: () => void;
     children: React.ReactNode;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -104,6 +140,15 @@ function PickerDialog({
                 <div className="flex-1 overflow-y-auto overscroll-contain">
                     {loading ? (
                         <p className="px-4 py-8 text-center text-sm text-muted-foreground">Пошук…</p>
+                    ) : failed ? (
+                        <div className="px-4 py-8 text-center" role="alert">
+                            <p className="text-sm text-muted-foreground text-pretty">
+                                Не вдалося звʼязатися з Новою поштою. Перевірте інтернет і спробуйте ще раз.
+                            </p>
+                            <Button type="button" variant="secondary" size="sm" className="mt-3.5" onClick={onRetry}>
+                                Спробувати ще раз
+                            </Button>
+                        </div>
                     ) : (
                         children
                     )}
@@ -125,12 +170,15 @@ function CityPickerDialog({
     const [query, setQuery] = useState('');
     const [opts, setOpts] = useState<CityOpt[]>([]);
     const [loading, setLoading] = useState(false);
+    const [failed, setFailed] = useState(false);
+    const [attempt, setAttempt] = useState(0);
     const debounced = useDebounced(query, 280);
 
     useEffect(() => {
         if (open) {
             setQuery('');
             setOpts([]);
+            setFailed(false);
         }
     }, [open]);
 
@@ -138,30 +186,30 @@ function CityPickerDialog({
         const q = debounced.trim().toLowerCase();
         if (q.length < 2) {
             setOpts([]);
+            setFailed(false);
             return;
         }
 
         const cached = cityCache.get(q);
         if (cached) {
             setOpts(cached);
+            setFailed(false);
             return;
         }
 
         let cancelled = false;
         setLoading(true);
-        fetch('/api/np/cities', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ q }),
-        })
-            .then((r) => r.json())
-            .then((data) => {
-                const items: CityOpt[] = data?.items ?? [];
+        setFailed(false);
+        npLookup<CityOpt>('/api/np/cities', { q })
+            .then((items) => {
                 cityCache.set(q, items);
                 if (!cancelled) setOpts(items);
             })
             .catch(() => {
-                if (!cancelled) setOpts([]);
+                if (!cancelled) {
+                    setOpts([]);
+                    setFailed(true);
+                }
             })
             .finally(() => {
                 if (!cancelled) setLoading(false);
@@ -169,7 +217,7 @@ function CityPickerDialog({
         return () => {
             cancelled = true;
         };
-    }, [debounced]);
+    }, [debounced, attempt]);
 
     return (
         <PickerDialog
@@ -180,6 +228,8 @@ function CityPickerDialog({
             query={query}
             onQueryChange={setQuery}
             loading={loading}
+            failed={failed}
+            onRetry={() => setAttempt((n) => n + 1)}
         >
             {query.trim().length < 2 ? (
                 <p className="px-4 py-8 text-center text-sm text-muted-foreground">Введіть щонайменше 2 символи</p>
@@ -219,10 +269,15 @@ function WarehousePickerDialog({
     const [query, setQuery] = useState('');
     const [opts, setOpts] = useState<WhOpt[]>([]);
     const [loading, setLoading] = useState(false);
+    const [failed, setFailed] = useState(false);
+    const [attempt, setAttempt] = useState(0);
     const debounced = useDebounced(query, 250);
 
     useEffect(() => {
-        if (open) setQuery('');
+        if (open) {
+            setQuery('');
+            setFailed(false);
+        }
     }, [open]);
 
     useEffect(() => {
@@ -233,24 +288,23 @@ function WarehousePickerDialog({
         const cached = warehouseCache.get(cacheKey);
         if (cached) {
             setOpts(cached);
+            setFailed(false);
             return;
         }
 
         let cancelled = false;
         setLoading(true);
-        fetch('/api/np/warehouses', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cityRef, q }),
-        })
-            .then((r) => r.json())
-            .then((data) => {
-                const items: WhOpt[] = data?.items ?? [];
+        setFailed(false);
+        npLookup<WhOpt>('/api/np/warehouses', { cityRef, q })
+            .then((items) => {
                 warehouseCache.set(cacheKey, items);
                 if (!cancelled) setOpts(items);
             })
             .catch(() => {
-                if (!cancelled) setOpts([]);
+                if (!cancelled) {
+                    setOpts([]);
+                    setFailed(true);
+                }
             })
             .finally(() => {
                 if (!cancelled) setLoading(false);
@@ -258,7 +312,7 @@ function WarehousePickerDialog({
         return () => {
             cancelled = true;
         };
-    }, [open, cityRef, debounced]);
+    }, [open, cityRef, debounced, attempt]);
 
     return (
         <PickerDialog
@@ -269,6 +323,8 @@ function WarehousePickerDialog({
             query={query}
             onQueryChange={setQuery}
             loading={loading}
+            failed={failed}
+            onRetry={() => setAttempt((n) => n + 1)}
         >
             {opts.length === 0 ? (
                 <p className="px-4 py-8 text-center text-sm text-muted-foreground">Відділень не знайдено</p>
@@ -291,17 +347,36 @@ function WarehousePickerDialog({
     );
 }
 
+/*
+  `cityError` / `warehouseError` are the form's own messages for these two
+  fields, and they are not optional decoration.
+
+  The schema has always required a city and (for a branch delivery) a warehouse,
+  so `handleSubmit` refused to submit without them — but nothing on the page
+  rendered those two messages. A customer who filled in their name and phone,
+  missed the city picker and pressed «Підтвердити замовлення» got no error, no
+  movement and no order: the button simply did nothing, on the last screen of
+  the checkout. Every other field in this form reports itself through `Field` or
+  `FormMessage`; these two are hand-built triggers, so they have to be handed
+  their errors explicitly.
+*/
 export function ShippingSelector({
                                      value = { cityRef: '', cityName: '', warehouseRef: '', warehouse: '' },
                                      showWarehouse,
                                      onChange,
+                                     cityError,
+                                     warehouseError,
                                  }: {
     value?: ShippingValue;
     showWarehouse: boolean;
     onChange: (patch: Partial<ShippingValue>) => void;
+    cityError?: string;
+    warehouseError?: string;
 }) {
     const [cityOpen, setCityOpen] = useState(false);
     const [whOpen, setWhOpen] = useState(false);
+    const cityErrId = 'np-city-error';
+    const whErrId = 'np-warehouse-error';
 
     return (
         <div className="flex flex-col gap-3.5">
@@ -309,13 +384,24 @@ export function ShippingSelector({
         <span className={labelCls}>
           Місто <span className="text-foreground">*</span>
         </span>
-                <button type="button" onClick={() => setCityOpen(true)} className={triggerCls}>
+                <button
+                    type="button"
+                    onClick={() => setCityOpen(true)}
+                    className={triggerCls}
+                    data-invalid={cityError ? '' : undefined}
+                    aria-describedby={cityError ? cityErrId : undefined}
+                >
                     {value.cityName ? (
                         <span className="text-foreground">{value.cityName}</span>
                     ) : (
                         <span className="text-muted-foreground">Оберіть місто</span>
                     )}
                 </button>
+                {cityError ? (
+                    <p id={cityErrId} role="alert" className="text-sm font-medium text-error-subtle-foreground">
+                        {cityError}
+                    </p>
+                ) : null}
             </div>
 
             {showWarehouse ? (
@@ -328,6 +414,8 @@ export function ShippingSelector({
                         disabled={!value.cityRef}
                         onClick={() => setWhOpen(true)}
                         className={triggerCls}
+                        data-invalid={warehouseError ? '' : undefined}
+                        aria-describedby={warehouseError ? whErrId : undefined}
                     >
                         {value.warehouse ? (
                             <span className="text-foreground">{value.warehouse}</span>
@@ -337,6 +425,11 @@ export function ShippingSelector({
               </span>
                         )}
                     </button>
+                    {warehouseError ? (
+                        <p id={whErrId} role="alert" className="text-sm font-medium text-error-subtle-foreground">
+                            {warehouseError}
+                        </p>
+                    ) : null}
                 </div>
             ) : null}
 
