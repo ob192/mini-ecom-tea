@@ -22,7 +22,7 @@ export function ArticleCard({ article, priority = false }: { article: Article; p
             fill
             priority={priority}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 
@@ -34,7 +34,7 @@ export function ArticleCard({ article, priority = false }: { article: Article; p
           {article.title}
         </h3>
 
-        <span className="flex items-center gap-[5px] text-xs font-bold uppercase text-muted-foreground">
+        <span className="flex items-center gap-1.5 text-xs font-bold uppercase text-muted-foreground">
           Читати
           <ArrowRight className="size-3.5" aria-hidden />
         </span>

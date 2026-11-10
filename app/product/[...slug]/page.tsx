@@ -166,7 +166,7 @@ export default async function ProductPage({ params }: Params) {
 
                 <div className="mt-16 flex flex-col gap-12 border-t border-border pt-10">
                     <Accordion id="opys" title="Опис">
-                        <div className="flex max-w-[70ch] flex-col gap-3 text-base text-muted-foreground">
+                        <div className="flex max-w-prose flex-col gap-3 text-base text-muted-foreground">
                             {paragraphs.map((p, i) => (
                                 <p key={i} className={`m-0 ${p.startsWith('• ') ? '-indent-3.5 pl-3.5' : ''}`}>
                                     {p}
@@ -176,7 +176,7 @@ export default async function ProductPage({ params }: Params) {
                     </Accordion>
 
                     <Accordion title="Приготування" defaultOpen={false}>
-                        <p className="m-0 max-w-[70ch] text-base text-muted-foreground">
+                        <p className="m-0 max-w-prose text-base text-muted-foreground">
                             Загальні пропорції, температура води та кількість проливів для кожного
                             типу чаю зібрані в нашому гіді.{' '}
                             <Link href="/brewing" className="text-primary underline underline-offset-4">

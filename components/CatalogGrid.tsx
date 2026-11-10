@@ -91,7 +91,7 @@ export function CatalogGrid({
         390px screen was permanently covered by filter chips while scrolling.
         From `lg` there is room to wrap and no scrolling is needed.
       */}
-      <div className="sticky top-[60px] z-20 border-b border-border bg-background/95 py-3 backdrop-blur-md">
+      <div className="sticky top-14 z-20 border-b border-border bg-background/95 py-3 backdrop-blur-md">
         <div
           className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:flex-wrap lg:overflow-x-visible lg:px-8"
           role="tablist"
@@ -109,9 +109,9 @@ export function CatalogGrid({
                   setActiveCat(c.slug);
                   trackSelectCategory(c.slug, c.label);
                 }}
-                className={`min-h-[38px] shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors ${
+                className={`min-h-10 shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors ${
  active
- ?'bg-primary text-primary-foreground shadow-[inset_0_0_0_1px_var(--green)]'
+ ?'bg-primary text-primary-foreground ring-1 ring-primary'
                     : 'bg-card text-muted-foreground border border-border hover:text-foreground'
                 }`}
               >
@@ -142,7 +142,7 @@ export function CatalogGrid({
           >
             <SectionHeading
               id={`cat-${g.slug}`}
-              className="scroll-mt-[130px]"
+              className="scroll-mt-32"
               action={
                 <span className="text-sm text-muted-foreground">{g.items.length}</span>
               }

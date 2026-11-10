@@ -95,7 +95,7 @@ export function ProductCard({
               ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
               : `${product.title} — немає в наявності`
           }
-          className="absolute bottom-3 right-4 flex h-[42px] w-[42px] items-center justify-center rounded-full bg-card text-foreground border border-border transition-colors hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="absolute bottom-3 right-4 flex size-10 items-center justify-center rounded-full bg-card text-foreground border border-border transition-colors hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {added ? <Check className="size-5" /> : <Plus className="size-5" />}
         </button>
@@ -137,7 +137,7 @@ export function ProductCard({
                 ) : (
                   /* One tier is not a choice; drawing it as a control invites a
                      press that can never do anything. */
-                  <span className="inline-block rounded-sm bg-card px-[9px] py-1 text-xs text-muted-foreground border border-border">
+                  <span className="inline-block rounded-sm bg-card px-2 py-1 text-xs text-muted-foreground border border-border">
                     {t.weight} {UNIT}
                   </span>
                 )}

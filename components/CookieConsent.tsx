@@ -127,10 +127,10 @@ export function CookieConsent() {
       role="dialog"
       aria-live="polite"
       aria-label="Повідомлення про файли cookie"
-      className="fixed inset-x-0 bottom-0 z-50 px-[18px] pb-[calc(18px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none"
+      className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[calc(18px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none"
     >
-      <div className="pointer-events-auto mx-auto w-full max-w-[560px] rounded-xl bg-primary-strong text-primary-foreground shadow-xl p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <p className="m-0 flex-1 text-[13.5px] leading-relaxed text-primary-foreground/85">
+      <div className="pointer-events-auto mx-auto w-full max-w-xl rounded-xl bg-primary-strong text-primary-foreground shadow-xl p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <p className="m-0 flex-1 text-sm leading-relaxed text-primary-foreground/85">
           Ми використовуємо файли cookie, щоб сайт працював коректно та щоб розуміти, які чаї вам
           цікаві. Деталі —{' '}
           <Link

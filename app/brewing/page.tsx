@@ -33,7 +33,7 @@ function Steps({ items }: { items: string[] }) {
     <ol className={ol}>
       {items.map((s, i) => (
         <li key={i} className="flex gap-3">
-          <span className="shrink-0 w-6 h-6 rounded-full bg-primary-subtle text-primary font-semibold text-xs flex items-center justify-center mt-0.5">
+          <span className="shrink-0 size-6 rounded-full bg-primary-subtle text-primary font-semibold text-xs flex items-center justify-center mt-0.5">
             {i + 1}
           </span>
           <span className="text-muted-foreground text-base leading-relaxed">{s}</span>
@@ -47,8 +47,8 @@ export default function BrewingPage() {
   return (
     <>
       <Header title="Як заварювати" back />
-      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-2.5">
+      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+        <h1 className="font-semibold text-2xl text-foreground leading-tight mb-2.5">
           Як правильно заварювати китайський чай
         </h1>
         <p className={p}>

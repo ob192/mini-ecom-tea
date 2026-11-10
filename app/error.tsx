@@ -15,8 +15,8 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center min-h-[80vh] px-8 gap-3">
-      <h1 className="font-semibold text-[26px] text-foreground">Щось пішло не так</h1>
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 py-24 text-center">
+      <h1 className="font-semibold text-2xl text-foreground">Щось пішло не так</h1>
       <p className="text-muted-foreground text-base max-w-[30ch]">
         Сталася помилка. Спробуйте оновити сторінку.
       </p>

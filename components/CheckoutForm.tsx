@@ -80,7 +80,7 @@ export function CheckoutForm() {
         return (
             <>
                 <Header title="Оформлення" back backHref="/cart" />
-                <div className="flex flex-col items-center justify-center text-center px-8 py-16 gap-2 min-h-[60vh]">
+                <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 py-24 text-center">
                     <h1 className="text-2xl uppercase text-foreground">Кошик порожній</h1>
                     <p className="text-muted-foreground text-base max-w-[28ch]">
                         Додайте товари, щоб оформити замовлення.
@@ -136,16 +136,16 @@ export function CheckoutForm() {
     return (
         <>
             <Header title="Оформлення" back backHref="/cart" />
-            <h1 className="mx-auto max-w-6xl px-[18px] pt-4 text-2xl uppercase text-foreground lg:px-8">
+            <h1 className="mx-auto max-w-6xl px-4 pt-4 text-2xl uppercase text-foreground lg:px-8">
                 Оформлення
             </h1>
-            <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
+            <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 lg:py-6">
                 {/* order summary (right column on desktop) */}
-                <div className="px-[18px] pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-24">
+                <div className="px-4 pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-24">
                     <h2 className="mb-2.5 mt-2 text-xs uppercase text-muted-foreground lg:mt-0">
                         Ваше замовлення
                     </h2>
-                    <Card className="p-4 mb-[22px] lg:mb-0">
+                    <Card className="p-4 mb-5 lg:mb-0">
                         {items.map((it) => {
                             const p = getProduct(it.slug);
                             if (!p) return null;
@@ -171,7 +171,7 @@ export function CheckoutForm() {
                 {delivery === 0 ? 'Безкоштовно' : uah(delivery)}
               </span>
                         </div>
-                        <div className="flex justify-between items-baseline font-semibold text-[21px] text-foreground">
+                        <div className="flex justify-between items-baseline font-semibold text-xl text-foreground">
                             <span>Разом</span>
                             <span>{uah(total)}</span>
                         </div>
@@ -179,8 +179,8 @@ export function CheckoutForm() {
                 </div>
 
                 {/* delivery form (left column on desktop) */}
-                <div className="px-[18px] pb-6 lg:px-0 lg:pt-0 lg:order-1">
-                    <h2 className="text-sm tracking-[0.1em] uppercase text-primary mb-3">
+                <div className="px-4 pb-6 lg:px-0 lg:pt-0 lg:order-1">
+                    <h2 className="text-sm tracking-widest uppercase text-primary mb-3">
                         Дані для доставки
                     </h2>
 
@@ -191,7 +191,7 @@ export function CheckoutForm() {
                                 No label and a meaningless field name: browsers autofill
                                 by name/label (company, organization, …) even with
                                 autocomplete="off", which used to drop real orders. */}
-                            <div aria-hidden className="absolute -left-[9999px] w-px h-px overflow-hidden">
+                            <div aria-hidden className="sr-only">
                                 <input
                                     id="bot-field"
                                     type="text"
@@ -281,7 +281,7 @@ export function CheckoutForm() {
                                         type="button"
                                         onClick={() => form.setValue('deliveryMethod', 'np_warehouse', { shouldValidate: true })}
                                         aria-pressed={deliveryMethod === 'np_warehouse'}
-                                        className={`flex-1 rounded-md min-h-[44px] px-4 text-sm transition-colors ${
+                                        className={`flex-1 rounded-md min-h-11 px-4 text-sm transition-colors ${
  deliveryMethod ==='np_warehouse'
                                                 ? 'bg-primary text-primary-foreground'
                                                 : 'bg-card text-muted-foreground border border-border hover:text-foreground'
@@ -293,7 +293,7 @@ export function CheckoutForm() {
                                         type="button"
                                         onClick={() => form.setValue('deliveryMethod', 'np_courier', { shouldValidate: true })}
                                         aria-pressed={deliveryMethod === 'np_courier'}
-                                        className={`flex-1 rounded-md min-h-[44px] px-4 text-sm transition-colors ${
+                                        className={`flex-1 rounded-md min-h-11 px-4 text-sm transition-colors ${
  deliveryMethod ==='np_courier'
                                                 ? 'bg-primary text-primary-foreground'
                                                 : 'bg-card text-muted-foreground border border-border hover:text-foreground'

@@ -397,7 +397,7 @@ function Blocks({ blocks }: { blocks: Block[] }) {
             <ul key={i} className="m-0 mt-2.5 pl-0 list-none flex flex-col gap-2">
               {block.list.map((item) => (
                 <li key={item} className="flex gap-2.5 items-start">
-                  <span className="mt-[9px] w-1.5 h-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
                   <span className="text-muted-foreground text-base leading-relaxed">{item}</span>
                 </li>
               ))}
@@ -423,8 +423,8 @@ export default function PrivacyPage() {
   return (
     <>
       <Header title="Угода користувача" back />
-      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-2.5">
+      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+        <h1 className="font-semibold text-2xl text-foreground leading-tight mb-2.5">
           Угода користувача
         </h1>
         <p className="m-0 text-muted-foreground text-base leading-relaxed mb-6">
@@ -433,7 +433,7 @@ export default function PrivacyPage() {
         </p>
 
         <nav aria-label="Зміст" className="bg-card rounded-xl border border-border p-4 mb-7">
-          <div className="font-semibold text-[15.5px] text-foreground mb-2">Зміст</div>
+          <div className="font-semibold text-base text-foreground mb-2">Зміст</div>
           <ol className="m-0 pl-0 list-none flex flex-col gap-1.5">
             {sections.map((s, i) => (
               <li key={s.id} className="flex gap-2 items-baseline">

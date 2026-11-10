@@ -4,35 +4,25 @@ import { Leaf } from 'lucide-react';
 import { BRAND_NAME } from '@/lib/contacts';
 
 /*
-  Logo — the `Logo` group used in the header and footer of every frame in
-  jintea.pen: a green leaf beside the wordmark in the display face at 22px,
-  600, with 3px of tracking. The mobile frames draw it at 19px/2.5px; that is
-  the `sm` size.
+  Logo — a leaf beside the wordmark, in the header and the footer.
 
-  `tone` inverts it for the green footer.
+  It sets no surface and no text colour: the leaf is the one text use of the
+  brand hue the system allows (it is the brand mark — C5), and the wordmark
+  inherits whatever surface it sits on, so the same component works on the page,
+  on a card and inside the footer's dark block with nothing passed (C2). That is
+  why the old `tone` prop is gone.
+
+  The wordmark is the one place tracking is set by hand: letter-spaced caps are
+  what makes four letters read as a mark rather than as a word.
 */
-export function Logo({
-  size = 'md',
-  tone: t = 'ink',
-}: {
-  size?: 'sm' | 'md';
-  tone?: 'ink' | 'on-green';
-}) {
-  const glyph = size === 'sm' ? 18 : 22;
-
+export function Logo({ size = 'md' }: { size?: 'sm' | 'md' }) {
   return (
     <span className="flex items-center gap-2">
-      <span className={t === 'ink' ? 'flex text-primary' : 'flex text-primary-foreground'} aria-hidden>
-        <Leaf width={glyph} height={glyph} />
-      </span>
+      <Leaf className={size === 'sm' ? 'size-4 text-primary' : 'size-5 text-primary'} />
       <span
-        className={`whitespace-nowrap font-semibold leading-none ${
- t ==='ink' ? 'text-foreground' : 'text-primary-foreground'
+        className={`whitespace-nowrap font-semibold tracking-widest ${
+          size === 'sm' ? 'text-lg' : 'text-xl'
         }`}
-        style={{
-          fontSize: size === 'sm' ? 19 : 22,
-          letterSpacing: size === 'sm' ? '2.5px' : '3px',
-        }}
       >
         {BRAND_NAME.toUpperCase()}
       </span>
@@ -103,7 +93,7 @@ export function ProductImage({
       </div>
       {tag ? (
         <span
-          className="relative z-[1] m-2 rounded-sm px-[7px] py-[3px] text-[10px] tracking-wide"
+          className="relative z-10 m-2 rounded-sm px-2 py-1 text-xs tracking-wide"
           style={{ color: 'rgba(255,255,255,0.82)', background: 'rgba(0,0,0,0.18)' }}
         >
           {tag}

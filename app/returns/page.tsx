@@ -42,8 +42,8 @@ export default function ReturnsPage() {
   return (
     <>
       <Header title="Обмін та повернення" back />
-      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-6">
+      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+        <h1 className="font-semibold text-2xl text-foreground leading-tight mb-6">
           Обмін та повернення
         </h1>
 
@@ -71,7 +71,7 @@ export default function ReturnsPage() {
         <ul className="m-0 mt-2.5 pl-0 list-none flex flex-col gap-2">
           {checklist.map((c) => (
             <li key={c} className="flex gap-2.5 items-start">
-              <span className="mt-[9px] w-1.5 h-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
               <p className="m-0 text-muted-foreground text-base leading-relaxed">{c}</p>
             </li>
           ))}
@@ -82,7 +82,7 @@ export default function ReturnsPage() {
         </p>
 
         <div className="mt-3 bg-card rounded-xl border border-border p-4 flex gap-3.5 items-start">
-          <span className="w-10 h-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+          <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
             <AlertCircle className="size-5" />
           </span>
           <p className="m-0 text-muted-foreground text-base leading-relaxed">
@@ -118,12 +118,12 @@ export default function ReturnsPage() {
               href={href}
               className="bg-card rounded-xl border border-border p-4 flex items-center gap-3.5 hover:bg-primary-subtle transition-colors"
             >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+              <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
                 <Icon className="size-5" />
               </span>
               <div className="min-w-0">
                 <div className="text-muted-foreground text-xs">{label}</div>
-                <div className="font-semibold text-[15.5px] text-foreground break-all">
+                <div className="font-semibold text-base text-foreground break-all">
                   {value}
                 </div>
               </div>

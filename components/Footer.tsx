@@ -7,37 +7,37 @@ import { Logo } from './Logo';
 import { BRAND_NAME, INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_URL } from '@/lib/contacts';
 
 /*
-  Footer — the `Footer` frame of every screen in jintea.pen.
+  Footer — the page's one dark block.
 
-  A green-deep slab with the wordmark and a one-line description on the left,
-  then link columns, then a hairline and the copyright / social row. Link text
-  is `on-green` at 69% and lifts to full opacity on hover; the column headings
-  are the uppercase 12/700 label style.
+  `dark` on the element switches every semantic token inside it to its dark
+  value, so the links, the hairlines and the logo need no `dark:` classes and no
+  bespoke opacity ladder: `text-muted-foreground` is already 6.9:1 there. It was
+  a slab of brand green, which the system no longer allows — the brand hue marks
+  actions, not areas the size of a footer (C5, C7).
 
-  The design draws a YouTube glyph as well; only the channels in lib/contacts
-  actually exist, so only those are rendered.
+  The design drew a YouTube glyph too; only the channels in lib/contacts exist,
+  so only those are rendered.
 */
 function Column({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (
     <nav aria-label={heading} className="flex flex-col gap-3">
-      <h2 className="m-0 text-xs font-bold uppercase text-primary-foreground">
-        {heading}
-      </h2>
+      <h2 className="text-xs font-semibold uppercase tracking-wide">{heading}</h2>
       {children}
     </nav>
   );
 }
 
-const linkCls = 'text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground';
+const linkCls =
+  'inline-flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground sm:min-h-0';
 
 export function Footer() {
   return (
-    <footer className="bg-primary-strong text-primary-foreground">
+    <footer className="dark bg-background text-foreground">
       <div className="mx-auto max-w-6xl px-5 pb-7 pt-14 lg:px-8">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-8">
-          <div className="flex max-w-[320px] flex-col gap-3.5">
-            <Logo tone="on-green" />
-            <p className="m-0 text-sm text-primary-foreground/70">
+          <div className="flex max-w-xs flex-col gap-3.5">
+            <Logo />
+            <p className="text-sm text-muted-foreground text-pretty">
               Листовий китайський чай прямо з Юньнані. Розсилка та самовивіз по Україні.
             </p>
           </div>
@@ -73,17 +73,17 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-primary-foreground/15 pt-[22px]">
-          <span className="text-xs text-primary-foreground/50">
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+          <span className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} {BRAND_NAME} · Усі права захищені
           </span>
-          <div className="flex items-center gap-[18px] text-primary-foreground/80">
+          <div className="flex items-center gap-1">
             <ContactLink
               channel="instagram"
               location="footer"
               href={INSTAGRAM_URL}
               aria-label="Instagram"
-              className="transition-colors hover:text-primary-foreground"
+              className="grid size-11 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
               <InstagramMark className="size-5" />
             </ContactLink>
@@ -92,7 +92,7 @@ export function Footer() {
               location="footer"
               href={TIKTOK_URL}
               aria-label="TikTok"
-              className="transition-colors hover:text-primary-foreground"
+              className="grid size-11 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
               <TikTokMark className="size-5" />
             </ContactLink>
@@ -101,7 +101,7 @@ export function Footer() {
               location="footer"
               href={TELEGRAM_URL}
               aria-label="Telegram"
-              className="transition-colors hover:text-primary-foreground"
+              className="grid size-11 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
               <TelegramMark className="size-5" />
             </ContactLink>
@@ -110,7 +110,7 @@ export function Footer() {
               location="footer"
               href="tel:+380986575800"
               aria-label="Телефон"
-              className="transition-colors hover:text-primary-foreground"
+              className="grid size-11 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
             >
               <Phone className="size-5" />
             </ContactLink>
