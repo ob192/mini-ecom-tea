@@ -206,6 +206,16 @@ and the notice is dismissed by one 44px tap, so it is left as it is. The inciden
 the handshake exists for was different in kind: the buy bar is *sticky*, so it was
 covered at every scroll position and there was no way to reach it at all.
 
+### A card fills its cell
+
+Every card in a row ends on one line because the card itself is `h-full`. The
+card is a flex column whose middle section is `flex-1` with the price on
+`mt-auto`; that only distributes slack if the card fills the cell its container
+stretched. In the home rail it did not — the flex scroller stretched the
+*wrapper* to 442px and the `<article>` inside kept its own 410–442px content
+height, so prices sat on three different lines and a card with four weight chips
+simply grew. Anything else built as a grid or rail item inherits the same rule.
+
 ### The sticky budget
 
 At most one bar is pinned to the top. The header is split: the 56px bar with the
