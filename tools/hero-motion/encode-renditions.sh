@@ -73,19 +73,16 @@ echo "graded (NVENC HEVC intermediate): $(du -h "$GRADED" | cut -f1)"
 
 # --------------------------------------------------------------- 2. seam ----
 SOURCE="$GRADED"
+python3 -I "$HERE/close-loop.py" "$GRADED" --measure
 if [ "$SEAM" -gt 0 ]; then
-  TOTAL="$(ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of csv=p=0 "$GRADED")"
-  START=$((TOTAL - SEAM))
-  echo "seam: dissolving frames ${START}..$((TOTAL-1)) into frame 0"
-  ffmpeg -v error -y -i "$GRADED" -frames:v 1 -q:v 1 "$WORK/frame0.png"
-  SEAMED="$WORK/seamed.mp4"
-  # The still is looped as a second input and mixed in over the tail only, so
-  # every frame before START is passed through bit-for-bit, frame 0 included.
-  ffmpeg -v error -y -i "$GRADED" -loop 1 -i "$WORK/frame0.png" \
-    -filter_complex "[1:v]format=yuv420p,setsar=1[still];\
-[0:v][still]blend=all_expr='if(gte(N,${START}),A*(1-(N-${START}+1)/${SEAM})+B*((N-${START}+1)/${SEAM}),A)'[v]" \
-    -map "[v]" -frames:v "$TOTAL" -an \
-    -c:v hevc_nvenc -preset p7 -rc vbr -cq 16 -b:v 0 -pix_fmt yuv420p "$SEAMED"
+  SEAMED="$WORK/seamed.mkv"
+  # close-loop.py and not an ffmpeg filter: this was a `blend` with an
+  # `all_expr` keyed on the frame number, and on a synthetic ramp clip it left
+  # frames before the seam altered and made the seam worse rather than closing
+  # it. The replacement asserts, per frame, that frame 0 is untouched and that
+  # the last frame is an exact copy of it. Lossless FFV1 out, so the dissolve
+  # is not quantised before the real encoders see it.
+  python3 -I "$HERE/close-loop.py" "$GRADED" "$SEAMED" --frames "$SEAM"
   SOURCE="$SEAMED"
 fi
 
