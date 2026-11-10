@@ -217,6 +217,23 @@ const varRefs = []
 const cssClean = cssText.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "))
 for (const m of cssClean.matchAll(/var\(\s*(--[\w-]+)\s*(,)?/g)) varRefs.push({name: m[1], fallback: !!m[2], file: cssFile, line: lineAt(cssClean, m.index)})
 for (const u of used) for (const m of u.token.matchAll(/\((--[\w-]+)\)|var\((--[\w-]+)/g)) varRefs.push({name: m[1] ?? m[2], fallback: false, file: u.file, line: u.line})
+/*
+ * Source files too, not only classes. A `var()` inside a JSX inline style
+ * (`style={{background: "linear-gradient(…, var(--scrim-to))"}}`) is not a
+ * class, so the pass above never saw it — and that is exactly where a
+ * reference to a deleted token survives a token rewrite, silently, because the
+ * gradient just renders transparent. Found one on a live hero that way.
+ */
+for (const file of sourceFiles) {
+	// Comments are blanked, not dropped, so the line numbers still line up. A
+	// `var(--x)` quoted in a comment explaining a bug is not a use of it.
+	const text = fs
+		.readFileSync(file, "utf8")
+		.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "))
+		.replace(/^[ \t]*\/\/.*$/gm, (m) => " ".repeat(m.length))
+	for (const m of text.matchAll(/var\(\s*(--[\w-]+)\s*(,)?/g))
+		varRefs.push({name: m[1], fallback: !!m[2], file, line: lineAt(text, m.index)})
+}
 const undefinedRefs = varRefs.filter((r) => !declared.has(r.name) && !isInternal(r.name))
 const byName = groupBy(undefinedRefs, (r) => r.name)
 for (const [name, refs] of byName) {
