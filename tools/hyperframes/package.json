@@ -1,0 +1,12 @@
+{
+  "name": "jintea-ad-cuts",
+  "private": true,
+  "description": "Hyperframes compositions for the Jintea ad cuts. Kept out of the app's package.json on purpose: this renders video on a workstation and must never become a dependency of the Next.js build.",
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "hyperframes": "0.9.30"
+  }
+}
