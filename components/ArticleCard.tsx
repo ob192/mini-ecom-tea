@@ -1,11 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Article } from '@/lib/journal';
-import { ArrowRight } from 'lucide-react';
 
 /*
   ArticleCard — one cell of the `Journal` grid in jintea.pen: a 6px-radius
-  cover, an amber kicker, a 19px display title and a "ЧИТАТИ →" affordance.
+  cover, a kicker, a title and an underlined «Читати».
 
   The whole card is one link. The "ЧИТАТИ" row is styled as a link but is not
   one — a second anchor to the same href would add a duplicate tab stop and a
@@ -34,9 +33,8 @@ export function ArticleCard({ article, priority = false }: { article: Article; p
           {article.title}
         </h3>
 
-        <span className="flex items-center gap-1.5 text-xs font-bold uppercase text-muted-foreground">
+        <span className="text-sm font-medium text-muted-foreground underline decoration-border-strong underline-offset-4 transition-colors group-hover:decoration-primary-subtle-foreground">
           Читати
-          <ArrowRight className="size-3.5" aria-hidden />
         </span>
       </Link>
     </article>

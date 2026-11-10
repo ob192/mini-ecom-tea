@@ -9,7 +9,7 @@ import { trackRemoveFromCart, trackViewCart } from "@/lib/analytics";
 import { Header } from "@/components/Header";
 import { ProductImage } from "@/components/Logo";
 import { QtyStepper } from "@/components/ui/qty-stepper";
-import { ArrowRight, Leaf, ShoppingBag, Trash2 } from "lucide-react";
+import { Leaf, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { CartItem } from "@/lib/types";
@@ -210,12 +210,8 @@ export function CartView() {
               size="lg"
               className="w-full mt-3.5 px-4 sm:px-5"
             >
-              <Link
-                href="/checkout"
-                className="justify-center text-base sm:text-lg"
-              >
+              <Link href="/checkout" className="justify-center text-base">
                 <span className="truncate">Оформити</span>
-                <ArrowRight className="size-5" />
               </Link>
             </Button>
           </div>

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Check, Truck } from 'lucide-react';
+import { Check, Truck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/ui/eyebrow';
@@ -107,10 +107,7 @@ export function Hero() {
             <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-border pt-5">
               <span className="text-3xl font-semibold tabular-nums">{uah(price)}</span>
               <Button asChild size="lg">
-                <Link href={href}>
-                  Замовити набір
-                  <ArrowRight />
-                </Link>
+                <Link href={href}>Замовити набір</Link>
               </Button>
               {shipsFree ? (
                 <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">

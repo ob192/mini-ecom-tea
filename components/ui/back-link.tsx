@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
 
 /*
   BackLink — «Назад», a real link to the page's parent.
@@ -25,6 +24,11 @@ import { ChevronLeft } from 'lucide-react';
   JSON-LD those pages emit, is crawlable, survives a middle-click and needs no
   JavaScript. Give every `back` header a `backHref`; `/` is a floor, not a good
   answer. tests/back-navigation.test.ts pins this.
+
+  No chevron. «Назад» is the label and says the whole thing; the glyph was
+  decoration of the same family as the trailing arrows that used to sit on every
+  link. The only arrows left on the site are the gallery's and the rail's
+  prev/next buttons, where the glyph *is* the control.
 */
 export function BackLink({ href = '/', label = 'Назад' }: { href?: string; label?: string }) {
   return (
@@ -32,7 +36,6 @@ export function BackLink({ href = '/', label = 'Назад' }: { href?: string; 
       href={href}
       className="-ml-2 inline-flex min-h-11 items-center gap-1 rounded-md px-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <ChevronLeft className="size-4" />
       <span>{label}</span>
     </Link>
   );

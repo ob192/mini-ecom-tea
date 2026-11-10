@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Check, Truck } from 'lucide-react';
+import { Check, Truck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/ui/eyebrow';
@@ -85,10 +85,7 @@ export function StarterSetOffer() {
           <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-3">
             <span className="text-3xl font-semibold tabular-nums">{uah(price)}</span>
             <Button asChild size="lg">
-              <Link href={HREF}>
-                Замовити набір
-                <ArrowRight />
-              </Link>
+              <Link href={HREF}>Замовити набір</Link>
             </Button>
           </div>
           {shipsFree ? (
