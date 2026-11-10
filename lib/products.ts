@@ -28,12 +28,26 @@ interface RawProduct {
   weight: number | null;
   priceTiers: PriceTier[];
   files: string[];
+  video?: { src?: string; poster?: string; label?: string };
 }
 
 function build(raw: RawProduct): Product {
   const category = raw.slug.split('/')[0] as CategorySlug;
   const files = Array.isArray(raw.files) ? raw.files : [];
   const images = files.map((f) => `/${raw.slug}/${f}`);
+
+  /* Same convention as `files`: bare filenames in the JSON, resolved to public
+     paths here. Both halves have to be present — a clip with no poster would
+     put a blank rectangle in the gallery before anyone presses play. */
+  const rawVideo = raw.video;
+  const video =
+    rawVideo?.src && rawVideo?.poster
+      ? {
+          src: `/${raw.slug}/${rawVideo.src}`,
+          poster: `/${raw.slug}/${rawVideo.poster}`,
+          label: rawVideo.label ?? 'Відео',
+        }
+      : null;
   const priceTiers = (raw.priceTiers ?? []).slice().sort((a, b) => a.weight - b.weight);
 
   // When tiers exist, anchor the displayed "від ..." price/weight to the
@@ -54,6 +68,7 @@ function build(raw: RawProduct): Product {
     files,
     images,
     image: images[0] ?? '',
+    video,
     inStock: basePrice != null,
   };
 }

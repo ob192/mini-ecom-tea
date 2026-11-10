@@ -26,6 +26,25 @@ export interface PriceTier {
  * Product, derived from public/products.json.
  * `category` is parsed from the slug prefix ("green/longjing-cha" -> "green").
  */
+/*
+  A product video is its own field, never an entry in `files`.
+
+  `files` is the photo list: it becomes `images` (the gallery), `image` (the
+  first photo), the OG and JSON-LD image, and `g:image_link` in the Merchant
+  Center feed. A .mp4 in that array would be handed to `next/image`, could
+  become the feed's image link, and would be rejected by Google — a silent way
+  to drop the product out of Shopping. Keeping video in its own field means
+  every one of those paths keeps seeing photographs only.
+*/
+export interface ProductVideo {
+  /** Resolved public path, e.g. "/set/start-mini-7/unboxing-720.mp4". */
+  src: string;
+  /** Resolved public path of the still shown before playback — the clip's own frame 0. */
+  poster: string;
+  /** What the clip shows, for the slide's accessible name. */
+  label: string;
+}
+
 export interface Product {
   slug: string; // "green/longjing-cha"
   category: CategorySlug;
@@ -43,6 +62,8 @@ export interface Product {
   images: string[];
   /** First image or '' (empty -> branded placeholder). */
   image: string;
+  /** Optional product video; null for everything that has none. */
+  video: ProductVideo | null;
   /** Purchasable when a base price can be resolved. */
   inStock: boolean;
 }

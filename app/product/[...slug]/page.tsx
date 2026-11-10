@@ -115,8 +115,12 @@ export default async function ProductPage({ params }: Params) {
                 images={product.images}
                 category={product.category}
                 alt={`${product.title} — ${product.subtitle}`}
+                video={product.video}
                 ratio="1 / 1"
-                radius={6}
+                /* 12px, the radius DESIGN.md gives cards and images. The 6px
+                   here was the old near-square scale, which went with the
+                   Pencil export — on the new scale 6px is a control. */
+                radius={12}
                 sizes="(max-width: 1024px) 100vw, 560px"
               />
             </div>
