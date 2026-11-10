@@ -1,18 +1,23 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
 /*
-  TextLink — a quieter action than a ghost button: a label with a trailing glyph
-  and no surface. «Усі товари →» to navigate, «Читати далі +» to reveal.
+  TextLink — a quieter action than a ghost button: an underlined label with no
+  surface. «Усі товари» to navigate, «Читати далі» to reveal.
+
+  No trailing arrow. It was on every link on the site and said nothing a link
+  does not already say — the underline is the affordance, and a row of identical
+  chevrons is noise that competes with the one thing on a screen that should
+  point anywhere (the main action). The `plus` glyph stays, because a disclosure
+  genuinely means something different from a link.
 
   It renders a next/link when given `href` and a button otherwise, so the
-  disclosure and the navigation cases share one appearance. The trailing glyph
-  points the way, so it goes after the label (I12).
+  disclosure and the navigation cases share one appearance.
 */
-type Glyph = 'arrow' | 'plus' | 'none';
+type Glyph = 'plus' | 'none';
 
 const base = [
   'inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium text-foreground',
@@ -21,15 +26,9 @@ const base = [
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 ].join(' ');
 
-function GlyphIcon({ glyph }: { glyph: Glyph }) {
-  if (glyph === 'arrow') return <ArrowRight className="size-4" />;
-  if (glyph === 'plus') return <Plus className="size-4" />;
-  return null;
-}
-
 export function TextLink({
   href,
-  glyph = 'arrow',
+  glyph = 'none',
   className,
   children,
   ...props
@@ -42,7 +41,7 @@ export function TextLink({
   const content = (
     <>
       <span>{children}</span>
-      <GlyphIcon glyph={glyph} />
+      {glyph === 'plus' ? <Plus className="size-4" /> : null}
     </>
   );
   if (href) {

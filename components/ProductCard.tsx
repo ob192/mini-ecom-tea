@@ -93,22 +93,38 @@ export function ProductCard({
           {categoryLabel(product.category)}
         </p>
 
-        {/* `min-w-0` + `break-words`: in a two-column grid at 320 a long
-            single word («Цзіндечженської») is wider than its column and took
-            the page into horizontal scroll (L16). */}
+        {/*
+          `min-w-0` + `break-words`: in a two-column grid at 320 a long single
+          word («Цзіндечженської») is wider than its column and took the page
+          into horizontal scroll (L16).
+
+          `text-base` and two lines on a phone. At 375 the grid column is 162px,
+          and an 18px title ran to three lines on half the catalogue — the card
+          came out 455px tall with a 135px photograph, which is a card that is
+          two-thirds furniture for a product people buy by eye. The full title
+          is one tap away on the product page (T12).
+        */}
         <h3 className="min-w-0">
           <Link
             href={`/product/${product.slug}`}
             onClick={handleSelect}
-            className="text-lg font-medium break-words text-balance transition-colors hover:text-primary-subtle-foreground"
+            className="line-clamp-2 text-base font-medium break-words text-balance transition-colors hover:text-primary-subtle-foreground sm:line-clamp-none sm:text-lg"
           >
             {product.title}
           </Link>
         </h3>
 
+        {/*
+          The tier chips are hidden on a phone. Four of them wrap to two rows in
+          a 162px column and account for a sixth of the card's height, and the
+          product page now carries a far better selector (weight, price, price
+          per gram, best value marked). What a card has to do on a phone is show
+          the tea, name it, price it and offer one action; the weight it would
+          add rides next to the price below, so nothing is implied silently.
+        */}
         {product.priceTiers.length > 0 ? (
           <ul
-            className="flex list-none flex-wrap gap-1.5 pt-0.5"
+            className="hidden list-none flex-wrap gap-1.5 pt-0.5 sm:flex"
             aria-label={`Вага — ${product.title}`}
           >
             {product.priceTiers.map((t) => (
@@ -132,8 +148,17 @@ export function ProductCard({
           </ul>
         ) : null}
 
-        <p className="mt-auto pt-2 text-xl font-semibold tabular-nums">
-          {price != null ? uah(price) : 'Ціна за запитом'}
+        <p className="mt-auto flex flex-wrap items-baseline gap-x-2 pt-2">
+          <span className="text-xl font-semibold tabular-nums">
+            {price != null ? uah(price) : 'Ціна за запитом'}
+          </span>
+          {/* Below `sm` this is the only place the weight appears, so the
+              button cannot add something the visitor did not see. */}
+          {weight ? (
+            <span className="text-sm text-muted-foreground tabular-nums sm:hidden">
+              / {weight} {UNIT}
+            </span>
+          ) : null}
         </p>
       </div>
 

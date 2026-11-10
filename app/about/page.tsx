@@ -4,7 +4,6 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
 import { BRAND_NAME } from '@/lib/contacts';
 
 export const dynamic = 'force-static';
@@ -82,7 +81,6 @@ export default function AboutPage() {
           className="mt-1 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors hover:text-primary-subtle-foreground"
         >
           Детальніше про способи заварювання
-          <ArrowRight className="size-4" />
         </Link>
 
         <Card className="p-4 mt-7 border-l-2 border-border-strong text-foreground text-base leading-relaxed">
