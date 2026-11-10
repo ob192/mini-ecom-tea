@@ -37,7 +37,7 @@ they use the roles below. An opacity modifier on a token is still that token
 | `subtle` | a quiet band | sections that alternate with `background` |
 | `card` | a surface | product cards, summaries, panels; no border, no shadow |
 | `muted-foreground` | secondary text | captions, meta, hints, footer links (6.8:1 on the page, 6.0:1 on a card) |
-| `primary` | the main action | one filled button per view, the selected weight chip, the active state, the leaf in the wordmark — and nothing else. Amber takes **ink**, not white: at 6.1:1 the dark label is the readable pair, and it keeps the button from reading as a warning sign. One shade serves both modes |
+| `primary` | the main action | one filled button per view, the selected weight chip, the active state, the leaf in the wordmark — and nothing else. Amber takes **ink**, not white: at 6.1:1 the dark label is the readable pair, and it keeps the button from reading as a warning sign. One shade serves both modes. **Never text and never a line on a light surface** — see below |
 | `primary-strong` | pressed | `hover:` and `active:` on `bg-primary` |
 | `primary-subtle` / `-foreground` | a tinted area | a highlighted row or badge; never a saturated fill at that size. A step deeper than a status tint would be, so a gold area reads as the brand |
 | `secondary` | the second button | beside the main action |
@@ -53,6 +53,30 @@ they use the roles below. An opacity modifier on a token is still that token
 Every pair above is measured, and the ratio is written beside the token in
 `app/globals.css`. `/playground` recomputes them from the resolved colours in the
 browser, so a value that drifts shows there rather than in a review.
+
+### Amber is a fill, not a hue for text
+
+`primary` as text measures **2.4–2.8:1** on the three light surfaces. It is a
+mid-tone, and no amount of wanting makes it readable. So on a light surface the
+brand is only ever a **fill** (a button, a selected chip, a badge) with ink on
+it. Where the brand has to appear *as text or as a mark* — a link's hover, a
+figure picked out in a sentence, a meaningful icon — the token is
+`primary-subtle-foreground` (8.6:1 on the page, 7.5:1 on a card), which is the
+same role `error-subtle-foreground` already plays for a field error.
+
+A hovered link is the case that bites: colouring it `primary` makes it *less*
+readable than at rest. Links hover to `primary-subtle-foreground`.
+
+Two exceptions exist in the code, both commented where they live:
+
+- the leaf in the logo is `text-primary` at 2.8:1 — part of a logo, which WCAG
+  1.4.11 exempts, with the wordmark beside it at 16.9:1;
+- inside a `.dark` block amber is 6.1–6.6:1, so it is ordinary text there (the
+  hero's checkmarks).
+
+A **selected control** is outlined in `foreground`, not in `primary`: the amber
+fill alone is 2.8:1 against the page, under the 3:1 a control's own boundary
+needs (C10), while ink is 16.9:1 and reads as "pressed".
 
 ### Warning has no tinted surface
 
@@ -147,6 +171,17 @@ Observed practice — the rhythm new screens follow.
 - Sizes come from the content and the column, never from the viewport: no `vh`
   heights, no unbounded `vw`. A band looks the same at 1920 as at 1440, with more
   margin around it.
+- **The shell declares `[&>*]:w-full`** (`app/layout.tsx`), and it is
+  load-bearing. An auto cross-axis margin on a flex item turns off
+  `align-items: stretch`, so a direct child written as `mx-auto max-w-6xl …` —
+  which is the container recipe — sizes itself to its *content*. Without the
+  rule the home page's Журнал section came out 1136px wide inside a 375px
+  viewport and took the whole page sideways.
+- **A touch target is guarded by `pointer-coarse:`, not by a breakpoint.** A
+  tablet in landscape is wide *and* touched: the footer's links were given
+  `sm:min-h-0` and measured 20px at 1023. The small `Button` sizes, the compact
+  weight chip and the footer links all grow to 44px on a coarse pointer at every
+  width, and keep their tight rhythm for a mouse.
 - The page is full width. The old design capped the canvas at the 1440px Pencil
   frame with a deeper band either side; the hero and footer are full-bleed now
   and the cap is gone.
@@ -177,6 +212,11 @@ over a photograph in a dark block it is `bg-background/70`.
 
 - Movement is a response to an action: hover, focus, press, a disclosure opening.
   150–200 ms, and `motion-reduce:` turns it off.
+- A control over a photograph gets a surface. The discover banner's button was
+  `outline` — transparent, so its label sat on whatever the crop put behind it:
+  measured on the real pixels the heading held at 9.6:1 and the eyebrow at
+  6.2:1, but the button's worst pixel was 3.3:1, and that number moves with
+  every width. It is `secondary` now, a solid fill, 11:1 whatever is behind it.
 - The home hero's video is a **layer over the still, not a replacement**.
   `components/HeroVideo.tsx` ships `preload="none"` with no `<source>` in the
   markup, so the server HTML carries no video URL; a client effect attaches

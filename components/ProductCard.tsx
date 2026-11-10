@@ -93,11 +93,14 @@ export function ProductCard({
           {categoryLabel(product.category)}
         </p>
 
-        <h3>
+        {/* `min-w-0` + `break-words`: in a two-column grid at 320 a long
+            single word («Цзіндечженської») is wider than its column and took
+            the page into horizontal scroll (L16). */}
+        <h3 className="min-w-0">
           <Link
             href={`/product/${product.slug}`}
             onClick={handleSelect}
-            className="text-lg font-medium text-balance transition-colors hover:text-primary"
+            className="text-lg font-medium break-words text-balance transition-colors hover:text-primary-subtle-foreground"
           >
             {product.title}
           </Link>

@@ -50,7 +50,7 @@ export const Radio = React.forwardRef<React.ElementRef<typeof RadioGroupPrimitiv
         className={cn(
           'mt-0.5 grid size-5 shrink-0 place-items-center rounded-full border border-input bg-background transition-colors',
           'group-hover:border-border-strong',
-          'group-data-[state=checked]:border-primary group-data-[state=checked]:bg-primary',
+          'group-data-[state=checked]:border-foreground group-data-[state=checked]:bg-primary',
         )}
       >
         <RadioGroupPrimitive.Indicator className="size-2 rounded-full bg-primary-foreground" />

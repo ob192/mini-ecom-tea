@@ -31,11 +31,11 @@ export function SuccessView() {
 
       <Card className="w-full p-4 mt-5 text-left text-sm text-muted-foreground leading-relaxed">
         Оплата — при отриманні або за реквізитами. Якщо у вас є запитання, зателефонуйте{' '}
-        <ContactLink channel="phone" location="order_success" href="tel:+380986575800" className="text-primary underline">
+        <ContactLink channel="phone" location="order_success" href="tel:+380986575800" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
           +38 (098) 657-58-00
         </ContactLink>{' '}
         або напишіть у{' '}
-        <ContactLink channel="telegram" location="order_success" href="https://t.me/Jin_tea" className="text-primary underline">
+        <ContactLink channel="telegram" location="order_success" href="https://t.me/Jin_tea" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
           Telegram
         </ContactLink>
         .

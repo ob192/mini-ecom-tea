@@ -377,7 +377,7 @@ function Blocks({ blocks }: { blocks: Block[] }) {
                 href={block.link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary underline underline-offset-2"
+                className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground"
               >
                 {block.link.label}
               </a>
@@ -440,7 +440,7 @@ export default function PrivacyPage() {
                 <span className="text-muted-foreground text-sm tabular-nums">{i + 1}.</span>
                 <a
                   href={`#${s.id}`}
-                  className="text-primary text-sm leading-snug underline underline-offset-2"
+                  className="inline-flex min-h-11 items-center text-sm leading-snug underline underline-offset-4 hover:text-primary-subtle-foreground"
                 >
                   {s.title}
                 </a>
@@ -463,7 +463,7 @@ export default function PrivacyPage() {
           Запити щодо ваших персональних даних надсилайте на{' '}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="text-primary underline underline-offset-2 break-all"
+            className="text-foreground underline underline-offset-4 break-all hover:text-primary-subtle-foreground"
           >
             {CONTACT_EMAIL}
           </a>

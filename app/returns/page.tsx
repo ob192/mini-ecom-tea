@@ -58,7 +58,7 @@ export default function ReturnsPage() {
             href={EXCEPTIONS_LAW_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary underline underline-offset-2"
+            className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground"
           >
             за посиланням
           </a>

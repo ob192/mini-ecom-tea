@@ -18,6 +18,10 @@ import { BRAND_NAME } from '@/lib/contacts';
 export function Logo({ size = 'md' }: { size?: 'sm' | 'md' }) {
   return (
     <span className="flex items-center gap-2">
+      {/* The one `text-primary` left on a light surface. Amber is 2.8:1 against
+          the page, under the 3:1 a meaningful graphic needs — but this is part
+          of a logo, which WCAG 1.4.11 exempts, and the wordmark beside it
+          carries the name at 16.9:1. Nothing else may copy this. */}
       <Leaf className={size === 'sm' ? 'size-4 text-primary' : 'size-5 text-primary'} />
       <span
         className={`whitespace-nowrap font-semibold tracking-widest ${

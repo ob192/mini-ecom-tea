@@ -96,6 +96,8 @@ export function Hero() {
             <ul className="flex list-none flex-wrap gap-x-4 gap-y-1.5">
               {SEVEN.map((tea) => (
                 <li key={tea} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+                  {/* Inside the dark block, so amber is 6.6:1 here. It is 2.8:1
+                      on the light page — see DESIGN.md. */}
                   <Check className="size-3.5 text-primary" />
                   {tea}
                 </li>

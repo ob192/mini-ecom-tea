@@ -91,9 +91,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <OrganizationJsonLd siteUrl={SITE} />
         <WebSiteJsonLd siteUrl={SITE} />
         <CartProvider>
-          {/* The shell pins the footer to the bottom of a short page (an empty
-              cart, an article stub) instead of leaving a band of paper under it. */}
-          <div className="flex min-h-dvh flex-col [&>footer]:mt-auto">{children}</div>
+          {/*
+            The shell pins the footer to the bottom of a short page (an empty
+            cart, an article stub) instead of leaving a band of paper under it.
+
+            `[&>*]:w-full` is load-bearing, not tidiness. An auto cross-axis
+            margin on a flex item turns off `align-items: stretch`, so a direct
+            child written as `mx-auto max-w-6xl …` — which is the container
+            recipe — sizes itself to its content instead of to the column. The
+            old `.app-shell > *` rule defended against exactly this and was lost
+            with the Pencil export: the home page's Журнал section promptly came
+            out 1136px wide inside a 375px viewport and took the whole page into
+            horizontal scroll. Declaring the width here means a section can keep
+            using `mx-auto` safely.
+          */}
+          <div className="flex min-h-dvh flex-col [&>*]:w-full [&>footer]:mt-auto">{children}</div>
         </CartProvider>
         <CookieConsent />
         <Toaster />

@@ -70,6 +70,15 @@ export function ProductBuy({
   }, [product, weight, qty]);
 
   const hasTiers = product.priceTiers.length > 1;
+  /*
+    Ukrainian uses a decimal comma, and `toFixed` does not know that (T11). The
+    per-gram figure is also what a screen reader reads out of the tier row, so
+    it has to be a number a person would say.
+  */
+  const perGramFmt = new Intl.NumberFormat('uk-UA', {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
   const unitPrice = priceFor(product, weight);
   const buyable = product.inStock && unitPrice != null;
   const total = unitPrice != null ? unitPrice * qty : null;
@@ -113,17 +122,25 @@ export function ProductBuy({
                   <button
                     type="button"
                     aria-pressed={on}
+                    /*
+                      Without this the accessible name is the row's text content
+                      run together — «25 г270 ₴10.8 ₴ / г», observed in the
+                      keyboard walk. Spelled out, it is a sentence.
+                    */
+                    aria-label={`${t.weight} ${UNIT} — ${uah(t.price)}, ${perGramFmt.format(
+                      t.price / t.weight,
+                    )} ₴ за грам`}
                     onClick={() => setWeight(t.weight)}
                     className={`flex min-h-14 w-full items-center gap-3 rounded-md border px-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                       on
-                        ? 'border-primary bg-primary-subtle'
+                        ? 'border-foreground bg-primary-subtle'
                         : 'border-input hover:border-border-strong hover:bg-foreground/5'
                     }`}
                   >
                     <span
                       aria-hidden
                       className={`grid size-5 shrink-0 place-items-center rounded-full border ${
-                        on ? 'border-primary bg-primary' : 'border-input'
+                        on ? 'border-foreground bg-primary' : 'border-input'
                       }`}
                     >
                       {on ? <Check className="size-3 text-primary-foreground" /> : null}
@@ -139,7 +156,7 @@ export function ProductBuy({
                     <span className="ml-auto shrink-0 text-right">
                       <span className="block font-semibold tabular-nums">{uah(t.price)}</span>
                       <span className="block text-xs text-muted-foreground tabular-nums">
-                        {(t.price / t.weight).toFixed(1)} ₴ / {UNIT}
+                        {perGramFmt.format(t.price / t.weight)} ₴ / {UNIT}
                       </span>
                     </span>
                   </button>
@@ -150,13 +167,20 @@ export function ProductBuy({
         </fieldset>
       ) : null}
 
-      <div className="sticky-bar mt-8 flex items-stretch gap-2.5">
+      {/*
+        `flex-wrap` with a min width on the button. The label is one line by
+        design (T13), so its min-content width wins over `flex-1` and the row
+        could not shrink: at 320 the button ran 18px past the screen edge. Now
+        it drops to its own full-width line when the stepper and the label stop
+        fitting side by side, which happens below about 350px.
+      */}
+      <div className="sticky-bar mt-8 flex flex-wrap items-stretch gap-2.5">
         <QtyStepper
           value={qty}
           onDec={() => setQty((q) => Math.max(1, q - 1))}
           onInc={() => setQty((q) => Math.min(99, q + 1))}
         />
-        <Button onClick={handleAdd} disabled={!buyable} className="flex-1">
+        <Button onClick={handleAdd} disabled={!buyable} className="min-w-40 flex-1">
           <ShoppingBag />
           {buyable
             ? total != null && qty > 1

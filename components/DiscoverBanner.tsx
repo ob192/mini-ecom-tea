@@ -43,7 +43,17 @@ export function DiscoverBanner() {
           Відкрийте світ китайського чаю
         </h2>
 
-        <Button asChild variant="outline" className="mt-2">
+        {/*
+          `secondary`, not `outline`. An outline button is transparent, so its
+          label sits on whatever the photograph happens to put behind it:
+          measured on the real pixels, the heading held at 9.6:1 (p5) and the
+          eyebrow at 6.2:1, but the button's label dipped to 3.3:1 on its worst
+          pixel — and that number moves with every crop and every screen width.
+          Inside this dark block `secondary` is a solid neutral-700, so the
+          label is 11:1 regardless of what is behind the band. It also stays the
+          quieter action: the brand button belongs to the hero.
+        */}
+        <Button asChild variant="secondary" className="mt-2">
           <Link href="/about">Читати історію</Link>
         </Button>
       </div>

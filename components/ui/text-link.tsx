@@ -17,7 +17,7 @@ type Glyph = 'arrow' | 'plus' | 'none';
 const base = [
   'inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm font-medium text-foreground',
   'underline decoration-border-strong decoration-1 underline-offset-4 transition-colors',
-  'hover:text-primary hover:decoration-primary',
+  'hover:text-primary-subtle-foreground hover:decoration-primary-subtle-foreground',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
 ].join(' ');
 

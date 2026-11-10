@@ -393,15 +393,15 @@ export function CheckoutForm() {
                                 reachable from checkout, not only from the footer. */}
                             <p className="text-sm text-muted-foreground text-pretty">
                                 Підтверджуючи замовлення, ви погоджуєтесь з умовами{' '}
-                                <Link href="/delivery" className="underline underline-offset-4 hover:text-primary">
+                                <Link href="/delivery" className="underline underline-offset-4 hover:text-primary-subtle-foreground">
                                     оплати і доставки
                                 </Link>
                                 ,{' '}
-                                <Link href="/returns" className="underline underline-offset-4 hover:text-primary">
+                                <Link href="/returns" className="underline underline-offset-4 hover:text-primary-subtle-foreground">
                                     обміну та повернення
                                 </Link>{' '}
                                 і{' '}
-                                <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+                                <Link href="/privacy" className="underline underline-offset-4 hover:text-primary-subtle-foreground">
                                     Угодою користувача
                                 </Link>
                                 .

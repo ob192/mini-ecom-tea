@@ -128,7 +128,7 @@ export default function BrewingPage() {
               }`}
             >
               <span className="text-foreground">{row.tea}</span>
-              <span className="font-semibold text-primary">{row.range}</span>
+              <span className="font-semibold text-primary-subtle-foreground">{row.range}</span>
             </div>
           ))}
         </div>

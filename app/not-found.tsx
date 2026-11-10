@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 export default function NotFound() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 py-24 text-center">
-      <span className="text-primary">
+      <span className="text-primary-subtle-foreground">
         <Leaf className="size-14" />
       </span>
       <h1 className="font-semibold text-2xl text-foreground">Сторінку не знайдено</h1>

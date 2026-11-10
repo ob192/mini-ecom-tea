@@ -189,10 +189,17 @@ is no longer upstream of anything.
 - **The brand is amber** (`honey-*`), chosen by the owner on 2026-11-10 over the
   shop's old tea green and a terracotta; both of those palettes are deleted. It
   takes **ink**, not white, on the fill, and one shade serves the light page and
-  the dark block. Green survives only in the photography. One consequence worth
-  knowing: `warning` has no tinted surface of its own, because a pale amber
-  banner and a pale brand banner measure 1.1:1 apart — DESIGN.md says what it
-  uses instead.
+  the dark block. Green survives only in the photography. Two consequences that
+  will catch you out, both in DESIGN.md: amber is **never text or a line on a
+  light surface** (2.4–2.8:1 — use `primary-subtle-foreground`, and note that a
+  link hovering to `primary` becomes *less* readable), and `warning` has no
+  tinted surface of its own, because a pale amber banner and a pale brand banner
+  measure 1.1:1 apart.
+- **Every page section lives under `[&>*]:w-full`** in `app/layout.tsx`. The
+  shell is a flex column, and `mx-auto` on a flex item turns off the stretch, so
+  a section written with the container recipe sizes to its content instead of the
+  column. Deleting that one class put the home page into horizontal scroll at
+  375. The old `.app-shell > *` rule did the same job.
 - `components/ui/*` are real shadcn/ui components (`components.json`: style
   `new-york`, base colour `stone`, `cssVariables: true`) on the new tokens, with
   Radix underneath where one needs it, plus the project's own composites

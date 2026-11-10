@@ -28,7 +28,7 @@ function FreeDeliveryBar() {
   return (
     <div className="mx-auto max-w-6xl px-5 pt-6 lg:px-8">
       <p className="m-0 inline-flex items-center gap-2.5 rounded-md bg-secondary px-3.5 py-2 text-sm text-foreground border border-border">
-        <span className="flex shrink-0 text-primary" aria-hidden>
+        <span className="flex shrink-0 text-muted-foreground" aria-hidden>
           <Truck className="size-4" />
         </span>
         Безкоштовна доставка від 500 ₴ по Україні
@@ -109,7 +109,7 @@ export function CatalogGrid({
                   setActiveCat(c.slug);
                   trackSelectCategory(c.slug, c.label);
                 }}
-                className={`min-h-10 shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors ${
+                className={`min-h-11 shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors ${
  active
  ?'bg-primary text-primary-foreground ring-1 ring-primary'
                     : 'bg-card text-muted-foreground border border-border hover:text-foreground'
@@ -129,7 +129,7 @@ export function CatalogGrid({
       {groups.length === 0 ? (
         <div className="mx-auto max-w-6xl px-5 py-16 text-center text-base text-muted-foreground lg:px-8">
           У цій категорії поки немає товарів.{' '}
-          <Link href="/catalog" className="text-primary underline">
+          <Link href="/catalog" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
             Переглянути всі
           </Link>
         </div>

@@ -27,8 +27,14 @@ function Column({ heading, children }: { heading: string; children: React.ReactN
   );
 }
 
+/*
+  `pointer-coarse:`, not `sm:`. The first version relaxed the 44px floor above
+  `sm`, which reads a breakpoint as a pointer type — a tablet in landscape is
+  wide *and* touched, and the footer's eighteen links were 20px tall there. A
+  fine pointer keeps the tight column rhythm; a finger always gets 44px.
+*/
 const linkCls =
-  'inline-flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground sm:min-h-0';
+  'inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground pointer-coarse:min-h-11';
 
 export function Footer() {
   return (

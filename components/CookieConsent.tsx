@@ -137,7 +137,7 @@ export function CookieConsent() {
           цікаві. Деталі —{' '}
           <Link
             href="/privacy"
-            className="text-foreground underline underline-offset-2 hover:text-primary"
+            className="text-foreground underline underline-offset-2 hover:text-primary-subtle-foreground"
           >
             в Угоді користувача
           </Link>
