@@ -8,8 +8,8 @@ import { plural } from '@/lib/format';
 import { categoryLabel } from '@/lib/products';
 import { trackSelectCategory, trackViewItemList } from '@/lib/analytics';
 import { ProductCard } from './ProductCard';
-import { TruckIcon } from './Icons';
-import { SectionHeading } from '@/design';
+import { Truck } from 'lucide-react';
+import { SectionHeading } from '@/components/ui/section-heading';
 
 /*
   CatalogGrid — the `Explore` section of the home screens in jintea.pen.
@@ -26,10 +26,10 @@ import { SectionHeading } from '@/design';
 */
 function FreeDeliveryBar() {
   return (
-    <div className="mx-auto max-w-content px-5 pt-6 lg:px-8">
-      <p className="m-0 inline-flex items-center gap-2.5 rounded bg-amber-tint px-3.5 py-2 font-body text-small text-ink shadow-hairline">
-        <span className="flex shrink-0 text-green" aria-hidden>
-          <TruckIcon width={16} height={16} />
+    <div className="mx-auto max-w-6xl px-5 pt-6 lg:px-8">
+      <p className="m-0 inline-flex items-center gap-2.5 rounded-md bg-secondary px-3.5 py-2 text-sm text-foreground border border-border">
+        <span className="flex shrink-0 text-primary" aria-hidden>
+          <Truck className="size-4" />
         </span>
         Безкоштовна доставка від 500 ₴ по Україні
       </p>
@@ -91,9 +91,9 @@ export function CatalogGrid({
         390px screen was permanently covered by filter chips while scrolling.
         From `lg` there is room to wrap and no scrolling is needed.
       */}
-      <div className="sticky top-[60px] z-20 border-b border-line-soft bg-paper/95 py-3 backdrop-blur-md">
+      <div className="sticky top-[60px] z-20 border-b border-border bg-background/95 py-3 backdrop-blur-md">
         <div
-          className="mx-auto flex max-w-content gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:flex-wrap lg:overflow-x-visible lg:px-8"
+          className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:flex-wrap lg:overflow-x-visible lg:px-8"
           role="tablist"
           aria-label="Фільтр за категорією"
         >
@@ -109,10 +109,10 @@ export function CatalogGrid({
                   setActiveCat(c.slug);
                   trackSelectCategory(c.slug, c.label);
                 }}
-                className={`min-h-[38px] shrink-0 whitespace-nowrap rounded px-4 font-body text-nav transition-colors ${
-                  active
-                    ? 'bg-green text-on-green shadow-[inset_0_0_0_1px_var(--green)]'
-                    : 'bg-card text-ink-soft shadow-hairline hover:text-ink'
+                className={`min-h-[38px] shrink-0 whitespace-nowrap rounded-md px-4 text-sm transition-colors ${
+ active
+ ?'bg-primary text-primary-foreground shadow-[inset_0_0_0_1px_var(--green)]'
+                    : 'bg-card text-muted-foreground border border-border hover:text-foreground'
                 }`}
               >
                 {c.label}
@@ -122,14 +122,14 @@ export function CatalogGrid({
         </div>
       </div>
 
-      <div className="mx-auto max-w-content px-5 pt-3 font-body text-small text-ink-faint lg:px-8">
+      <div className="mx-auto max-w-6xl px-5 pt-3 text-sm text-muted-foreground lg:px-8">
         {filtered.length} {plural(filtered.length, 'позиція', 'позиції', 'позицій')}
       </div>
 
       {groups.length === 0 ? (
-        <div className="mx-auto max-w-content px-5 py-16 text-center font-body text-body text-ink-soft lg:px-8">
+        <div className="mx-auto max-w-6xl px-5 py-16 text-center text-base text-muted-foreground lg:px-8">
           У цій категорії поки немає товарів.{' '}
-          <Link href="/catalog" className="text-green underline">
+          <Link href="/catalog" className="text-primary underline">
             Переглянути всі
           </Link>
         </div>
@@ -137,14 +137,14 @@ export function CatalogGrid({
         groups.map((g) => (
           <section
             key={g.slug}
-            className="mx-auto max-w-content px-5 pb-10 pt-7 lg:px-8"
+            className="mx-auto max-w-6xl px-5 pb-10 pt-7 lg:px-8"
             aria-labelledby={`cat-${g.slug}`}
           >
             <SectionHeading
               id={`cat-${g.slug}`}
               className="scroll-mt-[130px]"
               action={
-                <span className="font-body text-small text-ink-faint">{g.items.length}</span>
+                <span className="text-sm text-muted-foreground">{g.items.length}</span>
               }
             >
               {categoryLabel(g.slug)}

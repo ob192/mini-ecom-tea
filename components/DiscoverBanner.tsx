@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Eyebrow } from '@/design';
+import { Eyebrow } from '@/components/ui/eyebrow';
 
 /*
   DiscoverBanner — the `Discover Banner` frame of the home screen: a full-bleed
@@ -29,17 +29,15 @@ export function DiscoverBanner() {
       <div className="absolute inset-0" style={{ background: '#23372699' }} />
 
       <div className="relative z-[1] mx-auto flex max-w-[720px] flex-col items-center gap-5 px-5 text-center">
-        <Eyebrow tone="on-green" className="tracking-[2.5px]">
-          Філософія чаю
-        </Eyebrow>
+        <Eyebrow className="text-primary-foreground/80">Філософія чаю</Eyebrow>
 
-        <h2 className="m-0 font-display text-[30px] font-semibold leading-[1.15] text-on-green lg:text-[40px]">
+        <h2 className="m-0 text-[30px] font-semibold text-primary-foreground lg:text-[40px]">
           Відкрийте світ китайського чаю
         </h2>
 
         <Link
           href="/about"
-          className="inline-flex items-center gap-2 rounded px-[26px] py-[13px] font-body text-label uppercase text-on-green shadow-[inset_0_0_0_1px_var(--on-green)] transition-colors hover:bg-on-green hover:text-green-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-green"
+          className="inline-flex items-center gap-2 rounded-md px-[26px] py-[13px] text-xs uppercase text-primary-foreground shadow-[inset_0_0_0_1px_var(--on-green)] transition-colors hover:bg-primary-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Читати історію
         </Link>

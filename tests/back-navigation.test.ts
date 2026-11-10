@@ -31,26 +31,26 @@ const code = (p: string) =>
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/^\s*\/\/.*$/gm, '');
 
-const breadcrumb = code('design/primitives/Breadcrumb.tsx');
+const backLink = code('components/ui/back-link.tsx');
 const header = code('components/Header.tsx');
 const product = code('app/product/[...slug]/page.tsx');
 
 describe('the back affordance', () => {
   it('is a link, not browser history', () => {
-    expect(breadcrumb).not.toMatch(/router\.back\(\)/);
-    expect(breadcrumb).not.toMatch(/useRouter/);
-    expect(breadcrumb).toMatch(/<Link\b/);
+    expect(backLink).not.toMatch(/router\.back\(\)/);
+    expect(backLink).not.toMatch(/useRouter/);
+    expect(backLink).toMatch(/<Link\b/);
   });
 
   it('always resolves to some href, even if a caller forgets one', () => {
     // The default is a floor, not a good answer — but a wrong destination is
     // recoverable and a dead end is not.
-    expect(breadcrumb).toMatch(/href = '\/'/);
+    expect(backLink).toMatch(/href = '\/'/);
   });
 
   it('is fed by the header rather than being hardcoded', () => {
     expect(header).toMatch(/backHref = '\/'/);
-    expect(header).toMatch(/<Breadcrumb href=\{backHref\} \/>/);
+    expect(header).toMatch(/<BackLink href=\{backHref\} \/>/);
   });
 });
 

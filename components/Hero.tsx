@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowIcon } from './Icons';
+import { ArrowRight } from 'lucide-react';
 import { HeroVideo } from './HeroVideo';
-import { Eyebrow } from '@/design';
+import { Eyebrow } from '@/components/ui/eyebrow';
 
 /*
   Hero — the `Hero` frame of the home screens in jintea.pen.
@@ -65,24 +65,24 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-[1] mx-auto w-full max-w-content px-5 pb-12 lg:px-8 lg:pb-24">
+      <div className="relative z-[1] mx-auto w-full max-w-6xl px-5 pb-12 lg:px-8 lg:pb-24">
         <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-[460px]">
-          <Eyebrow tone="on-green">Сезон пуеру відкрито</Eyebrow>
+          <Eyebrow className="text-primary-foreground/80">Сезон пуеру відкрито</Eyebrow>
 
-          <h1 className="m-0 font-display text-[34px] font-semibold leading-[1.12] text-on-green lg:text-display">
+          <h1 className="m-0 text-[34px] font-semibold text-primary-foreground lg:text-4xl sm:text-5xl">
             Прямо з гір Юньнані до вашої чашки
           </h1>
 
-          <p className="m-0 max-w-[46ch] font-body text-body text-on-green/80">
+          <p className="m-0 max-w-[46ch] text-base text-primary-foreground/80">
             Витриманий шу та живий шен пуер, зібраний зі старих чайних дерев.
           </p>
 
           <Link
             href="/catalog"
-            className="inline-flex w-fit items-center gap-2 rounded bg-card px-7 py-[14px] font-body text-label uppercase text-ink transition-colors hover:bg-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-green"
+            className="inline-flex w-fit items-center gap-2 rounded-md bg-card px-7 py-[14px] text-xs uppercase text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Переглянути каталог
-            <ArrowIcon width={15} height={15} aria-hidden />
+            <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
       </div>

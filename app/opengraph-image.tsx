@@ -20,9 +20,9 @@ const PAPER = '#F3ECDD';
 const AMBER = '#BE8638';
 
 export default async function OpengraphImage() {
-  // Read off disk at build time — satori needs ttf/otf (no woff2), and Oswald
+  // Read off disk at build time — satori needs ttf/otf (no woff2), and Geist
   // is the site's display face and covers Cyrillic.
-  const oswald = await readFile(join(process.cwd(), 'app/og/Oswald-SemiBold.ttf'));
+  const geist = await readFile(join(process.cwd(), 'app/og/Geist-SemiBold.ttf'));
 
   return new ImageResponse(
     (
@@ -37,7 +37,7 @@ export default async function OpengraphImage() {
           backgroundColor: GREEN,
           backgroundImage: `linear-gradient(135deg, ${GREEN} 0%, ${GREEN_DEEP} 100%)`,
           color: PAPER,
-          fontFamily: 'Oswald',
+          fontFamily: 'Geist',
         }}
       >
         {/* leaf mark — same path as app/icon.svg */}
@@ -72,7 +72,7 @@ export default async function OpengraphImage() {
     ),
     {
       ...size,
-      fonts: [{ name: 'Oswald', data: oswald, weight: 600, style: 'normal' }],
+      fonts: [{ name: 'Geist', data: geist, weight: 600, style: 'normal' }],
     },
   );
 }

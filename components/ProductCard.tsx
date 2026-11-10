@@ -7,9 +7,9 @@ import { categoryLabel, defaultWeight, priceFor, UNIT } from '@/lib/products';
 import { uah } from '@/lib/format';
 import { useCart } from '@/context/CartContext';
 import { trackAddToCart, trackSelectItem } from '@/lib/analytics';
-import { WeightChip } from '@/design';
+import { WeightChip } from '@/components/ui/weight-chip';
 import { ProductImage } from './Logo';
-import { CheckIcon, PlusIcon } from './Icons';
+import { Check, Plus } from 'lucide-react';
 
 /*
   ProductCard — the `component/Product Card` reusable component in jintea.pen.
@@ -74,7 +74,7 @@ export function ProductCard({
           href={`/product/${product.slug}`}
           aria-label={product.title}
           onClick={handleSelect}
-          className="block overflow-hidden rounded-lg shadow-hairline"
+          className="block overflow-hidden rounded-xl border border-border"
         >
           <ProductImage
             src={product.image}
@@ -95,14 +95,14 @@ export function ProductCard({
               ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
               : `${product.title} — немає в наявності`
           }
-          className="absolute bottom-3 right-4 flex h-[42px] w-[42px] items-center justify-center rounded-full bg-card text-ink shadow-hairline transition-colors hover:bg-green hover:text-on-green disabled:pointer-events-none disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="absolute bottom-3 right-4 flex h-[42px] w-[42px] items-center justify-center rounded-full bg-card text-foreground border border-border transition-colors hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          {added ? <CheckIcon width={18} height={18} /> : <PlusIcon width={18} height={18} />}
+          {added ? <Check className="size-5" /> : <Plus className="size-5" />}
         </button>
       </div>
 
       <div className="flex flex-col gap-1.5 px-0.5 pt-4">
-        <p className="m-0 font-body text-[11px] uppercase tracking-[1.2px] text-amber">
+        <p className="m-0 text-xs uppercase text-foreground">
           {categoryLabel(product.category)}
         </p>
 
@@ -110,13 +110,13 @@ export function ProductCard({
           <Link
             href={`/product/${product.slug}`}
             onClick={handleSelect}
-            className="font-display text-card-title uppercase text-ink transition-colors hover:text-green"
+            className="text-lg uppercase text-foreground transition-colors hover:text-primary"
           >
             {product.title}
           </Link>
         </h3>
 
-        <p className="m-0 font-body text-[15px] font-bold text-ink">
+        <p className="m-0 text-base font-bold text-foreground">
           {price != null ? uah(price) : 'Ціна за запитом'}
         </p>
 
@@ -137,7 +137,7 @@ export function ProductCard({
                 ) : (
                   /* One tier is not a choice; drawing it as a control invites a
                      press that can never do anything. */
-                  <span className="inline-block rounded-sm bg-card px-[9px] py-1 font-body text-[11px] text-ink-soft shadow-hairline">
+                  <span className="inline-block rounded-sm bg-card px-[9px] py-1 text-xs text-muted-foreground border border-border">
                     {t.weight} {UNIT}
                   </span>
                 )}

@@ -1,34 +1,494 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
 /*
-  globals.css — the single stylesheet the app imports.
+ * The whole design system's values. DESIGN.md (repo root) holds the decisions —
+ * what each token is for and the practice that is not a token.
+ *
+ * Three layers, each written once:
+ *   1. @theme        palette, fonts, the type scale  — raw values
+ *   2. :root / .dark semantic roles, as palette references
+ *   3. @theme inline the roles turned into utilities (bg-primary, text-muted-foreground…)
+ *
+ * This replaces the old Pencil export, which kept every token in three
+ * unsynced copies (design/tokens/*.ts, design/tokens/tokens.css,
+ * tailwind.config.ts) with a test pinning them against each other. There is no
+ * tailwind.config.* any more: Tailwind v4 reads this file.
+ */
 
-  Structure (order matters for PostCSS):
-  1. @import the modular, per-feature CSS files FIRST. postcss-import only
-     inlines @import rules that appear before other rules, so every import
-     lives at the very top of this file.
-  2. THEN the @tailwind layer directives.
+/* ── 1. PALETTE ───────────────────────────────────────────────────────────── */
+@theme {
+	/* `initial` drops Tailwind's default palette, so only these colours exist. */
+	--color-*: initial;
+	--color-white: #ffffff;
+	--color-black: #000000;
 
-  Cascade correctness: the feature files wrap their rules in @layer so their
-  specificity/order is controlled by Tailwind's layer system, not by where the
-  @import happens to sit. tokens.css stays outside any layer (it only defines
-  :root custom properties, which aren't subject to layer ordering).
+	/* neutral — warm cream greys: the page, cards, lines, text, and the dark block.
+	   The whole UI is built from these; the brand hue only lands on actions. */
+	--color-neutral-25: #fdfcf9; /* page */
+	--color-neutral-50: #f8f6f0; /* quiet band between sections */
+	--color-neutral-100: #f1ede4; /* card, muted */
+	--color-neutral-200: #e3ddcf; /* hairline */
+	--color-neutral-300: #c4bca8; /* hairline, hover */
+	--color-neutral-400: #857f70; /* a field's boundary: 3.9:1 on the page, 3.4:1 on a card */
+	--color-neutral-500: #5e594f; /* secondary text: 6.8:1 on the page, 6.0:1 on a card */
+	--color-neutral-600: #4a463e;
+	--color-neutral-700: #35322b; /* second button in the dark block */
+	--color-neutral-800: #272520; /* hairline in the dark block */
+	--color-neutral-900: #1c1a16; /* ink, and the card in the dark block */
+	--color-neutral-950: #12110e; /* the dark block's page */
 
-  To add a feature stylesheet: create app/styles/<feature>.css and add one
-  @import line in the block below.
-*/
+	/* leaf — the tea green the shop has used since it opened. */
+	--color-leaf-50: #eef3ed;
+	--color-leaf-100: #dae4d9;
+	--color-leaf-200: #b6c8b5;
+	--color-leaf-300: #8da68e;
+	--color-leaf-400: #5f8263;
+	--color-leaf-500: #47664b;
+	--color-leaf-600: #3a5a3e;
+	--color-leaf-700: #2e4631;
+	--color-leaf-800: #233726;
+	--color-leaf-900: #18261a;
+	--color-leaf-950: #0f1711;
 
-@import '../design/tokens/tokens.css';
-@import './styles/base.css';
-@import './styles/shell.css';
-@import './styles/sticky-bar.css';
-@import './styles/motion.css';
+	/* honey — warm amber, the colour of a brewed green liquor. */
+	--color-honey-50: #fdf6e9;
+	--color-honey-100: #fbebce;
+	--color-honey-200: #f5d79c;
+	--color-honey-300: #ebba62;
+	--color-honey-400: #dc9d39;
+	--color-honey-500: #d08a2c;
+	--color-honey-600: #c27c21;
+	--color-honey-700: #a8661a;
+	--color-honey-800: #8f5a1e;
+	--color-honey-900: #6b4113;
+	--color-honey-950: #42280b;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+	/* clay — fired terracotta, the colour of a Yixing teapot and of 红茶 liquor. */
+	--color-clay-50: #fcefec;
+	--color-clay-100: #f8dcd6;
+	--color-clay-200: #efb6aa;
+	--color-clay-300: #e08a78;
+	--color-clay-400: #c85a45;
+	--color-clay-500: #b84530;
+	--color-clay-600: #a8382a;
+	--color-clay-700: #8f2c1e;
+	--color-clay-800: #732318;
+	--color-clay-900: #4f1810;
+	--color-clay-950: #2e0e09;
 
-/* shadcn base layer: apply the border token globally, like the CLI does. */
+	/* Status hues. Kept apart from the brand families so a status never reads as
+	   a brand colour, or the other way round. */
+	--color-error-50: #fef2f2;
+	--color-error-200: #fecaca;
+	--color-error-400: #f87171;
+	--color-error-600: #dc2626;
+	--color-error-700: #b91c1c;
+	--color-error-950: #450a0a;
+
+	--color-success-50: #ecfdf5;
+	--color-success-200: #a7f3d0;
+	--color-success-400: #34d399;
+	--color-success-700: #047857;
+	--color-success-800: #065f46;
+	--color-success-950: #022c22;
+
+	--color-warn-50: #fffbeb;
+	--color-warn-200: #fde68a;
+	--color-warn-400: #fbbf24;
+	--color-warn-500: #f59e0b;
+	--color-warn-800: #92400e;
+	--color-warn-950: #451a03;
+
+	--color-blue-50: #eff6ff;
+	--color-blue-200: #bfdbfe;
+	--color-blue-400: #60a5fa;
+	--color-blue-600: #2563eb;
+	--color-blue-800: #1e40af;
+	--color-blue-950: #172554;
+
+	/* One family for everything, loaded by next/font in app/layout.tsx.
+	   Subsets: latin, cyrillic and cyrillic-ext — ₴ (U+20B4) is in cyrillic-ext,
+	   so latin + cyrillic alone drops the currency sign to the fallback font. */
+	--font-*: initial;
+	--font-sans:
+		var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+		sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+	/* Type: Tailwind's steps and sizes, with line height and tracking fitted to
+	   Geist and to Ukrainian (.claude/skills/design-system/references/leading.md).
+	   Measured: content area 1.300 em, x/cap 0.75 — a large x-height, so reading
+	   text takes the upper end of its band (1.55). Й reaches 0.913 em and g falls
+	   to −0.162, so two lines touch at line-height 1.073: 1.1 is the floor for
+	   every heading step, and nothing goes below it. Cyrillic takes about half
+	   the negative tracking Latin would (ш, щ, н, м crowd sooner). */
+	--text-xs--line-height: 1.4;
+	--text-sm--line-height: 1.45;
+	--text-base--line-height: 1.55;
+	--text-lg--line-height: 1.55;
+	--text-xl--line-height: 1.3;
+	--text-xl--letter-spacing: -0.01em;
+	--text-2xl--line-height: 1.25;
+	--text-2xl--letter-spacing: -0.012em;
+	--text-3xl--line-height: 1.18;
+	--text-3xl--letter-spacing: -0.016em;
+	--text-4xl--line-height: 1.12;
+	--text-4xl--letter-spacing: -0.02em;
+	--text-5xl--line-height: 1.1;
+	--text-5xl--letter-spacing: -0.022em;
+	--text-6xl--line-height: 1.1;
+	--text-6xl--letter-spacing: -0.025em;
+	--text-7xl--line-height: 1.1;
+	--text-7xl--letter-spacing: -0.025em;
+	--text-8xl--line-height: 1.1;
+	--text-8xl--letter-spacing: -0.028em;
+	--text-9xl--line-height: 1.1;
+	--text-9xl--letter-spacing: -0.028em;
+
+	/* The one shadow Tailwind has no step for: a bar pinned to the bottom of the
+	   viewport lifting off the content under it (the mobile buy bar). */
+	--shadow-up: 0 -6px 18px rgb(28 26 22 / 0.07);
+
+	/* Radii, spacing and breakpoints are Tailwind's own, unchanged. */
+}
+
+/* ── 2. SEMANTIC ──────────────────────────────────────────────────────────── */
+/*
+ * Roles, written as palette references. Components use these, never a palette
+ * shade. Contrast on every text pair is measured, not assumed; the numbers are
+ * in DESIGN.md and on /playground.
+ */
+:root {
+	--background: var(--color-neutral-25);
+	--foreground: var(--color-neutral-900); /* 16.9:1 */
+	--card: var(--color-neutral-100);
+	--card-foreground: var(--color-neutral-900); /* 14.9:1 */
+	--popover: var(--color-neutral-25);
+	--popover-foreground: var(--color-neutral-900);
+	--subtle: var(--color-neutral-50);
+	--subtle-foreground: var(--color-neutral-900);
+
+	/*
+	 * BRAND — provisional. The owner has not chosen a direction yet, so this is
+	 * the shop's existing identity (tea green) mapped onto the new roles, which
+	 * keeps the site looking like itself meanwhile. /playground/brand renders the
+	 * three directions; the choice changes only the five lines below, plus their
+	 * twins in `.dark`.
+	 */
+	--primary: var(--color-leaf-700); /* white on it: 10.3:1 */
+	--primary-foreground: var(--color-white);
+	--primary-strong: var(--color-leaf-800); /* hover and pressed */
+	--primary-subtle: var(--color-leaf-50);
+	--primary-subtle-foreground: var(--color-leaf-800); /* 11.4:1 on primary-subtle */
+
+	--secondary: var(--color-neutral-200);
+	--secondary-foreground: var(--color-neutral-900);
+	--muted: var(--color-neutral-100);
+	--muted-foreground: var(--color-neutral-500); /* 6.8:1 on the page, 6.0:1 on a card */
+	/* shadcn's hover/highlight surface (ghost buttons, menu items) — not a brand colour. */
+	--accent: var(--color-neutral-100);
+	--accent-foreground: var(--color-neutral-900);
+	--inverse: var(--color-neutral-900);
+	--inverse-foreground: var(--color-neutral-25); /* 16.9:1 */
+
+	--border: var(--color-neutral-200); /* decorative hairline */
+	--border-strong: var(--color-neutral-300);
+	/* A field's boundary has to be seen (WCAG 1.4.11), so it is darker than `border`. */
+	--input: var(--color-neutral-400);
+	--ring: var(--color-blue-600); /* 5.0:1 against the page — a focus ring, never the brand hue */
+
+	--error: var(--color-error-600);
+	--error-foreground: var(--color-white); /* 4.8:1 */
+	--error-subtle: var(--color-error-50);
+	--error-subtle-foreground: var(--color-error-700); /* 5.9:1 */
+	--success: var(--color-success-700);
+	--success-foreground: var(--color-white); /* 5.5:1 */
+	--success-subtle: var(--color-success-50);
+	--success-subtle-foreground: var(--color-success-800); /* 7.3:1 */
+	--warning: var(--color-warn-500);
+	--warning-foreground: var(--color-neutral-900); /* 8.1:1 */
+	--warning-subtle: var(--color-warn-50);
+	--warning-subtle-foreground: var(--color-warn-800); /* 6.8:1 */
+	--info: var(--color-blue-600);
+	--info-foreground: var(--color-white); /* 5.2:1 */
+	--info-subtle: var(--color-blue-50);
+	--info-subtle-foreground: var(--color-blue-800); /* 8.0:1 */
+	--destructive: var(--error);
+	--destructive-foreground: var(--error-foreground);
+
+	/* The notice at the bottom of the viewport publishes its height here while it
+	   is up (components/CookieConsent.tsx). Everything else pinned to the bottom
+	   of the viewport adds it, so nothing can come to rest underneath it — the bug
+	   that covered «Додати в кошик» on every first mobile visit, which is every ad
+	   click. tests/bottom-layers.test.ts pins both halves. */
+	--cookie-notice-h: 0px;
+}
+
+/*
+ * DARK — the same roles with dark values, for any element carrying the `dark`
+ * class and everything inside it: a band or a block, not the whole site. The
+ * utilities read the variables at the element, so primitives turn dark on their
+ * own and no `dark:` colour class is needed.
+ * Warm near-black, not black: the page is neutral-950 (#12110e), a card a step
+ * up (neutral-900), a field sunk back to the page colour inside it.
+ * Aliases (`destructive`) are declared again — a custom property inherits the
+ * value computed where it was declared, not the reference.
+ */
+.dark {
+	color-scheme: dark;
+
+	--background: var(--color-neutral-950);
+	--foreground: var(--color-neutral-25); /* 18.4:1 */
+	--card: var(--color-neutral-900);
+	--card-foreground: var(--color-neutral-25); /* 16.9:1 */
+	--popover: var(--color-neutral-900);
+	--popover-foreground: var(--color-neutral-25);
+	--subtle: var(--color-neutral-950);
+	--subtle-foreground: var(--color-neutral-25);
+
+	/* Leaf-700 is only 1.9:1 against a near-black page, so a green button would
+	   vanish on it. In a dark block the brand steps up to leaf-300 (7.2:1 to the
+	   page) and takes ink text (7.2:1). */
+	--primary: var(--color-leaf-300);
+	--primary-foreground: var(--color-neutral-950);
+	--primary-strong: var(--color-leaf-200);
+	--primary-subtle: var(--color-leaf-950);
+	--primary-subtle-foreground: var(--color-leaf-200); /* 10.7:1 */
+
+	--secondary: var(--color-neutral-700);
+	--secondary-foreground: var(--color-neutral-25);
+	--muted: var(--color-neutral-900);
+	--muted-foreground: #a39c8c; /* 6.9:1 on the page, 6.4:1 on a card */
+	--accent: var(--color-neutral-700);
+	--accent-foreground: var(--color-neutral-25);
+	--inverse: var(--color-neutral-25);
+	--inverse-foreground: var(--color-neutral-900);
+
+	--border: var(--color-neutral-800);
+	--border-strong: var(--color-neutral-400);
+	--input: var(--color-neutral-400); /* 4.7:1 to the page, 4.4:1 to a card */
+	--ring: var(--color-blue-400); /* 7.4:1 */
+
+	--error: var(--color-error-400);
+	--error-foreground: var(--color-neutral-950);
+	--error-subtle: var(--color-error-950);
+	--error-subtle-foreground: var(--color-error-200);
+	--success: var(--color-success-400);
+	--success-foreground: var(--color-neutral-950);
+	--success-subtle: var(--color-success-950);
+	--success-subtle-foreground: var(--color-success-200);
+	--warning: var(--color-warn-400);
+	--warning-foreground: var(--color-neutral-950);
+	--warning-subtle: var(--color-warn-950);
+	--warning-subtle-foreground: var(--color-warn-200);
+	--info: var(--color-blue-400);
+	--info-foreground: var(--color-neutral-950);
+	--info-subtle: var(--color-blue-950);
+	--info-subtle-foreground: var(--color-blue-200);
+	--destructive: var(--error);
+	--destructive-foreground: var(--error-foreground);
+}
+
+/* ── 3. MAPPING ───────────────────────────────────────────────────────────── */
+/* Turns the roles into utilities. `@theme inline` keeps the var() reference, so
+   the utility reads the variable at the element, where `.dark` can change it. */
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-subtle: var(--subtle);
+	--color-subtle-foreground: var(--subtle-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary-strong: var(--primary-strong);
+	--color-primary-subtle: var(--primary-subtle);
+	--color-primary-subtle-foreground: var(--primary-subtle-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-inverse: var(--inverse);
+	--color-inverse-foreground: var(--inverse-foreground);
+	--color-border: var(--border);
+	--color-border-strong: var(--border-strong);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-error: var(--error);
+	--color-error-foreground: var(--error-foreground);
+	--color-error-subtle: var(--error-subtle);
+	--color-error-subtle-foreground: var(--error-subtle-foreground);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-success-subtle: var(--success-subtle);
+	--color-success-subtle-foreground: var(--success-subtle-foreground);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-warning-subtle: var(--warning-subtle);
+	--color-warning-subtle-foreground: var(--warning-subtle-foreground);
+	--color-info: var(--info);
+	--color-info-foreground: var(--info-foreground);
+	--color-info-subtle: var(--info-subtle);
+	--color-info-subtle-foreground: var(--info-subtle-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+}
+
+/* `dark:` follows a `dark` class on a block, not the OS setting. Colours need no
+   `dark:` prefix at all — the tokens above switch by themselves. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Pinned interactive states for the /playground reference, which has to show
+   hover, focus and pressed side by side without a pointer. */
+@custom-variant hover {
+	@media (hover: hover) {
+		&:hover {
+			@slot;
+		}
+	}
+	&[data-preview~="hover"] {
+		@slot;
+	}
+}
+@custom-variant focus-visible {
+	&:focus-visible {
+		@slot;
+	}
+	&[data-preview~="focus"] {
+		@slot;
+	}
+}
+@custom-variant active {
+	&:active {
+		@slot;
+	}
+	&[data-preview~="active"] {
+		@slot;
+	}
+}
+
+/* ── Element defaults ─────────────────────────────────────────────────────── */
+/*
+ * In the base layer, so every utility class still wins over them. They read the
+ * semantic variables (`--border`), not the mapped ones (`--color-border`): those
+ * are computed once on `:root` and would keep their light value inside `.dark`.
+ */
 @layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--border, currentcolor);
+	}
+
+	/* The page is light; dark is a block, never the whole page. Without an explicit
+	   background the canvas follows the host, and a dark-mode browser shows through
+	   the gaps between sections. */
+	html {
+		color-scheme: light;
+		background-color: var(--background);
+		-webkit-text-size-adjust: 100%;
+
+		/*
+		  Anchor jumps glide rather than teleport — «Читати далі» on a product page
+		  drops the reader a screen and a half down to #opys, and landing there
+		  without the travel gives no sense of having moved rather than navigated.
+		  Safe globally: the App Router would otherwise animate its scroll-to-top on
+		  every route change, but Next disables this property for the duration of its
+		  own scroll and restores it afterwards.
+		*/
+		scroll-behavior: smooth;
+
+		/*
+		  The header is sticky, so an anchor and a focused element both have to land
+		  clear of it (WCAG 2.4.11, NV8). 6.5rem = 104px: the 56px bar (`h-14` in
+		  components/Header.tsx) plus the 44px «Назад» row the deeper pages carry,
+		  and some air. `scroll-padding-top` on `html` rather than `scroll-margin`
+		  on `[id]`, because it also keeps a *focused* element clear of the bar,
+		  which scroll-margin does not. tests/anchor-scroll.test.ts pins the pair.
+		*/
+		scroll-padding-top: 6.5rem;
+	}
+
+	/* Someone who asked for less motion asked for exactly this: a page that does not
+	   travel a screen and a half under its own power. Give them the jump. */
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+	}
+
+	body {
+		background-color: var(--background);
+		color: var(--foreground);
+		-webkit-font-smoothing: antialiased;
+
+		/*
+		  Reserve the cookie notice's height so nothing can come to rest underneath
+		  it. `.sticky-bar` lifts itself with `bottom`, but a short page has no room
+		  to lift into, and the last card of a grid or the footer's contact links
+		  have no such mechanism at all. 0px once the notice is dismissed, which is
+		  every visit after the first.
+		*/
+		padding-bottom: var(--cookie-notice-h, 0px);
+	}
+
+	input::placeholder,
+	textarea::placeholder {
+		color: var(--muted-foreground);
+	}
+
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+}
+
+/* ── Components ───────────────────────────────────────────────────────────── */
+@layer components {
+	/*
+	 * The mobile buy bar and the checkout submit. On phones they stick to the
+	 * bottom of the viewport on their own card surface; from `lg` they are
+	 * ordinary blocks in their column.
+	 *
+	 * `bottom` is a calc() because of `--cookie-notice-h`. The notice is anchored
+	 * to the bottom too and sits above this bar — correctly, a notice belongs
+	 * above the page. What was missing is that the bar had no idea it was there:
+	 * on a 375×812 phone the notice covered 89% of «Додати в кошик», so the tap
+	 * landed on «Добре» and nothing went into the cart. Every ad click hit that.
+	 * Deliberately no `transition` on `bottom`: the variable goes from 0 to a
+	 * length in an effect just after first paint, so a transition would spend its
+	 * whole duration in exactly the covered-button state this exists to prevent.
+	 */
+	.sticky-bar {
+		position: sticky;
+		bottom: calc(0.75rem + var(--cookie-notice-h, 0px));
+		z-index: 40;
+		margin-inline: -0.25rem;
+		border-radius: var(--radius-xl);
+		background-color: var(--card);
+		box-shadow:
+			var(--shadow-up),
+			inset 0 0 0 1px var(--border);
+		padding:
+			0.75rem calc(0.75rem + env(safe-area-inset-right, 0px))
+			calc(0.75rem + env(safe-area-inset-bottom, 0px)) calc(0.75rem + env(safe-area-inset-left, 0px));
+	}
+
+	@media (width >= 64rem) {
+		.sticky-bar {
+			position: static;
+			margin: 0;
+			border-radius: 0;
+			background-color: transparent;
+			box-shadow: none;
+			padding: 0;
+		}
+	}
 }

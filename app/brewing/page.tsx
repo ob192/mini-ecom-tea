@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { ThermometerIcon } from '@/components/Icons';
+import { Thermometer } from 'lucide-react';
 
 export const dynamic = 'force-static';
 
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/brewing' },
 };
 
-const h2 = 'font-display font-semibold text-[19px] text-ink mt-8 mb-2.5';
-const p = 'm-0 text-ink-soft text-[15px] leading-relaxed';
+const h2 = 'font-semibold text-xl text-foreground mt-8 mb-2.5';
+const p = 'm-0 text-muted-foreground text-base leading-relaxed';
 const ol = 'flex flex-col gap-2 mt-3 mb-1 pl-0 list-none';
 
 const temps = [
@@ -33,10 +33,10 @@ function Steps({ items }: { items: string[] }) {
     <ol className={ol}>
       {items.map((s, i) => (
         <li key={i} className="flex gap-3">
-          <span className="shrink-0 w-6 h-6 rounded-full bg-green-tint text-green font-display font-semibold text-[12px] flex items-center justify-center mt-0.5">
+          <span className="shrink-0 w-6 h-6 rounded-full bg-primary-subtle text-primary font-semibold text-xs flex items-center justify-center mt-0.5">
             {i + 1}
           </span>
-          <span className="text-ink-soft text-[15px] leading-relaxed">{s}</span>
+          <span className="text-muted-foreground text-base leading-relaxed">{s}</span>
         </li>
       ))}
     </ol>
@@ -47,8 +47,8 @@ export default function BrewingPage() {
   return (
     <>
       <Header title="Як заварювати" back />
-      <main className="animate-screenIn flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-display font-semibold text-[26px] text-ink leading-tight mb-2.5">
+      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
+        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-2.5">
           Як правильно заварювати китайський чай
         </h1>
         <p className={p}>
@@ -115,25 +115,25 @@ export default function BrewingPage() {
 
         <h2 className={h2}>
           <span className="inline-flex items-center gap-2">
-            <ThermometerIcon width={18} height={18} className="text-amber" />
+            <Thermometer className="size-5 text-foreground" />
             Температура води
           </span>
         </h2>
-        <div className="bg-card rounded-lg shadow-hairline overflow-hidden mt-1">
+        <div className="bg-card rounded-xl border border-border overflow-hidden mt-1">
           {temps.map((row, i) => (
             <div
               key={row.tea}
-              className={`flex items-center justify-between px-4 py-3 text-[14.5px] ${
-                i !== temps.length - 1 ? 'border-b border-line-soft' : ''
+              className={`flex items-center justify-between px-4 py-3 text-sm ${
+ i !== temps.length - 1 ?'border-b border-border' : ''
               }`}
             >
-              <span className="text-ink">{row.tea}</span>
-              <span className="font-display font-semibold text-green">{row.range}</span>
+              <span className="text-foreground">{row.tea}</span>
+              <span className="font-semibold text-primary">{row.range}</span>
             </div>
           ))}
         </div>
 
-        <Button asChild variant="pill" size="xl" className="mt-7 w-full">
+        <Button asChild size="lg" className="mt-7 w-full">
           <Link href="/">До каталогу</Link>
         </Button>
       </main>

@@ -13,7 +13,7 @@ import { uah } from '@/lib/format';
 import { trackAddShippingInfo, trackBeginCheckout, trackCheckoutError } from '@/lib/analytics';
 import { checkoutSchema, type CheckoutValues } from '@/lib/checkout-schema';
 import { Header } from '@/components/Header';
-import { AlertIcon } from '@/components/Icons';
+import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -80,12 +80,12 @@ export function CheckoutForm() {
         return (
             <>
                 <Header title="Оформлення" back backHref="/cart" />
-                <div className="animate-screenIn flex flex-col items-center justify-center text-center px-8 py-16 gap-2 min-h-[60vh]">
-                    <h1 className="font-display text-h2 uppercase text-ink">Кошик порожній</h1>
-                    <p className="text-ink-soft text-[15px] max-w-[28ch]">
+                <div className="flex flex-col items-center justify-center text-center px-8 py-16 gap-2 min-h-[60vh]">
+                    <h1 className="text-2xl uppercase text-foreground">Кошик порожній</h1>
+                    <p className="text-muted-foreground text-base max-w-[28ch]">
                         Додайте товари, щоб оформити замовлення.
                     </p>
-                    <Button variant="pill" size="lg" className="mt-2" onClick={() => router.push('/')}>
+                    <Button size="lg" className="mt-2" onClick={() => router.push('/')}>
                         До каталогу
                     </Button>
                 </div>
@@ -136,13 +136,13 @@ export function CheckoutForm() {
     return (
         <>
             <Header title="Оформлення" back backHref="/cart" />
-            <h1 className="mx-auto max-w-content px-[18px] pt-4 font-display text-h2 uppercase text-ink lg:px-8">
+            <h1 className="mx-auto max-w-6xl px-[18px] pt-4 text-2xl uppercase text-foreground lg:px-8">
                 Оформлення
             </h1>
             <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
                 {/* order summary (right column on desktop) */}
-                <div className="animate-screenIn px-[18px] pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-24">
-                    <h2 className="mb-2.5 mt-2 font-body text-[12px] uppercase tracking-[1.6px] text-ink-faint lg:mt-0">
+                <div className="px-[18px] pt-2 lg:px-0 lg:pt-0 lg:order-2 lg:sticky lg:top-24">
+                    <h2 className="mb-2.5 mt-2 text-xs uppercase text-muted-foreground lg:mt-0">
                         Ваше замовлення
                     </h2>
                     <Card className="p-4 mb-[22px] lg:mb-0">
@@ -151,27 +151,27 @@ export function CheckoutForm() {
                             if (!p) return null;
                             const unitPrice = priceFor(p, it.weight) ?? 0;
                             return (
-                                <div key={`${it.slug}|${it.weight}`} className="flex justify-between gap-2.5 py-1.5 text-[14.5px]">
-                  <span className="text-ink-soft">
-                    <span className="mr-1.5 font-body font-bold text-amber-deep">
+                                <div key={`${it.slug}|${it.weight}`} className="flex justify-between gap-2.5 py-1.5 text-sm">
+                  <span className="text-muted-foreground">
+                    <span className="mr-1.5 font-bold text-foreground">
                       {it.qty}×
                     </span>
                       {p.title}
                   </span>
-                                    <span className="whitespace-nowrap font-body font-bold text-ink">
+                                    <span className="whitespace-nowrap font-bold text-foreground">
                     {uah(unitPrice * it.qty)}
                   </span>
                                 </div>
                             );
                         })}
                         <hr className="divider my-2.5" />
-                        <div className="flex justify-between items-baseline text-[15px] text-ink-soft mb-1.5">
+                        <div className="flex justify-between items-baseline text-base text-muted-foreground mb-1.5">
                             <span>Доставка</span>
-                            <span className={delivery === 0 ? 'text-ok' : 'text-ink'}>
+                            <span className={delivery === 0 ? 'text-success-subtle-foreground' : 'text-foreground'}>
                 {delivery === 0 ? 'Безкоштовно' : uah(delivery)}
               </span>
                         </div>
-                        <div className="flex justify-between items-baseline font-display font-semibold text-[21px] text-ink">
+                        <div className="flex justify-between items-baseline font-semibold text-[21px] text-foreground">
                             <span>Разом</span>
                             <span>{uah(total)}</span>
                         </div>
@@ -179,8 +179,8 @@ export function CheckoutForm() {
                 </div>
 
                 {/* delivery form (left column on desktop) */}
-                <div className="animate-screenIn px-[18px] pb-6 lg:px-0 lg:pt-0 lg:order-1">
-                    <h2 className="font-display text-[13px] tracking-[0.1em] uppercase text-green-deep mb-3">
+                <div className="px-[18px] pb-6 lg:px-0 lg:pt-0 lg:order-1">
+                    <h2 className="text-sm tracking-[0.1em] uppercase text-primary mb-3">
                         Дані для доставки
                     </h2>
 
@@ -208,14 +208,14 @@ export function CheckoutForm() {
                                 render={({ field }) => (
                                     <FormItem className="mb-3.5">
                                         <FormLabel>
-                                            Ім&apos;я <span className="text-amber-deep">*</span>
+                                            Ім&apos;я <span className="text-foreground">*</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input placeholder="Олена" autoComplete="given-name" {...field} />
                                         </FormControl>
                                         <FormMessage className="[&_svg]:hidden">
                       <span className="flex items-center gap-1.5">
-                        <AlertIcon width={14} height={14} />
+                        <AlertCircle className="size-3.5" />
                           {form.formState.errors.first?.message}
                       </span>
                                         </FormMessage>
@@ -229,14 +229,14 @@ export function CheckoutForm() {
                                 render={({ field }) => (
                                     <FormItem className="mb-3.5">
                                         <FormLabel>
-                                            Прізвище <span className="text-amber-deep">*</span>
+                                            Прізвище <span className="text-foreground">*</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input placeholder="Коваленко" autoComplete="family-name" {...field} />
                                         </FormControl>
                                         <FormMessage className="[&_svg]:hidden">
                       <span className="flex items-center gap-1.5">
-                        <AlertIcon width={14} height={14} />
+                        <AlertCircle className="size-3.5" />
                           {form.formState.errors.last?.message}
                       </span>
                                         </FormMessage>
@@ -250,7 +250,7 @@ export function CheckoutForm() {
                                 render={({ field }) => (
                                     <FormItem className="mb-3.5">
                                         <FormLabel>
-                                            Телефон <span className="text-amber-deep">*</span>
+                                            Телефон <span className="text-foreground">*</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input
@@ -263,7 +263,7 @@ export function CheckoutForm() {
                                         </FormControl>
                                         <FormMessage className="[&_svg]:hidden">
                       <span className="flex items-center gap-1.5">
-                        <AlertIcon width={14} height={14} />
+                        <AlertCircle className="size-3.5" />
                           {form.formState.errors.phone?.message}
                       </span>
                                         </FormMessage>
@@ -273,7 +273,7 @@ export function CheckoutForm() {
 
                             {/* delivery method toggle */}
                             <div className="mb-3.5">
-                <span className="font-display font-medium text-[13px] tracking-wide uppercase text-ink-soft">
+                <span className="font-medium text-sm tracking-wide uppercase text-muted-foreground">
                   Спосіб доставки
                 </span>
                                 <div className="flex gap-2 mt-2">
@@ -281,10 +281,10 @@ export function CheckoutForm() {
                                         type="button"
                                         onClick={() => form.setValue('deliveryMethod', 'np_warehouse', { shouldValidate: true })}
                                         aria-pressed={deliveryMethod === 'np_warehouse'}
-                                        className={`flex-1 rounded min-h-[44px] px-4 font-body text-nav transition-colors ${
-                                            deliveryMethod === 'np_warehouse'
-                                                ? 'bg-green text-on-green'
-                                                : 'bg-card text-ink-soft shadow-hairline hover:text-ink'
+                                        className={`flex-1 rounded-md min-h-[44px] px-4 text-sm transition-colors ${
+ deliveryMethod ==='np_warehouse'
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'bg-card text-muted-foreground border border-border hover:text-foreground'
                                         }`}
                                     >
                                         Відділення / поштомат
@@ -293,10 +293,10 @@ export function CheckoutForm() {
                                         type="button"
                                         onClick={() => form.setValue('deliveryMethod', 'np_courier', { shouldValidate: true })}
                                         aria-pressed={deliveryMethod === 'np_courier'}
-                                        className={`flex-1 rounded min-h-[44px] px-4 font-body text-nav transition-colors ${
-                                            deliveryMethod === 'np_courier'
-                                                ? 'bg-green text-on-green'
-                                                : 'bg-card text-ink-soft shadow-hairline hover:text-ink'
+                                        className={`flex-1 rounded-md min-h-[44px] px-4 text-sm transition-colors ${
+ deliveryMethod ==='np_courier'
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'bg-card text-muted-foreground border border-border hover:text-foreground'
                                         }`}
                                     >
                                         Кур&apos;єром
@@ -321,14 +321,14 @@ export function CheckoutForm() {
                                     render={({ field }) => (
                                         <FormItem className="mb-3.5">
                                             <FormLabel>
-                                                Адреса доставки <span className="text-amber-deep">*</span>
+                                                Адреса доставки <span className="text-foreground">*</span>
                                             </FormLabel>
                                             <FormControl>
                                                 <Textarea autoComplete="street-address" placeholder="Вулиця, будинок, квартира" {...field} />
                                             </FormControl>
                                             <FormMessage className="[&_svg]:hidden">
                         <span className="flex items-center gap-1.5">
-                          <AlertIcon width={14} height={14} />
+                          <AlertCircle className="size-3.5" />
                             {form.formState.errors.address?.message}
                         </span>
                                             </FormMessage>
@@ -341,17 +341,17 @@ export function CheckoutForm() {
                                 Менеджер зателефонує для підтвердження. Оплата при отриманні або за реквізитами.
                             </FormDescription>
 
-                            <div className="sticky-bar flex items-center gap-3.5 lg:mt-6 lg:pt-6 lg:border-t lg:border-line">
+                            <div className="sticky-bar flex items-center gap-3.5 lg:mt-6 lg:pt-6 lg:border-t lg:border-border">
                                 <div className="flex flex-col">
-                                    <span className="text-[12px] text-ink-faint">До сплати</span>
-                                    <span className="font-display font-semibold text-[20px] text-ink">
+                                    <span className="text-xs text-muted-foreground">До сплати</span>
+                                    <span className="font-semibold text-xl text-foreground">
                     {uah(total)}
                   </span>
                                 </div>
                                 <Button
                                     type="submit"
-                                    variant="pill"
-                                    size="xl"
+                                    
+                                    size="lg"
                                     disabled={submitting}
                                     className="flex-1 disabled:cursor-wait"
                                 >
@@ -361,17 +361,17 @@ export function CheckoutForm() {
 
                             {/* Merchant Center expects the delivery and return terms to be
                                 reachable from checkout, not only from the footer. */}
-                            <p className="m-0 mt-3 text-[12.5px] text-ink-faint leading-relaxed">
+                            <p className="m-0 mt-3 text-xs text-muted-foreground leading-relaxed">
                                 Підтверджуючи замовлення, ви погоджуєтесь з умовами{' '}
-                                <Link href="/delivery" className="underline underline-offset-2 hover:text-ink">
+                                <Link href="/delivery" className="underline underline-offset-2 hover:text-foreground">
                                     оплати і доставки
                                 </Link>
                                 ,{' '}
-                                <Link href="/returns" className="underline underline-offset-2 hover:text-ink">
+                                <Link href="/returns" className="underline underline-offset-2 hover:text-foreground">
                                     обміну та повернення
                                 </Link>{' '}
                                 і{' '}
-                                <Link href="/privacy" className="underline underline-offset-2 hover:text-ink">
+                                <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">
                                     Угодою користувача
                                 </Link>
                                 .

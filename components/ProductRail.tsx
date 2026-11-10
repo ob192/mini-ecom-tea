@@ -4,8 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Product } from '@/lib/types';
 import { trackViewItemList } from '@/lib/analytics';
 import { ProductCard } from './ProductCard';
-import { ChevLeftIcon, ChevRightIcon } from './Icons';
-import { IconButton, SectionHeading, TextLink } from '@/design';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { TextLink } from '@/components/ui/text-link';
 
 /*
   ProductRail — the `Explore` section of the home frame in jintea.pen: a
@@ -70,31 +72,33 @@ export function ProductRail({
   };
 
   return (
-    <section className="mx-auto max-w-content px-5 py-14 lg:px-8 lg:py-16" aria-labelledby="explore">
+    <section className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16" aria-labelledby="explore">
       <SectionHeading
         id="explore"
         action={
           <>
             <TextLink href={href}>Усі товари</TextLink>
             <div className="hidden items-center gap-2.5 lg:flex">
-              <IconButton
+              <Button
+                variant="outline"
+                size="icon-sm"
+                className="rounded-full"
                 aria-label="Попередні товари"
-                size="sm"
-                surface="paper"
                 onClick={() => page(-1)}
                 disabled={atStart}
               >
-                <ChevLeftIcon width={16} height={16} />
-              </IconButton>
-              <IconButton
+                <ChevronLeft />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                className="rounded-full"
                 aria-label="Наступні товари"
-                size="sm"
-                surface="paper"
                 onClick={() => page(1)}
                 disabled={atEnd}
               >
-                <ChevRightIcon width={16} height={16} />
-              </IconButton>
+                <ChevronRight />
+              </Button>
             </div>
           </>
         }

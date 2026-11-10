@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { AlertIcon, MailIcon, PhoneIcon, TelegramIcon } from '@/components/Icons';
+import { AlertCircle, Mail, Phone } from 'lucide-react';
+import { TelegramMark } from '@/components/BrandMarks';
 import {
   BRAND_NAME,
   CONTACT_EMAIL,
@@ -32,22 +33,22 @@ const checklist = [
 ];
 
 const contacts = [
-  { icon: PhoneIcon, label: 'Телефон', value: CONTACT_PHONE, href: CONTACT_PHONE_HREF },
-  { icon: TelegramIcon, label: 'Telegram', value: TELEGRAM_HANDLE, href: TELEGRAM_URL },
-  { icon: MailIcon, label: 'Пошта', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+  { icon: Phone, label: 'Телефон', value: CONTACT_PHONE, href: CONTACT_PHONE_HREF },
+  { icon: TelegramMark, label: 'Telegram', value: TELEGRAM_HANDLE, href: TELEGRAM_URL },
+  { icon: Mail, label: 'Пошта', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
 ];
 
 export default function ReturnsPage() {
   return (
     <>
       <Header title="Обмін та повернення" back />
-      <main className="animate-screenIn flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-display font-semibold text-[26px] text-ink leading-tight mb-6">
+      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
+        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-6">
           Обмін та повернення
         </h1>
 
-        <h2 className="font-display font-semibold text-[19px] text-ink mb-2.5">Політика повернення</h2>
-        <p className="m-0 text-ink-soft text-[15px] leading-relaxed">
+        <h2 className="font-semibold text-xl text-foreground mb-2.5">Політика повернення</h2>
+        <p className="m-0 text-muted-foreground text-base leading-relaxed">
           Згідно із Законом України «Про захист прав споживачів» покупець має право обміняти товар на
           аналогічний або повернути протягом 14 днів, якщо куплений товар не підійшов за формою,
           габаритами, фасоном, кольором, розміром або з інших причин, і якщо збережено товарний
@@ -57,55 +58,55 @@ export default function ReturnsPage() {
             href={EXCEPTIONS_LAW_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-green underline underline-offset-2"
+            className="text-primary underline underline-offset-2"
           >
             за посиланням
           </a>
           .
         </p>
 
-        <p className="m-0 mt-4 text-ink-soft text-[15px] leading-relaxed">
+        <p className="m-0 mt-4 text-muted-foreground text-base leading-relaxed">
           Щоб повернути товар, будь ласка, переконайтеся, що:
         </p>
         <ul className="m-0 mt-2.5 pl-0 list-none flex flex-col gap-2">
           {checklist.map((c) => (
             <li key={c} className="flex gap-2.5 items-start">
-              <span className="mt-[9px] w-1.5 h-1.5 shrink-0 rounded-full bg-green" aria-hidden />
-              <p className="m-0 text-ink-soft text-[15px] leading-relaxed">{c}</p>
+              <span className="mt-[9px] w-1.5 h-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+              <p className="m-0 text-muted-foreground text-base leading-relaxed">{c}</p>
             </li>
           ))}
         </ul>
 
-        <p className="m-0 mt-4 text-ink-soft text-[15px] leading-relaxed">
+        <p className="m-0 mt-4 text-muted-foreground text-base leading-relaxed">
           Оплата доставки повернення відбувається за рахунок покупця.
         </p>
 
-        <div className="mt-3 bg-card rounded-lg shadow-hairline p-4 flex gap-3.5 items-start">
-          <span className="w-10 h-10 shrink-0 rounded-full bg-green-tint text-green flex items-center justify-center">
-            <AlertIcon width={19} height={19} />
+        <div className="mt-3 bg-card rounded-xl border border-border p-4 flex gap-3.5 items-start">
+          <span className="w-10 h-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+            <AlertCircle className="size-5" />
           </span>
-          <p className="m-0 text-ink-soft text-[15px] leading-relaxed">
+          <p className="m-0 text-muted-foreground text-base leading-relaxed">
             Доставка браку здійснюється за наш рахунок.
           </p>
         </div>
 
-        <p className="m-0 mt-4 text-ink-soft text-[15px] leading-relaxed">
+        <p className="m-0 mt-4 text-muted-foreground text-base leading-relaxed">
           Якщо ви не забрали своє замовлення або відмовилися від нього на пошті, це також вважається
           поверненням. Доставка в обидві сторони оплачується покупцем.
         </p>
 
-        <h2 className="font-display font-semibold text-[19px] text-ink mt-7 mb-2.5">
+        <h2 className="font-semibold text-xl text-foreground mt-7 mb-2.5">
           Порядок повернення коштів
         </h2>
-        <p className="m-0 text-ink-soft text-[15px] leading-relaxed">
+        <p className="m-0 text-muted-foreground text-base leading-relaxed">
           Повернути гроші або обміняти товар ми зможемо протягом 5 робочих днів з моменту отримання
           нами товару на склад.
         </p>
 
-        <h2 className="font-display font-semibold text-[19px] text-ink mt-7 mb-2.5">
+        <h2 className="font-semibold text-xl text-foreground mt-7 mb-2.5">
           Як відправити заяву на повернення?
         </h2>
-        <p className="m-0 text-ink-soft text-[15px] leading-relaxed mb-3.5">
+        <p className="m-0 text-muted-foreground text-base leading-relaxed mb-3.5">
           Зв’язатися з нашим менеджером за номером телефону, в чаті Telegram, або відправити листа на
           електронну адресу. Контакти для зворотного зв’язку вказані нижче:
         </p>
@@ -115,14 +116,14 @@ export default function ReturnsPage() {
             <a
               key={label}
               href={href}
-              className="bg-card rounded-lg shadow-hairline p-4 flex items-center gap-3.5 hover:bg-green-tint transition-colors"
+              className="bg-card rounded-xl border border-border p-4 flex items-center gap-3.5 hover:bg-primary-subtle transition-colors"
             >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-green-tint text-green flex items-center justify-center">
-                <Icon width={19} height={19} />
+              <span className="w-10 h-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+                <Icon className="size-5" />
               </span>
               <div className="min-w-0">
-                <div className="text-ink-faint text-[12.5px]">{label}</div>
-                <div className="font-display font-semibold text-[15.5px] text-ink break-all">
+                <div className="text-muted-foreground text-xs">{label}</div>
+                <div className="font-semibold text-[15.5px] text-foreground break-all">
                   {value}
                 </div>
               </div>
@@ -130,7 +131,7 @@ export default function ReturnsPage() {
           ))}
         </div>
 
-        <Button asChild variant="pill" size="xl" className="mt-7 w-full">
+        <Button asChild size="lg" className="mt-7 w-full">
           <Link href="/">До каталогу</Link>
         </Button>
       </main>

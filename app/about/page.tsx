@@ -4,7 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowIcon } from '@/components/Icons';
+import { ArrowRight } from 'lucide-react';
 import { BRAND_NAME } from '@/lib/contacts';
 
 export const dynamic = 'force-static';
@@ -38,10 +38,10 @@ export default function AboutPage() {
   return (
     <>
       <Header title="Про нас" back />
-      <main className="animate-screenIn flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-display font-semibold text-[26px] text-ink leading-tight mb-4">Про нас</h1>
+      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
+        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-4">Про нас</h1>
 
-        <div className="flex flex-col gap-3.5 text-ink-soft text-[15px] leading-relaxed">
+        <div className="flex flex-col gap-3.5 text-muted-foreground text-base leading-relaxed">
           <p className="m-0">
             Ми почали з того, що самі не могли знайти нормальний чай у місті. Усе або занадто пафосне,
             або взагалі незрозуміло що. Тому зібрали те, що п&rsquo;ємо самі — улуни, шени, червоні чаї
@@ -54,20 +54,20 @@ export default function AboutPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-7">
           {points.map((p) => (
-            <div key={p.n} className="bg-card rounded-lg shadow-hairline p-4">
-              <div className="font-display font-semibold text-[13px] text-amber tracking-[0.1em] mb-1.5">
+            <div key={p.n} className="bg-card rounded-xl border border-border p-4">
+              <div className="font-semibold text-sm text-foreground tracking-[0.1em] mb-1.5">
                 {p.n}
               </div>
-              <div className="font-display font-semibold text-[15px] text-ink mb-1">{p.label}</div>
-              <p className="m-0 text-ink-faint text-[13px] leading-relaxed">{p.text}</p>
+              <div className="font-semibold text-base text-foreground mb-1">{p.label}</div>
+              <p className="m-0 text-muted-foreground text-sm leading-relaxed">{p.text}</p>
             </div>
           ))}
         </div>
 
-        <h2 className="font-display font-semibold text-[19px] text-ink mt-2 mb-2.5">
+        <h2 className="font-semibold text-xl text-foreground mt-2 mb-2.5">
           Чи складно заварювати китайський чай?
         </h2>
-        <div className="flex flex-col gap-3.5 text-ink-soft text-[15px] leading-relaxed">
+        <div className="flex flex-col gap-3.5 text-muted-foreground text-base leading-relaxed">
           <p className="m-0">
             Багато хто думає, що китайський чай — це складно. Що треба вчитися роками, запам&rsquo;ятовувати
             терміни, купувати спеціальний стіл і дивитися відео по дві години. Насправді ні. Береш гайвань,
@@ -79,18 +79,18 @@ export default function AboutPage() {
 
         <Link
           href="/brewing"
-          className="inline-flex items-center gap-1.5 mt-1 font-display font-medium text-[14px] text-green hover:text-green-600 transition-colors"
+          className="inline-flex items-center gap-1.5 mt-1 font-medium text-sm text-primary hover:text-primary transition-colors"
         >
           Детальніше про способи заварювання
-          <ArrowIcon width={15} height={15} />
+          <ArrowRight className="size-4" />
         </Link>
 
-        <Card className="p-4 mt-7 border-l-[3px] border-amber text-ink text-[15px] leading-relaxed">
+        <Card className="p-4 mt-7 border-l-[3px] border-border-strong text-foreground text-base leading-relaxed">
           Ми не продаємо стиль життя і не розповідаємо про давні династії на кожній сторінці. Просто є
           чай, є посуд, є люди, які в цьому розбираються і можуть порадити.
         </Card>
 
-        <Button asChild variant="pill" size="xl" className="mt-7 w-full">
+        <Button asChild size="lg" className="mt-7 w-full">
           <Link href="/">До каталогу</Link>
         </Button>
       </main>

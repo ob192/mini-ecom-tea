@@ -1,4 +1,4 @@
-import { InstagramIcon, TikTokIcon } from './Icons';
+import { InstagramMark, TikTokMark } from '@/components/BrandMarks';
 import { ContactLink } from './Analytics';
 import { INSTAGRAM_URL, TIKTOK_URL } from '@/lib/contacts';
 
@@ -14,16 +14,16 @@ import { INSTAGRAM_URL, TIKTOK_URL } from '@/lib/contacts';
   «Стежити» that silently picks a winner.
 */
 const FOLLOW_BUTTON =
-  'inline-flex items-center gap-2 rounded px-7 py-[13px] font-body text-label uppercase text-green shadow-[inset_0_0_0_1px_var(--green)] transition-colors hover:bg-green hover:text-on-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+  'inline-flex items-center gap-2 rounded-md px-7 py-[13px] text-xs uppercase text-primary shadow-[inset_0_0_0_1px_var(--green)] transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
 export function JoinFamily() {
   return (
-    <section className="bg-paper-deep py-16">
-      <div className="mx-auto flex max-w-content flex-col items-center gap-4 px-5 text-center lg:px-8">
-        <h2 className="m-0 font-display text-[26px] font-semibold uppercase tracking-[1px] text-ink">
+    <section className="bg-subtle py-16">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 text-center lg:px-8">
+        <h2 className="m-0 text-[26px] font-semibold uppercase text-foreground">
           Приєднуйтесь до родини
         </h2>
-        <p className="m-0 max-w-[52ch] font-body text-body text-ink-soft">
+        <p className="m-0 max-w-[52ch] text-base text-muted-foreground">
           Живі фото чаю, анонси нових надходжень і чайні поради.
         </p>
         <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
@@ -33,7 +33,7 @@ export function JoinFamily() {
             href={INSTAGRAM_URL}
             className={FOLLOW_BUTTON}
           >
-            <InstagramIcon width={16} height={16} aria-hidden />
+            <InstagramMark className="size-4" aria-hidden />
             Instagram
           </ContactLink>
           <ContactLink
@@ -42,7 +42,7 @@ export function JoinFamily() {
             href={TIKTOK_URL}
             className={FOLLOW_BUTTON}
           >
-            <TikTokIcon width={16} height={16} aria-hidden />
+            <TikTokMark className="size-4" aria-hidden />
             TikTok
           </ContactLink>
         </div>

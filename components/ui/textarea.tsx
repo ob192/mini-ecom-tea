@@ -1,29 +1,25 @@
 import * as React from 'react';
+
 import { cn } from '@/lib/utils';
 
-/** shadcn Textarea, themed to Jintea. */
-const Textarea = React.forwardRef<
+/** Textarea — an `Input` with four rows, resizable only by hand. */
+export const Textarea = React.forwardRef<
   HTMLTextAreaElement,
   React.TextareaHTMLAttributes<HTMLTextAreaElement>
->(({ className, ...props }, ref) => {
-  return (
-    <textarea
-      ref={ref}
-      className={cn(
-        'font-body text-[16px] text-ink bg-card rounded w-full px-3.5 py-2.5',
-        'min-h-[76px] resize-none leading-snug',
-        'border-[1.5px] border-line transition',
-        'placeholder:text-ink-faint',
-        'focus:outline-none focus:border-green-600 focus:shadow-[0_0_0_3px_rgba(46,70,49,0.12)]',
-        'aria-[invalid=true]:border-danger aria-[invalid=true]:bg-danger-tint',
-        'aria-[invalid=true]:focus:shadow-[0_0_0_3px_rgba(176,73,47,0.14)]',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        className,
-      )}
-      {...props}
-    />
-  );
-});
+>(({ className, rows = 4, ...props }, ref) => (
+  <textarea
+    ref={ref}
+    rows={rows}
+    className={cn(
+      'min-h-28 w-full resize-y rounded-md border border-input bg-background px-3.5 py-2.5',
+      'text-base text-foreground transition-colors placeholder:text-muted-foreground sm:text-sm',
+      'hover:border-border-strong',
+      'aria-[invalid=true]:border-error aria-[invalid=true]:bg-error-subtle',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+      'disabled:cursor-not-allowed disabled:opacity-50',
+      className,
+    )}
+    {...props}
+  />
+));
 Textarea.displayName = 'Textarea';
-
-export { Textarea };

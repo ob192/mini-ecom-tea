@@ -8,9 +8,8 @@ import nextConfig from '@/next.config.mjs';
   Two production incidents are pinned here.
 
   1. The cookie notice ate the buy button. Both the notice
-     (components/CookieConsent.tsx) and the buy / submit bars
-     (app/styles/sticky-bar.css) anchor themselves to the bottom of the
-     viewport. The notice is z-50 and the bars z-40, so on a 375x812 phone the
+     (components/CookieConsent.tsx) and the buy / submit bars (`.sticky-bar` in
+     app/globals.css) anchor themselves to the bottom of the viewport. The notice is z-50 and the bars z-40, so on a 375x812 phone the
      notice covered 89% of «Додати в кошик» — `elementFromPoint` at the centre
      of the button returned «Добре». Every first-time mobile visitor hit that,
      and every ad click is a first-time visitor: 86 mobile users over the 90
@@ -30,7 +29,13 @@ import nextConfig from '@/next.config.mjs';
 const HEIGHT_VAR = '--cookie-notice-h';
 
 const notice = readFileSync(join(process.cwd(), 'components/CookieConsent.tsx'), 'utf8');
-const stickyBar = readFileSync(join(process.cwd(), 'app/styles/sticky-bar.css'), 'utf8');
+/*
+  Both halves now live in one stylesheet, so slice `.sticky-bar`'s own rule out
+  of it: asserting on the whole file would pass on a `bottom` or a `z-index`
+  belonging to some other rule.
+*/
+const globals = readFileSync(join(process.cwd(), 'app/globals.css'), 'utf8');
+const stickyBar = globals.match(/\.sticky-bar\s*\{[^}]*\}/)?.[0] ?? '';
 
 describe('bottom-anchored layers', () => {
   it('the cookie notice publishes its height', () => {
@@ -54,13 +59,17 @@ describe('bottom-anchored layers', () => {
     expect(notice).toMatch(/fixed inset-x-0 bottom-0 z-50/);
   });
 
+  it('the sticky bar has a rule at all', () => {
+    expect(stickyBar, '`.sticky-bar` is gone from globals.css').not.toBe('');
+  });
+
   it('the sticky bar offsets itself by the notice height', () => {
-    const bottom = stickyBar.match(/\n\s*bottom:\s*([^;]+);/)?.[1];
+    const bottom = stickyBar.match(/\bbottom:\s*([^;]+);/)?.[1];
     expect(bottom, 'sticky-bar has no `bottom`').toBeDefined();
     expect(bottom).toContain(`var(${HEIGHT_VAR}`);
-    // A fallback is mandatory: with no notice on screen the variable is not
-    // set at all, and `calc(12px + var(--x))` with no fallback is invalid —
-    // the bar would fall back to `bottom: auto` and stop sticking entirely.
+    // A fallback is mandatory: `calc(0.75rem + var(--x))` with no fallback is
+    // invalid if the variable is ever unset, and the bar would fall back to
+    // `bottom: auto` and stop sticking entirely.
     expect(bottom).toMatch(new RegExp(`var\\(${HEIGHT_VAR},\\s*0(px)?\\)`));
   });
 

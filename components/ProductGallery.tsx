@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import { tone } from '@/lib/products';
-import { LeafIcon } from '@/components/Icons';
+import { Leaf } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 export function ProductGallery({
@@ -53,12 +53,12 @@ export function ProductGallery({
             sizes={sizes}
             priority
             className={`object-cover transition-opacity duration-150 ${
-              i === active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+ i === active ?'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           />
         ))}
-        <span className="absolute bottom-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-ink/45 text-on-green backdrop-blur-sm opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
-          <ZoomIn width={18} height={18} strokeWidth={1.7} />
+        <span className="absolute bottom-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
+          <ZoomIn className="size-5" strokeWidth={1.7} />
         </span>
       </button>
 
@@ -71,10 +71,10 @@ export function ProductGallery({
               onClick={() => setActive(i)}
               aria-pressed={i === active}
               aria-label={`Фото ${i + 1}`}
-              className={`relative shrink-0 w-16 h-16 rounded-lg overflow-hidden transition ${
-                i === active
-                  ? 'ring-2 ring-green ring-offset-0'
-                  : 'opacity-75 shadow-hairline hover:opacity-100'
+              className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden transition ${
+ i === active
+ ?'ring-2 ring-ring ring-offset-0'
+                  : 'opacity-75 border border-border hover:opacity-100'
               }`}
             >
               <Image src={src} alt="" fill sizes="64px" className="object-cover" />
@@ -86,8 +86,8 @@ export function ProductGallery({
       <Dialog open={zoomOpen} onOpenChange={setZoomOpen}>
         <DialogContent
           className={
-            'left-0 top-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-none bg-ink p-0 shadow-none ' +
-            'sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[calc(100%-1.5rem)] sm:max-w-[880px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:bg-card/95 sm:p-1.5 sm:shadow-overlay'
+            'left-0 top-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-none bg-inverse p-0 shadow-none ' +
+            'sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[calc(100%-1.5rem)] sm:max-w-[880px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:bg-card/95 sm:p-1.5 sm:shadow-xl'
           }
         >
           <div className="relative h-full w-full overflow-hidden sm:aspect-square sm:h-auto sm:rounded-xl">
@@ -101,7 +101,7 @@ export function ProductGallery({
             />
 
             {/* scrim so the close button stays legible over bright photos on mobile */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-ink/55 to-transparent sm:hidden" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-inverse/55 to-transparent sm:hidden" />
 
             {images.length > 1 ? (
               <>
@@ -109,19 +109,19 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(-1)}
                   aria-label="Попереднє фото"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-ink/45 text-on-green backdrop-blur-sm hover:bg-ink/60 transition"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
                 >
-                  <ChevronLeft width={20} height={20} strokeWidth={1.7} />
+                  <ChevronLeft className="size-5" strokeWidth={1.7} />
                 </button>
                 <button
                   type="button"
                   onClick={() => go(1)}
                   aria-label="Наступне фото"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-ink/45 text-on-green backdrop-blur-sm hover:bg-ink/60 transition"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
                 >
-                  <ChevronRight width={20} height={20} strokeWidth={1.7} />
+                  <ChevronRight className="size-5" strokeWidth={1.7} />
                 </button>
-                <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-ink/45 px-3 py-1 font-display text-[12px] tracking-wide text-on-green backdrop-blur-sm">
+                <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-inverse/45 px-3 py-1 text-xs tracking-wide text-primary-foreground backdrop-blur-sm">
                   {active + 1} / {images.length}
                 </div>
               </>
@@ -244,7 +244,7 @@ function ZoomableImage({
           priority
           draggable={false}
           className={`object-contain transition-opacity duration-150 ${
-            i === active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+ i === active ?'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
           style={i === active ? { transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` } : undefined}
         />
@@ -284,7 +284,7 @@ function PlaceholderImage({
         }}
       />
       <div className="absolute inset-0 flex items-center justify-center" style={{ color: 'rgba(255,255,255,0.30)' }}>
-        <LeafIcon width="42%" height="42%" />
+        <Leaf width="42%" height="42%" />
       </div>
     </div>
   );

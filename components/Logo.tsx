@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { tone } from '@/lib/products';
-import { LeafIcon } from './Icons';
+import { Leaf } from 'lucide-react';
 import { BRAND_NAME } from '@/lib/contacts';
 
 /*
@@ -22,12 +22,12 @@ export function Logo({
 
   return (
     <span className="flex items-center gap-2">
-      <span className={t === 'ink' ? 'flex text-green' : 'flex text-on-green'} aria-hidden>
-        <LeafIcon width={glyph} height={glyph} />
+      <span className={t === 'ink' ? 'flex text-primary' : 'flex text-primary-foreground'} aria-hidden>
+        <Leaf width={glyph} height={glyph} />
       </span>
       <span
-        className={`whitespace-nowrap font-display font-semibold leading-none ${
-          t === 'ink' ? 'text-ink' : 'text-on-green'
+        className={`whitespace-nowrap font-semibold leading-none ${
+ t ==='ink' ? 'text-foreground' : 'text-primary-foreground'
         }`}
         style={{
           fontSize: size === 'sm' ? 19 : 22,
@@ -99,11 +99,11 @@ export function ProductImage({
         className="absolute inset-0 flex items-center justify-center"
         style={{ color: 'rgba(255,255,255,0.30)' }}
       >
-        <LeafIcon width="42%" height="42%" />
+        <Leaf width="42%" height="42%" />
       </div>
       {tag ? (
         <span
-          className="relative z-[1] m-2 rounded-sm px-[7px] py-[3px] font-body text-[10px] tracking-wide"
+          className="relative z-[1] m-2 rounded-sm px-[7px] py-[3px] text-[10px] tracking-wide"
           style={{ color: 'rgba(255,255,255,0.82)', background: 'rgba(0,0,0,0.18)' }}
         >
           {tag}
@@ -120,4 +120,3 @@ export function ProductImage({
  * (design/primitives/QtyStepper.tsx). Re-exported here because the cart rows
  * import it from this module.
  */
-export { QtyStepper as Stepper } from '@/design/primitives/QtyStepper';

@@ -371,13 +371,13 @@ function Blocks({ blocks }: { blocks: Block[] }) {
       {blocks.map((block, i) => {
         if ('link' in block) {
           return (
-            <p key={i} className="m-0 mt-3 text-ink-soft text-[15px] leading-relaxed">
+            <p key={i} className="m-0 mt-3 text-muted-foreground text-base leading-relaxed">
               {block.p}
               <a
                 href={block.link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-green underline underline-offset-2"
+                className="text-primary underline underline-offset-2"
               >
                 {block.link.label}
               </a>
@@ -387,7 +387,7 @@ function Blocks({ blocks }: { blocks: Block[] }) {
         }
         if ('p' in block) {
           return (
-            <p key={i} className="m-0 mt-3 text-ink-soft text-[15px] leading-relaxed">
+            <p key={i} className="m-0 mt-3 text-muted-foreground text-base leading-relaxed">
               {block.p}
             </p>
           );
@@ -397,8 +397,8 @@ function Blocks({ blocks }: { blocks: Block[] }) {
             <ul key={i} className="m-0 mt-2.5 pl-0 list-none flex flex-col gap-2">
               {block.list.map((item) => (
                 <li key={item} className="flex gap-2.5 items-start">
-                  <span className="mt-[9px] w-1.5 h-1.5 shrink-0 rounded-full bg-green" aria-hidden />
-                  <span className="text-ink-soft text-[15px] leading-relaxed">{item}</span>
+                  <span className="mt-[9px] w-1.5 h-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  <span className="text-muted-foreground text-base leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
@@ -408,8 +408,8 @@ function Blocks({ blocks }: { blocks: Block[] }) {
           <dl key={i} className="m-0 mt-2.5 flex flex-col gap-2.5">
             {block.terms.map(([term, definition]) => (
               <div key={term}>
-                <dt className="font-display font-semibold text-[15px] text-ink">{term}</dt>
-                <dd className="m-0 text-ink-soft text-[15px] leading-relaxed">{definition}</dd>
+                <dt className="font-semibold text-base text-foreground">{term}</dt>
+                <dd className="m-0 text-muted-foreground text-base leading-relaxed">{definition}</dd>
               </div>
             ))}
           </dl>
@@ -423,24 +423,24 @@ export default function PrivacyPage() {
   return (
     <>
       <Header title="Угода користувача" back />
-      <main className="animate-screenIn flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-display font-semibold text-[26px] text-ink leading-tight mb-2.5">
+      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
+        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-2.5">
           Угода користувача
         </h1>
-        <p className="m-0 text-ink-soft text-[15px] leading-relaxed mb-6">
+        <p className="m-0 text-muted-foreground text-base leading-relaxed mb-6">
           Положення про обробку і захист персональних даних у базах персональних даних, володільцем
           яких є продавець.
         </p>
 
-        <nav aria-label="Зміст" className="bg-card rounded-lg shadow-hairline p-4 mb-7">
-          <div className="font-display font-semibold text-[15.5px] text-ink mb-2">Зміст</div>
+        <nav aria-label="Зміст" className="bg-card rounded-xl border border-border p-4 mb-7">
+          <div className="font-semibold text-[15.5px] text-foreground mb-2">Зміст</div>
           <ol className="m-0 pl-0 list-none flex flex-col gap-1.5">
             {sections.map((s, i) => (
               <li key={s.id} className="flex gap-2 items-baseline">
-                <span className="text-ink-faint text-[13px] tabular-nums">{i + 1}.</span>
+                <span className="text-muted-foreground text-sm tabular-nums">{i + 1}.</span>
                 <a
                   href={`#${s.id}`}
-                  className="text-green text-[14px] leading-snug underline underline-offset-2"
+                  className="text-primary text-sm leading-snug underline underline-offset-2"
                 >
                   {s.title}
                 </a>
@@ -451,26 +451,26 @@ export default function PrivacyPage() {
 
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="scroll-mt-20 mb-7">
-            <h2 className="font-display font-semibold text-[19px] text-ink leading-snug">
+            <h2 className="font-semibold text-xl text-foreground leading-snug">
               {i + 1}. {s.title}
             </h2>
             <Blocks blocks={s.blocks} />
           </section>
         ))}
 
-        <h2 className="font-display font-semibold text-[19px] text-ink mb-2.5">Питання щодо даних</h2>
-        <p className="m-0 text-ink-soft text-[15px] leading-relaxed">
+        <h2 className="font-semibold text-xl text-foreground mb-2.5">Питання щодо даних</h2>
+        <p className="m-0 text-muted-foreground text-base leading-relaxed">
           Запити щодо ваших персональних даних надсилайте на{' '}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="text-green underline underline-offset-2 break-all"
+            className="text-primary underline underline-offset-2 break-all"
           >
             {CONTACT_EMAIL}
           </a>
           .
         </p>
 
-        <Button asChild variant="pill" size="xl" className="mt-7 w-full">
+        <Button asChild size="lg" className="mt-7 w-full">
           <Link href="/">До каталогу</Link>
         </Button>
       </main>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { categories } from '@/lib/products';
-import { InstagramIcon, TikTokIcon, TelegramIcon, PhoneIcon } from './Icons';
+import { Phone } from 'lucide-react';
+import { InstagramMark, TelegramMark, TikTokMark } from '@/components/BrandMarks';
 import { ContactLink } from './Analytics';
 import { Logo } from './Logo';
 import { BRAND_NAME, INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_URL } from '@/lib/contacts';
@@ -19,7 +20,7 @@ import { BRAND_NAME, INSTAGRAM_URL, TIKTOK_URL, TELEGRAM_URL } from '@/lib/conta
 function Column({ heading, children }: { heading: string; children: React.ReactNode }) {
   return (
     <nav aria-label={heading} className="flex flex-col gap-3">
-      <h2 className="m-0 font-body text-[12px] font-bold uppercase tracking-[1.2px] text-on-green">
+      <h2 className="m-0 text-xs font-bold uppercase text-primary-foreground">
         {heading}
       </h2>
       {children}
@@ -27,16 +28,16 @@ function Column({ heading, children }: { heading: string; children: React.ReactN
   );
 }
 
-const linkCls = 'font-body text-small text-on-green/70 transition-colors hover:text-on-green';
+const linkCls = 'text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground';
 
 export function Footer() {
   return (
-    <footer className="bg-green-deep text-on-green">
-      <div className="mx-auto max-w-content px-5 pb-7 pt-14 lg:px-8">
+    <footer className="bg-primary-strong text-primary-foreground">
+      <div className="mx-auto max-w-6xl px-5 pb-7 pt-14 lg:px-8">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-8">
           <div className="flex max-w-[320px] flex-col gap-3.5">
             <Logo tone="on-green" />
-            <p className="m-0 font-body text-small leading-[1.6] text-on-green/70">
+            <p className="m-0 text-sm text-primary-foreground/70">
               Листовий китайський чай прямо з Юньнані. Розсилка та самовивіз по Україні.
             </p>
           </div>
@@ -72,46 +73,46 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-on-green/15 pt-[22px]">
-          <span className="font-body text-[12px] text-on-green/50">
+        <div className="mt-11 flex flex-wrap items-center justify-between gap-3 border-t border-primary-foreground/15 pt-[22px]">
+          <span className="text-xs text-primary-foreground/50">
             © {new Date().getFullYear()} {BRAND_NAME} · Усі права захищені
           </span>
-          <div className="flex items-center gap-[18px] text-on-green/80">
+          <div className="flex items-center gap-[18px] text-primary-foreground/80">
             <ContactLink
               channel="instagram"
               location="footer"
               href={INSTAGRAM_URL}
               aria-label="Instagram"
-              className="transition-colors hover:text-on-green"
+              className="transition-colors hover:text-primary-foreground"
             >
-              <InstagramIcon width={18} height={18} />
+              <InstagramMark className="size-5" />
             </ContactLink>
             <ContactLink
               channel="tiktok"
               location="footer"
               href={TIKTOK_URL}
               aria-label="TikTok"
-              className="transition-colors hover:text-on-green"
+              className="transition-colors hover:text-primary-foreground"
             >
-              <TikTokIcon width={18} height={18} />
+              <TikTokMark className="size-5" />
             </ContactLink>
             <ContactLink
               channel="telegram"
               location="footer"
               href={TELEGRAM_URL}
               aria-label="Telegram"
-              className="transition-colors hover:text-on-green"
+              className="transition-colors hover:text-primary-foreground"
             >
-              <TelegramIcon width={18} height={18} />
+              <TelegramMark className="size-5" />
             </ContactLink>
             <ContactLink
               channel="phone"
               location="footer"
               href="tel:+380986575800"
               aria-label="Телефон"
-              className="transition-colors hover:text-on-green"
+              className="transition-colors hover:text-primary-foreground"
             >
-              <PhoneIcon width={18} height={18} />
+              <Phone className="size-5" />
             </ContactLink>
           </div>
         </div>
