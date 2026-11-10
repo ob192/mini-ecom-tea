@@ -49,12 +49,12 @@ export default function CatalogPage() {
       <Header title="Каталог" back />
 
       <main>
-        <h1 className="mx-auto max-w-content px-5 pt-4 font-display text-h2 uppercase text-ink lg:px-8">
+        <h1 className="mx-auto max-w-6xl px-5 pt-4 text-2xl uppercase text-foreground lg:px-8">
           Каталог
         </h1>
         <Suspense
           fallback={
-            <div className="mx-auto max-w-content px-5 py-16 font-body text-small text-ink-faint lg:px-8">
+            <div className="mx-auto max-w-6xl px-5 py-16 text-sm text-muted-foreground lg:px-8">
               Завантаження каталогу…
             </div>
           }

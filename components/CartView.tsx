@@ -7,8 +7,9 @@ import { getProduct, priceFor, UNIT } from '@/lib/products';
 import { uah, plural } from '@/lib/format';
 import { trackRemoveFromCart, trackViewCart } from '@/lib/analytics';
 import { Header } from '@/components/Header';
-import { Stepper, ProductImage } from '@/components/Logo';
-import { CartIcon, LeafIcon, TrashIcon, ArrowIcon } from '@/components/Icons';
+import { ProductImage } from '@/components/Logo';
+import { QtyStepper } from '@/components/ui/qty-stepper';
+import { ArrowRight, Leaf, ShoppingBag, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import type { CartItem } from '@/lib/types';
@@ -30,14 +31,14 @@ function CartRow({
 
   return (
       <div className="flex gap-3 py-3.5 items-start">
-        <Link href={`/product/${p.slug}`} className="w-[66px] shrink-0 rounded-lg overflow-hidden">
+        <Link href={`/product/${p.slug}`} className="w-[66px] shrink-0 rounded-xl overflow-hidden">
           <ProductImage src={p.image} category={p.category} alt={p.title} ratio="1 / 1" tag="" />
         </Link>
         <div className="flex-1 min-w-0">
           <div className="flex justify-between gap-2">
             <Link
                 href={`/product/${p.slug}`}
-                className="font-display text-card-title uppercase text-ink"
+                className="text-lg uppercase text-foreground"
             >
               {p.title}
             </Link>
@@ -45,23 +46,23 @@ function CartRow({
                 type="button"
                 onClick={() => onRemove(item.slug, item.weight)}
                 aria-label={`Видалити ${p.title} з кошика`}
-                className="w-[30px] h-[30px] -mt-1 -mr-1 shrink-0 flex items-center justify-center text-ink-faint hover:text-danger transition-colors"
+                className="w-[30px] h-[30px] -mt-1 -mr-1 shrink-0 flex items-center justify-center text-muted-foreground hover:text-error-subtle-foreground transition-colors"
             >
-              <TrashIcon width={19} height={19} />
+              <Trash2 className="size-5" />
             </button>
           </div>
-          <div className="text-ink-faint text-[12.5px] mt-0.5 mb-2.5">
+          <div className="text-muted-foreground text-xs mt-0.5 mb-2.5">
             {item.weight ? `${item.weight} ${UNIT} · ` : ''}
             {uah(unit)}
           </div>
           <div className="flex items-center justify-between">
-            <Stepper
+            <QtyStepper
                 size="sm"
                 value={item.qty}
                 onDec={() => onDec(item.slug, item.weight)}
                 onInc={() => onInc(item.slug, item.weight)}
             />
-            <span className="font-body text-[15px] font-bold text-ink">
+            <span className="text-base font-bold text-foreground">
             {uah(unit * item.qty)}
           </span>
           </div>
@@ -93,7 +94,7 @@ export function CartView() {
     return (
         <>
           <Header title="Кошик" back backHref="/catalog" />
-          <div className="px-[18px] py-16 text-center text-ink-faint">Завантаження…</div>
+          <div className="px-[18px] py-16 text-center text-muted-foreground">Завантаження…</div>
         </>
     );
   }
@@ -102,17 +103,17 @@ export function CartView() {
     return (
         <>
           <Header title="Кошик" back backHref="/catalog" />
-          <div className="animate-screenIn flex-1 flex flex-col items-center justify-center text-center px-8 py-16 gap-1.5 min-h-[60vh]">
-            <div className="w-[84px] h-[84px] rounded-full bg-green-tint flex items-center justify-center text-green mb-2">
-              <CartIcon width={36} height={36} />
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-8 py-16 gap-1.5 min-h-[60vh]">
+            <div className="w-[84px] h-[84px] rounded-full bg-primary-subtle flex items-center justify-center text-primary mb-2">
+              <ShoppingBag className="size-9" />
             </div>
-            <h1 className="font-display text-h2 uppercase text-ink">Кошик порожній</h1>
-            <p className="m-0 mb-4 text-ink-soft text-[15px] max-w-[26ch]">
+            <h1 className="text-2xl uppercase text-foreground">Кошик порожній</h1>
+            <p className="m-0 mb-4 text-muted-foreground text-base max-w-[26ch]">
               Додайте улюблений чай — і він з&apos;явиться тут.
             </p>
-            <Button asChild variant="pill" size="xl">
+            <Button asChild size="lg">
               <Link href="/catalog">
-                <LeafIcon width={18} height={18} /> Перейти до каталогу
+                <Leaf className="size-5" /> Перейти до каталогу
               </Link>
             </Button>
           </div>
@@ -126,9 +127,9 @@ export function CartView() {
       <>
         <Header title="Кошик" back backHref="/catalog" />
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
-          <div className="animate-screenIn px-[18px] pt-1 pb-2 lg:px-0 lg:pt-0">
-            <h1 className="m-0 font-display text-h2 uppercase text-ink">Кошик</h1>
-            <div className="text-ink-faint text-[13px] pt-1.5 pb-0.5">
+          <div className="px-[18px] pt-1 pb-2 lg:px-0 lg:pt-0">
+            <h1 className="m-0 text-2xl uppercase text-foreground">Кошик</h1>
+            <div className="text-muted-foreground text-sm pt-1.5 pb-0.5">
               {count} {plural(count, 'товар', 'товари', 'товарів')} у кошику
             </div>
             <div>
@@ -143,23 +144,23 @@ export function CartView() {
 
           <div className="px-[18px] lg:px-0 lg:sticky lg:top-20">
             <Card className="p-4 mt-3.5 lg:mt-0 flex flex-col gap-[11px]">
-              <div className="flex justify-between items-baseline text-[15px] text-ink-soft">
+              <div className="flex justify-between items-baseline text-base text-muted-foreground">
                 <span>Сума</span>
-                <span className="font-display font-semibold text-ink">{uah(subtotal)}</span>
+                <span className="font-semibold text-foreground">{uah(subtotal)}</span>
               </div>
-              <div className="flex justify-between items-baseline text-[15px] text-ink-soft">
+              <div className="flex justify-between items-baseline text-base text-muted-foreground">
                 <span>Доставка</span>
-                <span className={delivery === 0 ? 'text-ok' : 'text-ink'}>
+                <span className={delivery === 0 ? 'text-success-subtle-foreground' : 'text-foreground'}>
                 {delivery === 0 ? 'Безкоштовно' : uah(delivery)}
               </span>
               </div>
               {delivery > 0 && remaining > 0 ? (
-                  <div className="text-[12.5px] text-ink-faint -mt-1">
+                  <div className="text-xs text-muted-foreground -mt-1">
                     Безкоштовна доставка від {uah(freeDeliveryThreshold)} — додайте ще {uah(remaining)}
                   </div>
               ) : null}
               <hr className="divider" />
-              <div className="flex justify-between items-baseline font-display font-semibold text-[21px] text-ink">
+              <div className="flex justify-between items-baseline font-semibold text-[21px] text-foreground">
                 <span>Разом</span>
                 <span>{uah(total)}</span>
               </div>
@@ -168,13 +169,13 @@ export function CartView() {
               {/* CTA button — plain block, no sticky-bar wrapper (that's what added the flat rectangle) */}
               <Button
                   asChild
-                  variant="pill"
-                  size="xl"
+                  
+                  size="lg"
                   className="w-full mt-3.5 px-4 sm:px-[22px]"
               >
-                  <Link href="/checkout" className="justify-center text-[16px] sm:text-[18px]">
+                  <Link href="/checkout" className="justify-center text-base sm:text-lg">
                       <span className="truncate">Оформити</span>
-                      <ArrowIcon width={18} height={18} />
+                      <ArrowRight className="size-5" />
                   </Link>
               </Button>
           </div>

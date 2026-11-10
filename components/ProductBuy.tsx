@@ -7,8 +7,11 @@ import { uah } from '@/lib/format';
 import { priceFor, defaultWeight, collapseToTier, UNIT } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { trackAddToCart, trackViewItem } from '@/lib/analytics';
-import { CartIcon, TruckIcon, PackageIcon, PayIcon } from '@/components/Icons';
-import { Button, QtyStepper, WeightChip, InfoRow, InfoRows } from '@/design';
+import { Banknote, Package, ShoppingBag, Truck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { QtyStepper } from '@/components/ui/qty-stepper';
+import { WeightChip } from '@/components/ui/weight-chip';
+import { InfoRow, InfoRows } from '@/components/ui/info-row';
 
 /*
   ProductBuy — the weight selector, buy row and reassurance lines of the
@@ -77,17 +80,17 @@ export function ProductBuy({
   return (
     <>
       <p className="mt-3 flex items-baseline gap-2">
-        <span className="font-display text-[26px] font-semibold text-ink">
+        <span className="text-[26px] font-semibold text-foreground">
           {unitPrice != null ? uah(unitPrice) : 'Ціна за запитом'}
         </span>
-        {weight ? <span className="font-body text-small text-ink-faint">/ {weight} {UNIT}</span> : null}
+        {weight ? <span className="text-sm text-muted-foreground">/ {weight} {UNIT}</span> : null}
       </p>
 
       {children}
 
       {hasTiers ? (
         <div className="mt-8">
-          <h2 className="m-0 font-body text-[12px] uppercase tracking-[1.6px] text-ink-faint">
+          <h2 className="m-0 text-xs uppercase text-muted-foreground">
             Вага
           </h2>
           <div className="mt-3 flex flex-wrap gap-2.5" role="group" aria-label="Вага">
@@ -115,25 +118,25 @@ export function ProductBuy({
           disabled={!buyable}
           className="min-h-[50px] flex-1 gap-2.5"
         >
-          <CartIcon width={17} height={17} aria-hidden />
+          <ShoppingBag className="size-4" aria-hidden />
           {buyable ? 'Додати в кошик' : 'Немає в наявності'}
         </Button>
       </div>
 
       {qty > 1 && unitPrice != null ? (
-        <p className="mt-4 font-body text-small text-ink-faint">
-          Разом: <span className="font-bold text-ink">{uah(unitPrice * qty)}</span>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Разом: <span className="font-bold text-foreground">{uah(unitPrice * qty)}</span>
         </p>
       ) : null}
 
-      <InfoRows className="mt-6 border-t border-line pt-6">
-        <InfoRow icon={<TruckIcon width={15} height={15} />}>
+      <InfoRows className="mt-6 border-t border-border pt-6">
+        <InfoRow icon={<Truck className="size-4" />}>
           Доставка: Україна 1–3 дні
         </InfoRow>
-        <InfoRow icon={<PackageIcon width={15} height={15} />}>
+        <InfoRow icon={<Package className="size-4" />}>
           Самовивіз — Нова Пошта
         </InfoRow>
-        <InfoRow icon={<PayIcon width={15} height={15} />}>Оплата при отриманні</InfoRow>
+        <InfoRow icon={<Banknote className="size-4" />}>Оплата при отриманні</InfoRow>
       </InfoRows>
     </>
   );

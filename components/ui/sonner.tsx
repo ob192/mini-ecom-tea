@@ -3,31 +3,30 @@
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
 
 /*
-  Sonner Toaster, themed with Jintea tokens.
+  Sonner's Toaster. The site is light-only, so the theme is fixed and the
+  colours come from the semantic tokens.
 
-  We don't use next-themes here (the app is light-only), so we hard-set
-  theme="light" and drive colors from CSS variables via toastOptions.
+  Bottom-centre would collide with the mobile buy bar and the cookie notice, so
+  toasts sit at the top (FB5). An error a visitor must act on never lives only
+  here — it stays inline or in an `Alert` (FB2).
 */
-const Toaster = ({ ...props }: ToasterProps) => {
-  return (
-    <Sonner
-      theme="light"
-      position="top-center"
-      toastOptions={{
-        classNames: {
-          toast:
-            'group font-body rounded-lg shadow-overlay bg-card text-ink border border-line',
-          title: 'font-display font-medium',
-          description: 'text-ink-soft',
-          actionButton: 'bg-green text-on-green rounded-full',
-          cancelButton: 'bg-muted text-ink rounded-full',
-          error: 'bg-danger-tint text-danger border-danger/30',
-          success: 'bg-green-tint text-green-deep border-green/20',
-        },
-      }}
-      {...props}
-    />
-  );
-};
+const Toaster = (props: ToasterProps) => (
+  <Sonner
+    theme="light"
+    position="top-center"
+    toastOptions={{
+      classNames: {
+        toast: 'group rounded-xl bg-popover text-popover-foreground shadow-xl border border-border',
+        title: 'font-medium',
+        description: 'text-muted-foreground',
+        actionButton: 'bg-primary text-primary-foreground rounded-md',
+        cancelButton: 'bg-secondary text-secondary-foreground rounded-md',
+        error: 'bg-error-subtle text-error-subtle-foreground border-error/20',
+        success: 'bg-success-subtle text-success-subtle-foreground border-success/20',
+      },
+    }}
+    {...props}
+  />
+);
 
 export { Toaster };

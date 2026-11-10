@@ -36,9 +36,9 @@ export default function JournalPage() {
       />
       <Header title="Журнал" back />
 
-      <main className="mx-auto max-w-content px-5 pb-16 lg:px-8">
-        <h1 className="m-0 font-display text-h2 uppercase text-ink">Журнал</h1>
-        <p className="mt-3 max-w-[60ch] font-body text-body text-ink-soft">
+      <main className="mx-auto max-w-6xl px-5 pb-16 lg:px-8">
+        <h1 className="m-0 text-2xl uppercase text-foreground">Журнал</h1>
+        <p className="mt-3 max-w-[60ch] text-base text-muted-foreground">
           Про пуер, Юньнань і чайну практику — без езотерики, з тим, що можна перевірити за
           чашкою.
         </p>

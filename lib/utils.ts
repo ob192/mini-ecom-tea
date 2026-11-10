@@ -1,37 +1,19 @@
 import { clsx, type ClassValue } from 'clsx';
-import { extendTailwindMerge } from 'tailwind-merge';
+import { twMerge } from 'tailwind-merge';
 
-import { scale, roles } from '@/design/tokens/typography';
-
-/*
-  tailwind-merge has to be told about the design system's type scale.
-
-  Out of the box it only recognises Tailwind's stock font sizes (`text-sm`,
-  `text-xl`, …). Anything else beginning with `text-` it files as a *colour*.
-  So within one `cn()` call `text-label` and `text-on-green` landed in the same
-  class group, the later one won, and the colour was silently dropped — which
-  is how "Додати в кошик" ended up rendering ink #232719 on green #2E4631, at
-  1.48:1 contrast.
-
-  Registering the scale's keys as font sizes puts each utility back in its own
-  group. The list is derived from design/tokens/typography.ts rather than
-  retyped, so adding a step to the scale cannot reintroduce the bug.
-*/
-const TYPE_SCALE = [
-  ...Object.keys(scale),
-  // `roles` keys are camelCase in TS and kebab-case as utilities.
-  ...Object.keys(roles).map((k) => k.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()),
-];
-
-const twMerge = extendTailwindMerge({
-  extend: {
-    classGroups: {
-      'font-size': [{ text: TYPE_SCALE }],
-    },
-  },
-});
-
-/** Merge Tailwind classes with conflict resolution. Used by all shadcn ui/*. */
+/**
+ * Merge Tailwind classes with conflict resolution. Used by every primitive in
+ * `components/ui`.
+ *
+ * No `extendTailwindMerge` any more: the type scale is Tailwind's own steps
+ * (`text-xs` … `text-9xl`), which tailwind-merge already knows. The old system
+ * had named steps (`text-label`, `text-h2`), and anything after `text-` that
+ * tailwind-merge does not recognise it files as a *colour* — so `text-label`
+ * and `text-on-green` landed in one class group, the later won, and the colour
+ * was dropped. That is how «Додати в кошик» once rendered ink on green at
+ * 1.48:1. A new `--text-*` key would bring the bug back and has to be
+ * registered here (design-system skill, token-architecture.md).
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

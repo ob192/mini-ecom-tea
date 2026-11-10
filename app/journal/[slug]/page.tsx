@@ -5,7 +5,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ArticleCard } from '@/components/ArticleCard';
 import { BreadcrumbJsonLd, ArticleJsonLd } from '@/components/JsonLd';
-import { SectionHeading, TextLink, Eyebrow } from '@/design';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { TextLink } from '@/components/ui/text-link';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { articles, getArticle } from '@/lib/journal';
 import { descriptionParagraphs, siteUrl } from '@/lib/format';
 import { BRAND_NAME } from '@/lib/contacts';
@@ -69,15 +71,15 @@ export default async function ArticlePage({ params }: Params) {
 
       <Header title={article.title} back backHref="/journal" />
 
-      <article className="mx-auto max-w-content px-5 pb-16 lg:px-8">
+      <article className="mx-auto max-w-6xl px-5 pb-16 lg:px-8">
         <header className="max-w-[70ch]">
           <Eyebrow>{article.category}</Eyebrow>
-          <h1 className="mt-2 font-display text-[27px] font-semibold leading-[1.12] text-ink lg:text-h1">
+          <h1 className="mt-2 text-3xl font-semibold text-foreground lg:text-3xl">
             {article.title}
           </h1>
           <time
             dateTime={article.published}
-            className="mt-3 block font-body text-small text-ink-faint"
+            className="mt-3 block text-sm text-muted-foreground"
           >
             {new Date(article.published).toLocaleDateString('uk-UA', {
               day: 'numeric',
@@ -87,7 +89,7 @@ export default async function ArticlePage({ params }: Params) {
           </time>
         </header>
 
-        <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-lg shadow-hairline">
+        <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border">
           <Image
             src={article.cover}
             alt=""
@@ -98,7 +100,7 @@ export default async function ArticlePage({ params }: Params) {
           />
         </div>
 
-        <div className="mt-10 flex max-w-[70ch] flex-col gap-4 font-body text-body text-ink-soft">
+        <div className="mt-10 flex max-w-[70ch] flex-col gap-4 text-base text-muted-foreground">
           {paragraphs.map((p, i) => (
             <p key={i} className={`m-0 ${p.startsWith('• ') ? '-indent-3.5 pl-3.5' : ''}`}>
               {p}
@@ -107,7 +109,7 @@ export default async function ArticlePage({ params }: Params) {
         </div>
 
         {more.length > 0 ? (
-          <section className="mt-16 border-t border-line pt-10" aria-labelledby="more">
+          <section className="mt-16 border-t border-border pt-10" aria-labelledby="more">
             <SectionHeading id="more" action={<TextLink href="/journal">Усі статті</TextLink>}>
               Читати далі
             </SectionHeading>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Article } from '@/lib/journal';
-import { ArrowIcon } from './Icons';
+import { ArrowRight } from 'lucide-react';
 
 /*
   ArticleCard — one cell of the `Journal` grid in jintea.pen: a 6px-radius
@@ -15,7 +15,7 @@ export function ArticleCard({ article, priority = false }: { article: Article; p
   return (
     <article>
       <Link href={`/journal/${article.slug}`} className="group flex flex-col gap-3.5">
-        <div className="relative aspect-[16/11] w-full overflow-hidden rounded-lg shadow-hairline">
+        <div className="relative aspect-[16/11] w-full overflow-hidden rounded-xl border border-border">
           <Image
             src={article.cover}
             alt=""
@@ -26,17 +26,17 @@ export function ArticleCard({ article, priority = false }: { article: Article; p
           />
         </div>
 
-        <p className="m-0 font-body text-[11px] uppercase tracking-[1.4px] text-amber">
+        <p className="m-0 text-xs uppercase text-foreground">
           {article.category}
         </p>
 
-        <h3 className="m-0 font-display text-h3 normal-case leading-[1.22] tracking-normal text-ink transition-colors group-hover:text-green">
+        <h3 className="m-0 text-xl normal-case tracking-normal text-foreground transition-colors group-hover:text-primary">
           {article.title}
         </h3>
 
-        <span className="flex items-center gap-[5px] font-body text-[12px] font-bold uppercase tracking-[1px] text-ink-soft">
+        <span className="flex items-center gap-[5px] text-xs font-bold uppercase text-muted-foreground">
           Читати
-          <ArrowIcon width={13} height={13} aria-hidden />
+          <ArrowRight className="size-3.5" aria-hidden />
         </span>
       </Link>
     </article>

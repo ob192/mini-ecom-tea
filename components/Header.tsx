@@ -6,8 +6,8 @@ import { useCart } from '@/context/CartContext';
 import { categories } from '@/lib/products';
 import type { Category } from '@/lib/types';
 import { Logo } from './Logo';
-import { BagIcon, MenuIcon } from './Icons';
-import { Breadcrumb } from '@/design';
+import { Menu, ShoppingBag } from 'lucide-react';
+import { BackLink } from '@/components/ui/back-link';
 import { BRAND_NAME } from '@/lib/contacts';
 
 /*
@@ -47,8 +47,8 @@ export function Header({
   back?: boolean;
   /*
     Where «Назад» goes. A real destination, not history — see
-    design/primitives/Breadcrumb.tsx for why. Pass the page's actual parent;
-    `/` is only a floor so a new `back` header can never dead-end.
+    components/ui/back-link.tsx for why. Pass the page's actual parent; `/` is
+    only a floor so a new `back` header can never dead-end.
   */
   backHref?: string;
 }) {
@@ -56,16 +56,16 @@ export function Header({
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-card/95 backdrop-blur-md">
-      <div className="mx-auto flex h-[60px] max-w-content items-center justify-between px-5 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-md">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <button
           type="button"
           aria-label="Категорії"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((o) => !o)}
-          className="-ml-2 flex h-11 w-11 items-center justify-center rounded text-ink transition-colors hover:bg-green-tint lg:hidden"
+          className="-ml-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:hidden"
         >
-          <MenuIcon width={22} height={22} />
+          <Menu className="size-5" />
         </button>
 
         <Link
@@ -81,7 +81,7 @@ export function Header({
             <Link
               key={c.slug}
               href={`/catalog?cat=${c.slug}`}
-              className="whitespace-nowrap font-body text-nav text-ink-soft transition-colors hover:text-ink"
+              className="whitespace-nowrap text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {c.label}
             </Link>
@@ -91,11 +91,11 @@ export function Header({
         <Link
           href="/cart"
           aria-label={`Кошик${ready && count > 0 ? `, ${count} товарів` : ''}`}
-          className="relative -mr-2 flex h-11 w-11 items-center justify-center rounded text-ink transition-colors hover:bg-green-tint lg:ml-auto"
+          className="relative -mr-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:ml-auto"
         >
-          <BagIcon width={20} height={20} />
+          <ShoppingBag className="size-5" />
           {ready && count > 0 ? (
-            <span className="absolute right-0 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-amber px-1 font-body text-[10px] font-bold text-[#2A1E08]">
+            <span className="absolute right-0 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-[#2A1E08]">
               {count}
             </span>
           ) : null}
@@ -106,14 +106,14 @@ export function Header({
       {menuOpen ? (
         <nav
           aria-label="Категорії"
-          className="border-t border-line-soft bg-card px-5 pb-4 pt-2 lg:hidden"
+          className="border-t border-border bg-card px-5 pb-4 pt-2 lg:hidden"
         >
           {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/catalog?cat=${c.slug}`}
               onClick={() => setMenuOpen(false)}
-              className="block py-2.5 font-body text-nav text-ink-soft transition-colors hover:text-ink"
+              className="block py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {c.label}
             </Link>
@@ -123,10 +123,10 @@ export function Header({
 
       {back ? (
         <div
-          className="mx-auto flex max-w-content items-center px-5 py-3 lg:px-8"
+          className="mx-auto flex max-w-6xl items-center px-5 py-3 lg:px-8"
           aria-label={title}
         >
-          <Breadcrumb href={backHref} />
+          <BackLink href={backHref} />
         </div>
       ) : null}
     </header>

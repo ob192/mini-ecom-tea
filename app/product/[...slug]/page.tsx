@@ -7,7 +7,11 @@ import { ProductGallery } from '@/components/ProductGallery';
 import { ProductBuy } from '@/components/ProductBuy';
 import { ProductCard } from '@/components/ProductCard';
 import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd';
-import { Accordion, Eyebrow, SectionHeading, Tag, TextLink } from '@/design';
+import { Accordion } from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { TextLink } from '@/components/ui/text-link';
 import {
     getProduct,
     getProductsByCategory,
@@ -106,7 +110,7 @@ export default async function ProductPage({ params }: Params) {
 
             <Header back backHref={`/catalog?cat=${product.category}`} />
 
-            <article className="mx-auto max-w-content animate-screenIn px-5 pb-16 lg:px-8">
+            <article className="mx-auto max-w-6xl px-5 pb-16 lg:px-8">
                 <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-16">
                     <div className="lg:sticky lg:top-24">
                         <ProductGallery
@@ -125,7 +129,7 @@ export default async function ProductPage({ params }: Params) {
                             {product.subtitle ? ` · ${product.subtitle}` : ''}
                         </Eyebrow>
 
-                        <h1 className="mt-2 font-display text-[27px] font-semibold uppercase leading-[1.1] text-ink lg:text-h1">
+                        <h1 className="mt-2 text-3xl font-semibold uppercase text-foreground lg:text-3xl">
                             {product.title}
                         </h1>
 
@@ -137,16 +141,18 @@ export default async function ProductPage({ params }: Params) {
                         */}
                         <ProductBuy product={product}>
                             <div className="mt-4 flex flex-wrap gap-2">
-                                <Tag tone="sku"># {offerId(product, base)}</Tag>
+                                <Badge className="tabular-nums">
+                                    # {offerId(product, base)}
+                                </Badge>
                                 {product.inStock ? (
-                                    <Tag tone="ok">В наявності</Tag>
+                                    <Badge variant="success">В наявності</Badge>
                                 ) : (
-                                    <Tag tone="danger">Немає</Tag>
+                                    <Badge variant="error">Немає</Badge>
                                 )}
                             </div>
 
                             {lead ? (
-                                <p className="mt-6 font-body text-body text-ink-soft">{lead}</p>
+                                <p className="mt-6 text-base text-muted-foreground">{lead}</p>
                             ) : null}
 
                             {rest.length > 0 ? (
@@ -158,9 +164,9 @@ export default async function ProductPage({ params }: Params) {
                     </div>
                 </div>
 
-                <div className="mt-16 flex flex-col gap-12 border-t border-line pt-10">
+                <div className="mt-16 flex flex-col gap-12 border-t border-border pt-10">
                     <Accordion id="opys" title="Опис">
-                        <div className="flex max-w-[70ch] flex-col gap-3 font-body text-body text-ink-soft">
+                        <div className="flex max-w-[70ch] flex-col gap-3 text-base text-muted-foreground">
                             {paragraphs.map((p, i) => (
                                 <p key={i} className={`m-0 ${p.startsWith('• ') ? '-indent-3.5 pl-3.5' : ''}`}>
                                     {p}
@@ -170,10 +176,10 @@ export default async function ProductPage({ params }: Params) {
                     </Accordion>
 
                     <Accordion title="Приготування" defaultOpen={false}>
-                        <p className="m-0 max-w-[70ch] font-body text-body text-ink-soft">
+                        <p className="m-0 max-w-[70ch] text-base text-muted-foreground">
                             Загальні пропорції, температура води та кількість проливів для кожного
                             типу чаю зібрані в нашому гіді.{' '}
-                            <Link href="/brewing" className="text-green underline underline-offset-4">
+                            <Link href="/brewing" className="text-primary underline underline-offset-4">
                                 Як заварювати
                             </Link>
                             .

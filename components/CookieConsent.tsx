@@ -127,15 +127,15 @@ export function CookieConsent() {
       role="dialog"
       aria-live="polite"
       aria-label="Повідомлення про файли cookie"
-      className="animate-screenIn fixed inset-x-0 bottom-0 z-50 px-[18px] pb-[calc(18px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none"
+      className="fixed inset-x-0 bottom-0 z-50 px-[18px] pb-[calc(18px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none"
     >
-      <div className="pointer-events-auto mx-auto w-full max-w-[560px] rounded-xl bg-green-deep text-on-green shadow-overlay p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <p className="m-0 flex-1 text-[13.5px] leading-relaxed text-on-green/85">
+      <div className="pointer-events-auto mx-auto w-full max-w-[560px] rounded-xl bg-primary-strong text-primary-foreground shadow-xl p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <p className="m-0 flex-1 text-[13.5px] leading-relaxed text-primary-foreground/85">
           Ми використовуємо файли cookie, щоб сайт працював коректно та щоб розуміти, які чаї вам
           цікаві. Деталі —{' '}
           <Link
             href="/privacy"
-            className="text-amber underline underline-offset-2 hover:text-on-green"
+            className="text-foreground underline underline-offset-2 hover:text-primary-foreground"
           >
             в Угоді користувача
           </Link>
@@ -143,9 +143,9 @@ export function CookieConsent() {
         </p>
         <Button
           onClick={accept}
-          variant="pill"
+          
           size="lg"
-          className="shrink-0 bg-amber text-ink hover:bg-amber/90 sm:w-auto"
+          className="shrink-0 bg-primary text-foreground hover:bg-primary/90 sm:w-auto"
         >
           Добре
         </Button>

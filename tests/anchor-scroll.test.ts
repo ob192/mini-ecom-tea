@@ -15,10 +15,11 @@ import { join } from 'node:path';
   The offset is a number that has to stay larger than the header, and nothing
   connects the two but this test.
 */
-const base = readFileSync(join(process.cwd(), 'app/styles/base.css'), 'utf8');
+const base = readFileSync(join(process.cwd(), 'app/globals.css'), 'utf8');
 const header = readFileSync(join(process.cwd(), 'components/Header.tsx'), 'utf8');
 
-const anchorOffset = Number(base.match(/scroll-margin-top:\s*(\d+)px/)?.[1]);
+// `scroll-padding-top` is written in rem; 1rem = 16px.
+const anchorOffset = Number(base.match(/scroll-padding-top:\s*([\d.]+)rem/)?.[1]) * 16;
 
 describe('in-page anchors', () => {
   it('scroll smoothly', () => {
@@ -33,22 +34,26 @@ describe('in-page anchors', () => {
   });
 
   it('clear the sticky header instead of landing underneath it', () => {
-    expect(anchorOffset, 'no scroll-margin-top in base.css').toBeGreaterThan(0);
+    expect(anchorOffset, 'no scroll-padding-top in globals.css').toBeGreaterThan(0);
 
     /*
-      The header is a 60px bar plus, on pages that carry one, a «Назад» row —
-      104px measured, identical on mobile and desktop. Read the bar height back
-      out of the component so raising it fails here rather than silently
-      tucking every anchor target behind the header.
+      The header is a 56px bar plus, on pages that carry one, a 44px «Назад»
+      row. Read the bar height back out of the component so raising it fails
+      here rather than silently tucking every anchor target behind the header.
     */
-    const barHeight = Number(header.match(/h-\[(\d+)px\]/)?.[1]);
+    const barHeight = Number(header.match(/\bh-(\d+)\b/)?.[1]) * 4;
     expect(barHeight, 'header bar height not found in Header.tsx').toBeGreaterThan(0);
     expect(anchorOffset).toBeGreaterThanOrEqual(barHeight);
   });
 
-  it('get the offset unconditionally, not only once targeted', () => {
-    // `:target` matches only after the fragment already points at the element,
-    // which races the scroll Next's router performs.
-    expect(base).toMatch(/\[id\]\s*\{\s*\n?\s*scroll-margin-top/);
+  it('offsets every anchor, and keeps focus clear of the bar too', () => {
+    /*
+      `scroll-padding-top` on the scroll container, not `scroll-margin-top` on
+      `[id]`. Two reasons it is the stronger of the two: `:target` and
+      `scroll-margin` only act on the element being scrolled to, so a control
+      the keyboard moves focus to still lands under the bar (WCAG 2.4.11); and
+      it needs no per-element rule to be complete.
+    */
+    expect(base).toMatch(/html\s*\{[\s\S]*?scroll-padding-top/);
   });
 });

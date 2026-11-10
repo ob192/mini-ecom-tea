@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div className="px-6 py-16 text-center text-ink-faint">Завантаження…</div>}>
+    <Suspense fallback={<div className="px-6 py-16 text-center text-muted-foreground">Завантаження…</div>}>
       <SuccessView />
     </Suspense>
   );

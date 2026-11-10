@@ -23,11 +23,11 @@ const code = (p: string) =>
     .replace(/^\s*\/\/.*$/gm, '');
 
 const card = code('components/ProductCard.tsx');
-const chip = code('design/primitives/WeightChip.tsx');
+const chip = code('components/ui/weight-chip.tsx');
 
 describe('the catalogue card tier selector', () => {
   it('uses the shared chip control rather than drawing its own', () => {
-    expect(card).toMatch(/import \{ WeightChip \} from '@\/design'/);
+    expect(card).toMatch(/import \{ WeightChip \} from '@\/components\/ui\/weight-chip'/);
     expect(card).toMatch(/<WeightChip\b/);
   });
 

@@ -42,12 +42,12 @@ function useDebounced<T>(value: T, delay = 280): T {
     return debounced;
 }
 
-const labelCls = 'font-display font-medium text-[13px] tracking-wide uppercase text-ink-soft';
+const labelCls = 'font-medium text-sm tracking-wide uppercase text-muted-foreground';
 
 const triggerCls =
-    'font-body text-[16px] text-left bg-card rounded min-h-[48px] w-full px-3.5 py-2.5 ' +
-    'border-[1.5px] border-line transition ' +
-    'focus:outline-none focus:border-green focus:ring-1 focus:ring-green ' +
+    'text-base text-left bg-card rounded-md min-h-[48px] w-full px-3.5 py-2.5 ' +
+    'border-[1.5px] border-border transition ' +
+    'focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring ' +
     'disabled:cursor-not-allowed disabled:opacity-50';
 
 /* Shared picker dialog: search input pinned at top, big scrollable rows below. */
@@ -82,11 +82,11 @@ function PickerDialog({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="p-0 gap-0 flex flex-col w-[calc(100%-1.25rem)] sm:max-w-[440px] h-[82vh] max-h-[640px] overflow-hidden">
-                <div className="px-4 pt-4 pb-3 border-b border-line shrink-0">
+                <div className="px-4 pt-4 pb-3 border-b border-border shrink-0">
                     <DialogTitle className="mb-2.5">{title}</DialogTitle>
                     <div className="relative">
                         <Search
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none"
+                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
                             width={17}
                             height={17}
                             strokeWidth={1.7}
@@ -97,13 +97,13 @@ function PickerDialog({
                             onChange={(e) => onQueryChange(e.target.value)}
                             placeholder={placeholder}
                             autoComplete="off"
-                            className="w-full bg-paper border border-line rounded pl-10 pr-3.5 py-2.5 text-[16px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-green focus:ring-1 focus:ring-green"
+                            className="w-full bg-background border border-border rounded-md pl-10 pr-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring"
                         />
                     </div>
                 </div>
                 <div className="flex-1 overflow-y-auto overscroll-contain">
                     {loading ? (
-                        <p className="px-4 py-8 text-center text-[14px] text-ink-faint">Пошук…</p>
+                        <p className="px-4 py-8 text-center text-sm text-muted-foreground">Пошук…</p>
                     ) : (
                         children
                     )}
@@ -182,9 +182,9 @@ function CityPickerDialog({
             loading={loading}
         >
             {query.trim().length < 2 ? (
-                <p className="px-4 py-8 text-center text-[14px] text-ink-faint">Введіть щонайменше 2 символи</p>
+                <p className="px-4 py-8 text-center text-sm text-muted-foreground">Введіть щонайменше 2 символи</p>
             ) : opts.length === 0 ? (
-                <p className="px-4 py-8 text-center text-[14px] text-ink-faint">Місто не знайдено</p>
+                <p className="px-4 py-8 text-center text-sm text-muted-foreground">Місто не знайдено</p>
             ) : (
                 <ul>
                     {opts.map((c) => (
@@ -192,10 +192,10 @@ function CityPickerDialog({
                             <button
                                 type="button"
                                 onClick={() => onPick(c)}
-                                className="w-full text-left px-4 py-3.5 min-h-[58px] flex flex-col justify-center border-b border-line-soft active:bg-green-tint hover:bg-green-tint transition-colors"
+                                className="w-full text-left px-4 py-3.5 min-h-[58px] flex flex-col justify-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
                             >
-                                <span className="text-[16px] text-ink font-display font-medium">{c.name}</span>
-                                {c.area ? <span className="text-[13px] text-ink-faint mt-0.5">{c.area}</span> : null}
+                                <span className="text-base text-foreground font-medium">{c.name}</span>
+                                {c.area ? <span className="text-sm text-muted-foreground mt-0.5">{c.area}</span> : null}
                             </button>
                         </li>
                     ))}
@@ -271,7 +271,7 @@ function WarehousePickerDialog({
             loading={loading}
         >
             {opts.length === 0 ? (
-                <p className="px-4 py-8 text-center text-[14px] text-ink-faint">Відділень не знайдено</p>
+                <p className="px-4 py-8 text-center text-sm text-muted-foreground">Відділень не знайдено</p>
             ) : (
                 <ul>
                     {opts.map((w) => (
@@ -279,9 +279,9 @@ function WarehousePickerDialog({
                             <button
                                 type="button"
                                 onClick={() => onPick(w)}
-                                className="w-full text-left px-4 py-3.5 min-h-[58px] flex items-center border-b border-line-soft active:bg-green-tint hover:bg-green-tint transition-colors"
+                                className="w-full text-left px-4 py-3.5 min-h-[58px] flex items-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
                             >
-                                <span className="text-[15px] text-ink leading-snug">{w.description}</span>
+                                <span className="text-base text-foreground leading-snug">{w.description}</span>
                             </button>
                         </li>
                     ))}
@@ -307,13 +307,13 @@ export function ShippingSelector({
         <div className="flex flex-col gap-3.5">
             <div className="flex flex-col gap-1.5">
         <span className={labelCls}>
-          Місто <span className="text-amber-deep">*</span>
+          Місто <span className="text-foreground">*</span>
         </span>
                 <button type="button" onClick={() => setCityOpen(true)} className={triggerCls}>
                     {value.cityName ? (
-                        <span className="text-ink">{value.cityName}</span>
+                        <span className="text-foreground">{value.cityName}</span>
                     ) : (
-                        <span className="text-ink-faint">Оберіть місто</span>
+                        <span className="text-muted-foreground">Оберіть місто</span>
                     )}
                 </button>
             </div>
@@ -321,7 +321,7 @@ export function ShippingSelector({
             {showWarehouse ? (
                 <div className="flex flex-col gap-1.5">
           <span className={labelCls}>
-            Відділення / поштомат <span className="text-amber-deep">*</span>
+            Відділення / поштомат <span className="text-foreground">*</span>
           </span>
                     <button
                         type="button"
@@ -330,9 +330,9 @@ export function ShippingSelector({
                         className={triggerCls}
                     >
                         {value.warehouse ? (
-                            <span className="text-ink">{value.warehouse}</span>
+                            <span className="text-foreground">{value.warehouse}</span>
                         ) : (
-                            <span className="text-ink-faint">
+                            <span className="text-muted-foreground">
                 {value.cityRef ? 'Оберіть відділення' : 'Спочатку оберіть місто'}
               </span>
                         )}

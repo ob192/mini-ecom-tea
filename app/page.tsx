@@ -5,7 +5,8 @@ import { ProductRail } from '@/components/ProductRail';
 import { DiscoverBanner } from '@/components/DiscoverBanner';
 import { ArticleCard } from '@/components/ArticleCard';
 import { JoinFamily } from '@/components/JoinFamily';
-import { SectionHeading, TextLink } from '@/design';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { TextLink } from '@/components/ui/text-link';
 import { products, categories } from '@/lib/products';
 import { ADVERTISED_CATEGORIES } from '@/lib/merchant-feed';
 import { articlesByDate } from '@/lib/journal';
@@ -64,7 +65,7 @@ export default function HomePage() {
       <DiscoverBanner />
 
       <section
-        className="mx-auto max-w-content px-5 py-14 lg:px-8 lg:py-16"
+        className="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16"
         aria-labelledby="journal"
       >
         <SectionHeading id="journal" action={<TextLink href="/journal">Усі статті</TextLink>}>
