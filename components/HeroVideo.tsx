@@ -30,29 +30,63 @@ import { cn } from '@/lib/utils';
 
   ## The renditions
 
-  Built from media/main_video.mp4 (3840x2160, 12.5 Mbps, 23 MB, no audio — it
-  is decorative, so audio was never encoded and `muted` is not a compromise).
-  Serving that master would have been ~27x the weight of the entire rest of the
-  page. Regenerate with:
+  The footage is «Сім чашок»: a 12s overhead loop across seven cups of tea
+  whose liquor steps from pale jade green to near black, with the set's seven
+  pouches fanned behind them. It is generated, not filmed — Seedream 5.0 Pro
+  for the opening still (from the shop's own photographs of the tray, the
+  pouches and the cha he, so the props are the ones that actually ship), then
+  Seedance 2.5 for the motion, with that same still pinned as BOTH the first
+  and the last frame. That pinning is what makes it loop: the model is asked to
+  leave and come back, so the move is a drift out and back rather than a pan
+  that ends somewhere else. Measured seam between the last frame and the first:
+  RMS 4.3 on 0-255, which is invisible.
 
-    ffmpeg -i media/main_video.mp4 -an -vf "scale=1280:720:flags=lanczos" \
-      -c:v libx264 -preset slow -crf 27 -profile:v main -pix_fmt yuv420p \
-      -g 50 -movflags +faststart public/video/hero-720.mp4
-    ffmpeg -i media/main_video.mp4 -an -vf "scale=1920:1080:flags=lanczos" \
-      -c:v libx264 -preset slow -crf 26 -profile:v high -pix_fmt yuv420p \
-      -g 50 -movflags +faststart public/video/hero-1080.mp4
-    ffmpeg -i media/main_video.mp4 -an -vf "scale=1280:720:flags=lanczos" \
-      -c:v libvpx-vp9 -crf 36 -b:v 0 -cpu-used 2 -row-mt 1 -g 50 \
+  The master (1280x720, 24fps, 12.0s, no audio — it is decorative, so audio was
+  never generated and `muted` is not a compromise) lives in
+  media/hero-motion/gen/, which is git-ignored, because anything under public/
+  ships to every deploy and is fetchable.
+
+  Regenerate the renditions with:
+
+    tools/hero-motion/encode-renditions.sh media/hero-motion/gen/hero-loop-v1.mp4
+
+  which comes down to these, after a grade pass and a scale_cuda upscale from
+  the 720p master (720p is $0.23/s to generate and 1080p is $0.614/s; the hero
+  sits behind two scrims at half opacity and is object-cover cropped, so native
+  1080 pixels are not worth 2.7x there):
+
+    ffmpeg -hwaccel cuda -i <720p source> -an \
+      -c:v h264_nvenc -preset p7 -tune hq -rc vbr -cq 32 -b:v 0 \
+      -profile:v main -pix_fmt yuv420p -g 50 -movflags +faststart \
+      public/video/hero-720.mp4
+    ffmpeg -hwaccel cuda -i <1080p source> -an \
+      -c:v h264_nvenc -preset p7 -tune hq -rc vbr -cq 33 -b:v 0 \
+      -profile:v high -pix_fmt yuv420p -g 50 -movflags +faststart \
+      public/video/hero-1080.mp4
+    ffmpeg -i <720p source> -an \
+      -c:v libvpx-vp9 -crf 38 -b:v 0 -cpu-used 2 -row-mt 1 -g 50 \
       public/video/hero-720.webm
-    ffmpeg -i media/main_video.mp4 -an -vf "scale=1920:1080:flags=lanczos" \
-      -c:v libvpx-vp9 -crf 34 -b:v 0 -cpu-used 2 -row-mt 1 -g 50 \
+    ffmpeg -i <1080p source> -an \
+      -c:v libvpx-vp9 -crf 38 -b:v 0 -cpu-used 2 -row-mt 1 -g 50 \
       public/video/hero-1080.webm
+
+  The VP9 rates are chosen so each WebM is genuinely smaller than its H.264
+  twin (1.06 vs 1.24 MB at 720p, 1.72 vs 2.02 MB at 1080p) at the same picture.
+  That is the whole justification for listing WebM first below: at the rate
+  used before, the WebM was the LARGER file of the pair, and preferring it
+  would have cost every Chrome and Firefox visitor bytes rather than saving
+  them. tools/hero-motion/compare-encoders.py is the measurement.
 
   `-movflags +faststart` matters: without it the MP4's index sits at the end of
   the file and playback waits for the whole download. AV1 was measured and
   dropped — 759 KB against VP9's 851 KB at 720p, which does not pay for a third
   codec and software decode on the cheap Androids that make up most of the
   mobile traffic.
+
+  public/video/hero-poster.jpg is extracted from hero-1080.mp4, so it is
+  literally the first frame a browser decodes rather than a lookalike still.
+  tools/hero-motion/verify-renditions.sh checks that, the size band, the
+  faststart flag and the loop seam; run it after any re-encode.
 */
 
 /** Phones get 720p. The shell caps at 1440px, so 1080p covers every desktop. */

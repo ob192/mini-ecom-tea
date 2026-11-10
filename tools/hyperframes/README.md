@@ -178,23 +178,44 @@ Run it on its own any time:
 ./verify-renditions.sh
 ```
 
-### Why the last encode is not on the GPU
+### Which encoder, and why it was measured
 
-The instruction for this work was to do everything after generation locally on
-the RTX 3090, and `encode-renditions.sh` does decode, upscale and grade there.
-The four web files themselves are written by `libx264` and `libvpx-vp9`,
-because at the ~1 MB they have to hit, a hardware encoder spends its bitrate
-much less efficiently than `x264 -preset slow`, and the size band is tight.
-`encode-compare.sh` is the measurement that decision rests on — it encodes the
-same source both ways at matched file sizes and prints PSNR and SSIM:
+`encode-renditions.sh` decodes on NVDEC, upscales 720→1080 with `scale_cuda`
+and writes both MP4s with `h264_nvenc`. The WebMs are `libvpx-vp9` on the CPU
+because no NVENC VP9 encoder exists — that one is not a choice.
+
+The rates are measured, not preferred. Frame-aligned luma PSNR against a
+lossless copy of the source:
+
+| | 720p | | 1080p | |
+|---|---|---|---|---|
+| | MB | PSNR | MB | PSNR |
+| H.264 NVENC (cq 32 / 33) | 1.24 | 39.17 | 2.02 | 40.44 |
+| VP9 crf 36 | 1.32 | 39.49 | 2.19 | 41.19 |
+| **VP9 crf 38** (shipped) | **1.10** | 38.98 | **1.80** | 40.71 |
+| VP9 crf 40 | 0.92 | 38.48 | 1.49 | 40.23 |
+
+VP9 at crf 38 is ~11% smaller than its H.264 twin at both sizes for the same
+picture. **That is the whole justification for listing WebM first** in
+`HeroVideo.tsx`: at crf 36 the WebM was the *larger* file of the pair, and
+preferring it would have cost every Chrome and Firefox visitor bytes instead of
+saving them. Check this again if the footage ever changes character:
 
 ```bash
-./encode-compare.sh ../../media/hero-motion/gen/hero-loop.mp4
+cd tools/hero-motion
+python3 compare-encoders.py ../../media/hero-motion/gen/hero-loop-v1.mp4 --width 1280 --height 720
 ```
 
-If a future ffmpeg or a future card closes that gap, swap the two `enc_mp4`
-calls for `h264_nvenc -preset p7 -tune hq -rc vbr -cq N` and re-run the
-verifier; nothing else in the pipeline cares.
+Two traps that tool exists to avoid, both of which caught this work first:
+
+- **Score against the source, not an encode of it.** An earlier version built
+  an `x264 -crf 14` reference; every H.264 candidate then shared its artifacts
+  and scored high, and the tool confidently reported that NVENC beat VP9. It
+  does not.
+- **Align frames before differencing them.** `ffmpeg -lavfi psnr` can pair
+  frame *n* with frame *n+1* across a container change, which puts a floor
+  under the error that no bitrate removes — H.264 appeared to cap at 37 dB at
+  every rate. `compare-encoders.py` searches a ±2-frame window.
 
 ---
 

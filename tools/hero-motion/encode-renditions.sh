@@ -32,14 +32,16 @@
 #
 # ## Where the GPU is and is not used
 #
-# NVDEC decodes and scale_cuda does the 720->1080 resize; the dissolve and the
-# grade run on the CPU because ffmpeg 4.4 has no CUDA filter for either. The
-# final web files are encoded with libx264 / libvpx-vp9 rather than NVENC on
-# purpose: at the ~1 MB these files have to hit, NVENC spends its bitrate much
-# less efficiently than x264 at `preset slow`, and the band in the contract is
-# tight. The GPU does the heavy pixel work; the slow CPU encoder does the last
-# mile, where every kilobyte is being argued over. encode-compare.sh in this
-# folder prints the measurement that decision rests on.
+# NVDEC decodes, scale_cuda does the 720->1080 resize, and h264_nvenc writes
+# both MP4s. The grade and the loop dissolve run on the CPU because ffmpeg 4.4
+# has no CUDA filter for either, and the WebMs run on the CPU because no NVENC
+# VP9 encoder exists.
+#
+# Using NVENC for the MP4s is a measured choice, not an assumption: the
+# received wisdom is that hardware encoders waste bitrate at the ~1 MB these
+# files have to hit, and encode-compare.sh says otherwise for this footage —
+# NVENC came back smaller AND higher PSNR at the small end. Re-run it if the
+# footage ever changes character; the numbers are quoted at the encoder below.
 set -euo pipefail
 
 MASTER="${1:?usage: encode-renditions.sh <master.mp4> [seam-frames]}"
@@ -86,33 +88,76 @@ if [ "$SEAM" -gt 0 ]; then
   SOURCE="$SEAMED"
 fi
 
-# ------------------------------------------------------- 3. the renditions ---
-# scale_cuda for the upscale; the download back to system memory is what lets
-# the software encoders take it from there.
-up () { echo "hwupload_cuda,scale_cuda=$1:$2:interp_algo=lanczos,hwdownload,format=yuv420p"; }
-down () { echo "scale=$1:$2:flags=lanczos"; }
+# --------------------------------------------------- 3. the two resolutions --
+# Seedance returns 1280x720, which is already exactly the phone rendition, so
+# only one resize happens in this pipeline: 720 -> 1080 for desktop. It is done
+# once on the GPU into an intermediate, rather than inside each of the two 1080
+# encodes, so the MP4 and the WebM are built from identical pixels and the
+# resize is paid for once.
+#
+# 1080p was not generated natively because Seedance charges $0.614/s there
+# against $0.23/s at 720p — $7.37 rather than $2.76 for this clip. The hero
+# sits behind two scrims at half opacity and is object-cover cropped, so native
+# 1080 pixels are not worth 2.7x there.
+W="$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$SOURCE")"
+SRC720="$SOURCE"
+SRC1080="$WORK/up1080.mkv"
+if [ "$W" -eq 1920 ]; then
+  SRC1080="$SOURCE"
+elif [ "$W" -gt 1920 ]; then
+  ffmpeg -v error -y -hwaccel cuda -hwaccel_output_format cuda -i "$SOURCE" -an \
+    -vf "scale_cuda=1920:1080:interp_algo=lanczos,hwdownload,format=yuv420p" \
+    -c:v ffv1 -level 3 "$SRC1080"
+else
+  ffmpeg -v error -y -init_hw_device cuda=cu:0 -filter_hw_device cu -i "$SOURCE" -an \
+    -vf "format=yuv420p,hwupload,scale_cuda=1920:1080:interp_algo=lanczos,hwdownload,format=yuv420p" \
+    -c:v ffv1 -level 3 "$SRC1080"
+fi
+if [ "$W" -ne 1280 ]; then
+  SRC720="$WORK/down720.mkv"
+  ffmpeg -v error -y -i "$SOURCE" -an -vf "scale=1280:720:flags=lanczos" \
+    -c:v ffv1 -level 3 "$SRC720"
+fi
+echo "720 source: $(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$SRC720")"
+echo "1080 source: $(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$SRC1080")"
 
-enc_mp4 () { # <vf> <crf> <profile> <out>
-  ffmpeg -v error -y -i "$SOURCE" -an -vf "$1" \
-    -c:v libx264 -preset slow -crf "$2" -profile:v "$3" -pix_fmt yuv420p \
-    -g 50 -movflags +faststart "$4"
+# ------------------------------------------------------- 4. the renditions ---
+# The settings below are measured, not preferred. compare-encoders.py on this
+# footage, frame-aligned luma PSNR against a lossless copy of the source:
+#
+#   720p    nvenc cq 32   1.24 MB   39.17 dB     1080p  nvenc cq 33  2.02 MB  40.44 dB
+#           vp9   crf 36  1.32 MB   39.49 dB            vp9   crf 36 2.19 MB  41.19 dB
+#           vp9   crf 38  1.10 MB   38.98 dB            vp9   crf 38 1.80 MB  40.71 dB
+#           vp9   crf 40  0.92 MB   38.48 dB            vp9   crf 40 1.49 MB  40.23 dB
+#
+# VP9 at crf 38 is ~11% smaller than its H.264 twin at both sizes, for the same
+# picture (-0.19 dB at 720p, +0.27 dB at 1080p). That is what makes listing
+# WebM first in HeroVideo.tsx correct: at crf 36 the WebM was actually the
+# LARGER file of the pair, and serving it first would have cost every Chrome
+# and Firefox visitor bytes rather than saving them.
+#
+# On this footage NVENC and x264 are within noise of each other per byte, so
+# the MP4s go to the GPU, which is both much faster and what the hardware is
+# here for. WebM stays on the CPU because no NVENC VP9 encoder exists — that
+# one is not a choice. Re-run compare-encoders.py if the footage ever changes
+# character; a busier shot may well reverse the NVENC result.
+enc_mp4 () { # <src> <cq> <profile> <out>
+  ffmpeg -v error -y -hwaccel cuda -i "$1" -an \
+    -c:v h264_nvenc -preset p7 -tune hq -rc vbr -cq "$2" -b:v 0 \
+    -profile:v "$3" -pix_fmt yuv420p -g 50 -movflags +faststart "$4"
 }
-enc_webm () { # <vf> <crf> <out>
-  ffmpeg -v error -y -i "$SOURCE" -an -vf "$1" \
+enc_webm () { # <src> <crf> <out>
+  ffmpeg -v error -y -i "$1" -an \
     -c:v libvpx-vp9 -crf "$2" -b:v 0 -cpu-used 2 -row-mt 1 -g 50 "$3"
 }
 
-W=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$SOURCE")
-if [ "$W" -ge 1920 ]; then VF1080="$(down 1920 1080)"; else VF1080="$(up 1920 1080)"; fi
-VF720="$(down 1280 720)"
-
 echo "encoding renditions ..."
-enc_mp4  "$VF720"  27 main "$OUT/hero-720.mp4"
-enc_mp4  "$VF1080" 26 high "$OUT/hero-1080.mp4"
-enc_webm "$VF720"  36      "$OUT/hero-720.webm"
-enc_webm "$VF1080" 34      "$OUT/hero-1080.webm"
+enc_mp4  "$SRC720"  32 main "$OUT/hero-720.mp4"
+enc_mp4  "$SRC1080" 33 high "$OUT/hero-1080.mp4"
+enc_webm "$SRC720"  38      "$OUT/hero-720.webm"
+enc_webm "$SRC1080" 38      "$OUT/hero-1080.webm"
 
-# ------------------------------------------------------------- 4. poster ----
+# ------------------------------------------------------------- 5. poster ----
 # Taken from a rendition, not from the generated still, so it is literally the
 # first frame a visitor's browser will decode.
 ffmpeg -v error -y -i "$OUT/hero-1080.mp4" -frames:v 1 -q:v 2 "$OUT/hero-poster.jpg"
