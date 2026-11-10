@@ -80,7 +80,7 @@ export function ProductBuy({
   return (
     <>
       <p className="mt-3 flex items-baseline gap-2">
-        <span className="text-[26px] font-semibold text-foreground">
+        <span className="text-2xl font-semibold text-foreground">
           {unitPrice != null ? uah(unitPrice) : 'Ціна за запитом'}
         </span>
         {weight ? <span className="text-sm text-muted-foreground">/ {weight} {UNIT}</span> : null}
@@ -116,7 +116,7 @@ export function ProductBuy({
         <Button
           onClick={handleAdd}
           disabled={!buyable}
-          className="min-h-[50px] flex-1 gap-2.5"
+          className="min-h-12 flex-1 gap-2.5"
         >
           <ShoppingBag className="size-4" aria-hidden />
           {buyable ? 'Додати в кошик' : 'Немає в наявності'}

@@ -63,7 +63,7 @@ export function Header({
           aria-label="Категорії"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((o) => !o)}
-          className="-ml-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:hidden"
+          className="-ml-2 flex size-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:hidden"
         >
           <Menu className="size-5" />
         </button>
@@ -76,7 +76,7 @@ export function Header({
           <Logo />
         </Link>
 
-        <nav aria-label="Категорії" className="hidden items-center gap-[30px] lg:flex">
+        <nav aria-label="Категорії" className="hidden items-center gap-8 lg:flex">
           {navCategories.map((c) => (
             <Link
               key={c.slug}
@@ -91,11 +91,11 @@ export function Header({
         <Link
           href="/cart"
           aria-label={`Кошик${ready && count > 0 ? `, ${count} товарів` : ''}`}
-          className="relative -mr-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:ml-auto"
+          className="relative -mr-2 flex size-11 items-center justify-center rounded-md text-foreground transition-colors hover:bg-primary-subtle lg:ml-auto"
         >
           <ShoppingBag className="size-5" />
           {ready && count > 0 ? (
-            <span className="absolute right-0 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-[#2A1E08]">
+            <span className="absolute right-0 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-bold text-primary-foreground">
               {count}
             </span>
           ) : null}

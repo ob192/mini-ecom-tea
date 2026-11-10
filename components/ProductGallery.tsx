@@ -57,7 +57,7 @@ export function ProductGallery({
             }`}
           />
         ))}
-        <span className="absolute bottom-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
+        <span className="absolute bottom-3 right-3 flex items-center justify-center size-9 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
           <ZoomIn className="size-5" strokeWidth={1.7} />
         </span>
       </button>
@@ -71,7 +71,7 @@ export function ProductGallery({
               onClick={() => setActive(i)}
               aria-pressed={i === active}
               aria-label={`Фото ${i + 1}`}
-              className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden transition ${
+              className={`relative shrink-0 size-16 rounded-xl overflow-hidden transition ${
  i === active
  ?'ring-2 ring-ring ring-offset-0'
                   : 'opacity-75 border border-border hover:opacity-100'
@@ -87,10 +87,10 @@ export function ProductGallery({
         <DialogContent
           className={
             'left-0 top-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-none bg-inverse p-0 shadow-none ' +
-            'sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[calc(100%-1.5rem)] sm:max-w-[880px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:bg-card/95 sm:p-1.5 sm:shadow-xl'
+            'sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[calc(100%-1.5rem)] sm:max-w-4xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:bg-card/95 sm:p-1.5 sm:shadow-xl'
           }
         >
-          <div className="relative h-full w-full overflow-hidden sm:aspect-square sm:h-auto sm:rounded-xl">
+          <div className="relative size-full overflow-hidden sm:aspect-square sm:h-auto sm:rounded-xl">
             <ZoomableImage
               images={images}
               active={active}
@@ -109,7 +109,7 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(-1)}
                   aria-label="Попереднє фото"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center size-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
                 >
                   <ChevronLeft className="size-5" strokeWidth={1.7} />
                 </button>
@@ -117,7 +117,7 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(1)}
                   aria-label="Наступне фото"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center size-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
                 >
                   <ChevronRight className="size-5" strokeWidth={1.7} />
                 </button>
@@ -226,7 +226,7 @@ function ZoomableImage({
 
   return (
     <div
-      className="h-full w-full touch-none select-none"
+      className="size-full touch-none select-none"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}

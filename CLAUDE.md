@@ -174,22 +174,36 @@ statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
 
 ## UI / design system
 
-The design is exported from **`/home/bunin192/Apps/Pencil/jintea.pen`** (Pencil
-MCP). `design/README.md` is the reference; read it before restyling anything.
+**`DESIGN.md` at the root is the reference — read it before restyling anything.**
+The Pencil export is gone: `design/`, `tailwind.config.ts`, `app/styles/*` and
+`tests/design-tokens.test.ts` were deleted with the rebuild, and the `.pen` file
+is no longer upstream of anything.
 
-- `design/tokens/*.ts` is the source of truth for tokens; `design/tokens/tokens.css`
-  is its CSS twin (and carries the shadcn bridge); `tailwind.config.ts` is the
-  utility surface. All three must agree — `tests/design-tokens.test.ts` fails if
-  they don't. Change the `.pen` file first, then all three.
-- `design/primitives/*` are the reusable controls, one module per panel of the
-  file's `Design System — Components` frame (Button, IconButton, TextLink, Tag,
-  Eyebrow, WeightChip, QtyStepper, InfoRow, Accordion, SectionHeading,
-  Breadcrumb, Panel, Field). Screens compose these; if a screen needs a control
-  that isn't there, draw it in the design file first.
-- `components/ui/*` are shadcn/ui components (`components.json`: style `new-york`,
-  base color `stone`, `cssVariables: true`). `button`, `input` and `badge` are now
-  thin re-exports of the design primitives, so the shadcn import paths keep working;
-  `card` is the design's `Panel` surface with shadcn's parts.
+- **Tailwind v4, one CSS file.** `app/globals.css` holds every token in three
+  layers: `@theme` (palette, fonts, the type scale), `:root` and `.dark`
+  (semantic roles as palette references), `@theme inline` (the roles turned into
+  utilities). There is no `tailwind.config.*` — v4 reads the CSS. Adding or
+  changing a token goes through the `design-system` skill and through all three
+  layers in one edit, and `node .claude/skills/design-system/scripts/audit.mjs .`
+  has to come back clean.
+- **The brand direction is still open.** `--primary` and its companions hold the
+  shop's existing tea green provisionally; the palette also ships `honey` and
+  `clay`. `/playground/brand` renders all three. Choosing one changes five lines
+  in `:root` and five in `.dark`, after which the two rejected families get
+  deleted. Do not pick for the owner.
+- `components/ui/*` are real shadcn/ui components (`components.json`: style
+  `new-york`, base colour `stone`, `cssVariables: true`) on the new tokens, with
+  Radix underneath where one needs it, plus the project's own composites
+  (`Field`, `WeightChip`, `QtyStepper`, `SectionHeading`, `TextLink`, `BackLink`,
+  `InfoRow`, `Eyebrow`). A screen that needs a control which is not there gets
+  one added here, not drawn inline.
+- **Design work is graded.** `.claude/rules/design/` holds the rules, the linter
+  is `node .claude/scripts/design-lint.mjs <files>` (a PostToolUse hook runs it
+  on every `.tsx` edit under `app/`, `components/` or `context/`), and the
+  `design-audit`, `design-mobile`, `design-a11y`, `design-playground` and
+  `design-system` skills are how a change is checked. `.claude/reference/` keeps
+  RedАвто's own DESIGN.md, globals.css and code rules as the worked example;
+  its Feature-Sliced `src/` layout is deliberately **not** adopted here.
 - **The home hero's video is a layer over the still, not a replacement.**
   `components/HeroVideo.tsx` ships with `preload="none"` and no `<source>` in the
   markup, so the server-rendered HTML carries no video URL at all; a client effect
@@ -214,20 +228,34 @@ MCP). `design/README.md` is the reference; read it before restyling anything.
   covered «Додати в кошик» outright on every first mobile visit, which is every ad
   click. Anything else pinned to the bottom of the viewport must join the handshake, not
   just pick a z-index. `tests/bottom-layers.test.ts` fails if either half goes missing.
-- The design separates surfaces with **hairlines, not shadows** (`shadow-hairline`);
-  `shadow-overlay` and `shadow-up` are the only real shadows. Corners are near-square:
-  `rounded-lg` is 6px, not 22px.
-- Content is held by `mx-auto max-w-content px-5 lg:px-8` inside full-bleed sections.
-  Such a section must not sit directly in a `flex flex-col` parent — an auto
-  cross-axis margin on a flex item shrinks it to its content, which silently
-  collapsed every catalogue section once already.
-- Fonts: Oswald (display) + PT Sans (body), loaded with Cyrillic subsets in `app/layout.tsx`.
-  Display face is for headings, prices and the wordmark only; button labels are
-  body-face, 13/700, uppercase.
-- Layout is mobile-first, with `lg:` breakpoints for desktop (see
-  `app/product/[...slug]/page.tsx`: single column on mobile, two-column grid on `lg:`).
-  The shell is full-width — the previous design's centred phone-width column with a
-  drop shadow is gone, because the hero and footer are full-bleed.
+- Depth is the surface step (`background` → `subtle` → `card`) plus a hairline;
+  a surface is set apart by its colour **or** a border, never both. Shadows are
+  for overlays (`shadow-xl`) and for the mobile buy bar (`shadow-up`). Radii are
+  Tailwind's own: `rounded-md` (6px) on controls, `rounded-xl` (12px) on cards and
+  images. The old near-square scale is gone — a 6px card is now off-system.
+- **A dark band is a `.dark` block.** `class="dark"` on a section switches every
+  semantic token inside it, so primitives turn dark on their own and no `dark:`
+  colour class is needed. The footer and the discover banner are the two blocks.
+  Text over a photograph is never `text-primary-foreground`: that token is white
+  in one brand direction and ink in another.
+- Content is held by `mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8` inside
+  full-bleed sections. The `w-full` is load-bearing: an auto cross-axis margin on
+  a flex item shrinks it to its content, which silently collapsed every catalogue
+  section once already.
+- **Type: Geist only**, self-hosted through `next/font/local` from
+  `app/fonts/Geist-Variable.woff2`. Not `next/font/google` — Google assigns ₴
+  (U+20B4) to a `cyrillic-ext` subset that next/font does not list for Geist, so
+  no combination of its subsets renders the currency sign. Sizes are Tailwind's
+  steps with line height and tracking fitted to Geist and Ukrainian; the heading
+  floor is 1.1, because Й and g touch at 1.073. Headings are sentence case —
+  uppercase survives only on the `Eyebrow` and the wordmark.
+- Layout is mobile-first, with `md:` for tablet portrait and `lg:` for tablet
+  landscape and desktop. The shell is full width: the previous design's 1440px
+  canvas cap with a deeper band either side is gone.
+- **Mobile is the point.** Over the 90 days to 2026-09-07 the site took zero
+  orders from 93 mobile sessions against 72 paid mobile clicks (`HANDOFF.md` has
+  the funnel). 375px is checked first, and `design-mobile`'s measurements at 375
+  are what a UI change is judged by.
 - SEO: per-page `generateMetadata`, JSON-LD via `components/JsonLd.tsx` (Product, BreadcrumbList, Organization), `app/sitemap.ts`, `app/robots.ts`.
 - Every absolute URL (canonical, OG, JSON-LD, sitemap, robots) comes from `siteUrl()` in
   `lib/format.ts` → `NEXT_PUBLIC_SITE_URL`. Never hardcode the domain; for metadata,

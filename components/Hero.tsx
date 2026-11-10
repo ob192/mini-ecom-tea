@@ -32,7 +32,7 @@ const HERO_IMAGE = process.env.NEXT_PUBLIC_HERO_IMAGE || DEFAULT_HERO;
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[440px] items-end overflow-hidden lg:min-h-[600px]">
+    <section className="relative flex min-h-110 items-end overflow-hidden lg:min-h-150">
       <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover" />
       <HeroVideo />
 
@@ -65,21 +65,21 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-[1] mx-auto w-full max-w-6xl px-5 pb-12 lg:px-8 lg:pb-24">
-        <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-[460px]">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-12 lg:px-8 lg:pb-24">
+        <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-md">
           <Eyebrow className="text-primary-foreground/80">Сезон пуеру відкрито</Eyebrow>
 
-          <h1 className="m-0 text-[34px] font-semibold text-primary-foreground lg:text-4xl sm:text-5xl">
+          <h1 className="m-0 text-3xl font-semibold text-primary-foreground lg:text-4xl sm:text-5xl">
             Прямо з гір Юньнані до вашої чашки
           </h1>
 
-          <p className="m-0 max-w-[46ch] text-base text-primary-foreground/80">
+          <p className="m-0 max-w-prose text-base text-primary-foreground/80">
             Витриманий шу та живий шен пуер, зібраний зі старих чайних дерев.
           </p>
 
           <Link
             href="/catalog"
-            className="inline-flex w-fit items-center gap-2 rounded-md bg-card px-7 py-[14px] text-xs uppercase text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex w-fit items-center gap-2 rounded-md bg-card px-7 py-3.5 text-xs uppercase text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Переглянути каталог
             <ArrowRight className="size-4" aria-hidden />

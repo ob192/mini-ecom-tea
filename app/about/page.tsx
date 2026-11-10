@@ -38,8 +38,8 @@ export default function AboutPage() {
   return (
     <>
       <Header title="Про нас" back />
-      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-4">Про нас</h1>
+      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+        <h1 className="font-semibold text-2xl text-foreground leading-tight mb-4">Про нас</h1>
 
         <div className="flex flex-col gap-3.5 text-muted-foreground text-base leading-relaxed">
           <p className="m-0">
@@ -55,7 +55,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-7">
           {points.map((p) => (
             <div key={p.n} className="bg-card rounded-xl border border-border p-4">
-              <div className="font-semibold text-sm text-foreground tracking-[0.1em] mb-1.5">
+              <div className="font-semibold text-sm text-foreground tracking-widest mb-1.5">
                 {p.n}
               </div>
               <div className="font-semibold text-base text-foreground mb-1">{p.label}</div>
@@ -85,7 +85,7 @@ export default function AboutPage() {
           <ArrowRight className="size-4" />
         </Link>
 
-        <Card className="p-4 mt-7 border-l-[3px] border-border-strong text-foreground text-base leading-relaxed">
+        <Card className="p-4 mt-7 border-l-2 border-border-strong text-foreground text-base leading-relaxed">
           Ми не продаємо стиль життя і не розповідаємо про давні династії на кожній сторінці. Просто є
           чай, є посуд, є люди, які в цьому розбираються і можуть порадити.
         </Card>

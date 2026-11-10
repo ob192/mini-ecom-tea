@@ -21,7 +21,6 @@
 	/* `initial` drops Tailwind's default palette, so only these colours exist. */
 	--color-*: initial;
 	--color-white: #ffffff;
-	--color-black: #000000;
 
 	/* neutral — warm cream greys: the page, cards, lines, text, and the dark block.
 	   The whole UI is built from these; the brand hue only lands on actions. */
@@ -267,7 +266,10 @@
 
 	--border: var(--color-neutral-800);
 	--border-strong: var(--color-neutral-400);
-	--input: var(--color-neutral-400); /* 4.7:1 to the page, 4.4:1 to a card */
+	/* The same shade as in light: neutral-400 clears 3:1 against both the cream
+	   page (3.9:1) and the near-black one (4.7:1), so the field boundary needs no
+	   dark value of its own. */
+	--input: var(--color-neutral-400);
 	--ring: var(--color-blue-400); /* 7.4:1 */
 
 	--error: var(--color-error-400);

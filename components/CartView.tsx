@@ -31,7 +31,7 @@ function CartRow({
 
   return (
       <div className="flex gap-3 py-3.5 items-start">
-        <Link href={`/product/${p.slug}`} className="w-[66px] shrink-0 rounded-xl overflow-hidden">
+        <Link href={`/product/${p.slug}`} className="w-16 shrink-0 rounded-xl overflow-hidden">
           <ProductImage src={p.image} category={p.category} alt={p.title} ratio="1 / 1" tag="" />
         </Link>
         <div className="flex-1 min-w-0">
@@ -46,7 +46,7 @@ function CartRow({
                 type="button"
                 onClick={() => onRemove(item.slug, item.weight)}
                 aria-label={`Видалити ${p.title} з кошика`}
-                className="w-[30px] h-[30px] -mt-1 -mr-1 shrink-0 flex items-center justify-center text-muted-foreground hover:text-error-subtle-foreground transition-colors"
+                className="size-8 -mt-1 -mr-1 shrink-0 flex items-center justify-center text-muted-foreground hover:text-error-subtle-foreground transition-colors"
             >
               <Trash2 className="size-5" />
             </button>
@@ -94,7 +94,7 @@ export function CartView() {
     return (
         <>
           <Header title="Кошик" back backHref="/catalog" />
-          <div className="px-[18px] py-16 text-center text-muted-foreground">Завантаження…</div>
+          <div className="px-4 py-16 text-center text-muted-foreground">Завантаження…</div>
         </>
     );
   }
@@ -103,8 +103,8 @@ export function CartView() {
     return (
         <>
           <Header title="Кошик" back backHref="/catalog" />
-          <div className="flex-1 flex flex-col items-center justify-center text-center px-8 py-16 gap-1.5 min-h-[60vh]">
-            <div className="w-[84px] h-[84px] rounded-full bg-primary-subtle flex items-center justify-center text-primary mb-2">
+          <div className="flex flex-1 flex-col items-center justify-center gap-1.5 px-6 py-24 text-center">
+            <div className="size-20 rounded-full bg-primary-subtle flex items-center justify-center text-primary mb-2">
               <ShoppingBag className="size-9" />
             </div>
             <h1 className="text-2xl uppercase text-foreground">Кошик порожній</h1>
@@ -126,8 +126,8 @@ export function CartView() {
   return (
       <>
         <Header title="Кошик" back backHref="/catalog" />
-        <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-[1040px] lg:mx-auto lg:w-full lg:px-8 lg:py-6">
-          <div className="px-[18px] pt-1 pb-2 lg:px-0 lg:pt-0">
+        <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8 lg:items-start lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 lg:py-6">
+          <div className="px-4 pt-1 pb-2 lg:px-0 lg:pt-0">
             <h1 className="m-0 text-2xl uppercase text-foreground">Кошик</h1>
             <div className="text-muted-foreground text-sm pt-1.5 pb-0.5">
               {count} {plural(count, 'товар', 'товари', 'товарів')} у кошику
@@ -142,8 +142,8 @@ export function CartView() {
             </div>
           </div>
 
-          <div className="px-[18px] lg:px-0 lg:sticky lg:top-20">
-            <Card className="p-4 mt-3.5 lg:mt-0 flex flex-col gap-[11px]">
+          <div className="px-4 lg:px-0 lg:sticky lg:top-20">
+            <Card className="p-4 mt-3.5 lg:mt-0 flex flex-col gap-3">
               <div className="flex justify-between items-baseline text-base text-muted-foreground">
                 <span>Сума</span>
                 <span className="font-semibold text-foreground">{uah(subtotal)}</span>
@@ -160,7 +160,7 @@ export function CartView() {
                   </div>
               ) : null}
               <hr className="divider" />
-              <div className="flex justify-between items-baseline font-semibold text-[21px] text-foreground">
+              <div className="flex justify-between items-baseline font-semibold text-xl text-foreground">
                 <span>Разом</span>
                 <span>{uah(total)}</span>
               </div>
@@ -171,7 +171,7 @@ export function CartView() {
                   asChild
                   
                   size="lg"
-                  className="w-full mt-3.5 px-4 sm:px-[22px]"
+                  className="w-full mt-3.5 px-4 sm:px-5"
               >
                   <Link href="/checkout" className="justify-center text-base sm:text-lg">
                       <span className="truncate">Оформити</span>

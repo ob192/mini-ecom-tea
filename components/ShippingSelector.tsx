@@ -45,8 +45,8 @@ function useDebounced<T>(value: T, delay = 280): T {
 const labelCls = 'font-medium text-sm tracking-wide uppercase text-muted-foreground';
 
 const triggerCls =
-    'text-base text-left bg-card rounded-md min-h-[48px] w-full px-3.5 py-2.5 ' +
-    'border-[1.5px] border-border transition ' +
+    'text-base text-left bg-card rounded-md min-h-12 w-full px-3.5 py-2.5 ' +
+    'border border-border transition ' +
     'focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring ' +
     'disabled:cursor-not-allowed disabled:opacity-50';
 
@@ -81,7 +81,7 @@ function PickerDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="p-0 gap-0 flex flex-col w-[calc(100%-1.25rem)] sm:max-w-[440px] h-[82vh] max-h-[640px] overflow-hidden">
+            <DialogContent className="flex max-h-[85dvh] w-[calc(100%-1.25rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-md">
                 <div className="px-4 pt-4 pb-3 border-b border-border shrink-0">
                     <DialogTitle className="mb-2.5">{title}</DialogTitle>
                     <div className="relative">
@@ -192,7 +192,7 @@ function CityPickerDialog({
                             <button
                                 type="button"
                                 onClick={() => onPick(c)}
-                                className="w-full text-left px-4 py-3.5 min-h-[58px] flex flex-col justify-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
+                                className="w-full text-left px-4 py-3.5 min-h-14 flex flex-col justify-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
                             >
                                 <span className="text-base text-foreground font-medium">{c.name}</span>
                                 {c.area ? <span className="text-sm text-muted-foreground mt-0.5">{c.area}</span> : null}
@@ -279,7 +279,7 @@ function WarehousePickerDialog({
                             <button
                                 type="button"
                                 onClick={() => onPick(w)}
-                                className="w-full text-left px-4 py-3.5 min-h-[58px] flex items-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
+                                className="w-full text-left px-4 py-3.5 min-h-14 flex items-center border-b border-border active:bg-primary-subtle hover:bg-primary-subtle transition-colors"
                             >
                                 <span className="text-base text-foreground leading-snug">{w.description}</span>
                             </button>

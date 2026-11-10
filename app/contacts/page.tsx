@@ -69,8 +69,8 @@ export default function ContactsPage() {
   return (
     <>
       <Header title="Контакти" back />
-      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-2.5">Контакти</h1>
+      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+        <h1 className="font-semibold text-2xl text-foreground leading-tight mb-2.5">Контакти</h1>
         <p className="m-0 text-muted-foreground text-base leading-relaxed mb-6">
           Пишіть або телефонуйте — відповідаємо щодня й допоможемо обрати чай або посуд.
         </p>
@@ -84,12 +84,12 @@ export default function ContactsPage() {
               href={href}
               className="bg-card rounded-xl border border-border p-4 flex items-center gap-3.5 hover:bg-primary-subtle transition-colors"
             >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+              <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
                 <Icon className="size-5" />
               </span>
               <div>
                 <div className="text-muted-foreground text-xs">{label}</div>
-                <div className="font-semibold text-[15.5px] text-foreground">{value}</div>
+                <div className="font-semibold text-base text-foreground">{value}</div>
               </div>
             </ContactLink>
           ))}

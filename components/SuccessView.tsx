@@ -11,8 +11,8 @@ export function SuccessView() {
   const id = useSearchParams().get('id');
 
   return (
-    <div className="flex-1 px-[22px] pt-[70px] lg:pt-24 pb-7 flex flex-col items-center text-center min-h-[80vh] lg:max-w-[620px] lg:mx-auto">
-      <div className="mb-[18px] flex h-[92px] w-[92px] items-center justify-center rounded-full bg-primary text-primary-foreground">
+    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center px-5 pb-8 pt-16 text-center lg:pt-24">
+      <div className="mb-4 flex size-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
         <Check className="size-10" />
       </div>
       <h1 className="max-w-[18ch] text-3xl font-semibold uppercase text-foreground lg:text-3xl">
@@ -29,7 +29,7 @@ export function SuccessView() {
         Наш менеджер зателефонує вам найближчим часом для підтвердження деталей і доставки.
       </p>
 
-      <Card className="w-full p-4 mt-[22px] text-left text-sm text-muted-foreground leading-relaxed">
+      <Card className="w-full p-4 mt-5 text-left text-sm text-muted-foreground leading-relaxed">
         Оплата — при отриманні або за реквізитами. Якщо у вас є запитання, зателефонуйте{' '}
         <ContactLink channel="phone" location="order_success" href="tel:+380986575800" className="text-primary underline">
           +38 (098) 657-58-00

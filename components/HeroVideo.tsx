@@ -130,7 +130,7 @@ export function HeroVideo({ className }: { className?: string }) {
       disablePictureInPicture
       disableRemotePlayback
       className={cn(
-        'pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-700 motion-reduce:transition-none',
+        'pointer-events-none absolute inset-0 size-full object-cover transition-opacity duration-700 motion-reduce:transition-none',
         playing ? 'opacity-100' : 'opacity-0',
         className,
       )}

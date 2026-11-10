@@ -70,7 +70,13 @@ if (!cssFile || !fs.existsSync(cssFile)) {
 	process.exit(2)
 }
 const cssText = fs.readFileSync(cssFile, "utf8")
-const sourceFiles = walk(root, (f) => SOURCE_EXT.test(f))
+// `walk` descends into .claude and .cursor on purpose, for the rule files the
+// docs-drift check reads. Their own tooling is not the project's UI, though, and
+// a rule message that happens to quote a class ("`z-index.`", "`space-x/space-y`"
+// in .claude/scripts/design-lint.mjs) reads as a class that compiles to nothing.
+// Scan the project's source, and let the doc scan below have those directories.
+const TOOLING = /(^|[/\\])\.(claude|cursor)[/\\]/
+const sourceFiles = walk(root, (f) => SOURCE_EXT.test(f) && !TOOLING.test(path.relative(root, f)))
 
 let gitRoot = root
 try {

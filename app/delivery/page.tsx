@@ -45,8 +45,8 @@ export default function DeliveryPage() {
   return (
     <>
       <Header title="Оплата і доставка" back />
-      <main className="flex-1 px-[18px] md:px-8 pt-6 pb-14 lg:max-w-[760px] lg:mx-auto">
-        <h1 className="font-semibold text-[26px] text-foreground leading-tight mb-2.5">
+      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+        <h1 className="font-semibold text-2xl text-foreground leading-tight mb-2.5">
           Оплата і доставка
         </h1>
         <p className="m-0 text-muted-foreground text-base leading-relaxed mb-6">
@@ -66,12 +66,12 @@ export default function DeliveryPage() {
         <div className="flex flex-col gap-2.5">
           {delivery.map(({ icon: Icon, title, text }) => (
             <div key={title} className="bg-card rounded-xl border border-border p-4 flex gap-3.5 items-start">
-              <span className="w-10 h-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
+              <span className="size-10 shrink-0 rounded-full bg-primary-subtle text-primary flex items-center justify-center">
                 <Icon className="size-5" />
               </span>
               <div>
-                <div className="font-semibold text-[15.5px] text-foreground mb-0.5">{title}</div>
-                <p className="m-0 text-muted-foreground text-[13.5px] leading-relaxed">{text}</p>
+                <div className="font-semibold text-base text-foreground mb-0.5">{title}</div>
+                <p className="m-0 text-muted-foreground text-sm leading-relaxed">{text}</p>
               </div>
             </div>
           ))}

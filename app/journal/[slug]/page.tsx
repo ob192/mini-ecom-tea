@@ -72,7 +72,7 @@ export default async function ArticlePage({ params }: Params) {
       <Header title={article.title} back backHref="/journal" />
 
       <article className="mx-auto max-w-6xl px-5 pb-16 lg:px-8">
-        <header className="max-w-[70ch]">
+        <header className="max-w-prose">
           <Eyebrow>{article.category}</Eyebrow>
           <h1 className="mt-2 text-3xl font-semibold text-foreground lg:text-3xl">
             {article.title}
@@ -89,7 +89,7 @@ export default async function ArticlePage({ params }: Params) {
           </time>
         </header>
 
-        <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border">
+        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-xl border border-border">
           <Image
             src={article.cover}
             alt=""
@@ -100,7 +100,7 @@ export default async function ArticlePage({ params }: Params) {
           />
         </div>
 
-        <div className="mt-10 flex max-w-[70ch] flex-col gap-4 text-base text-muted-foreground">
+        <div className="mt-10 flex max-w-prose flex-col gap-4 text-base text-muted-foreground">
           {paragraphs.map((p, i) => (
             <p key={i} className={`m-0 ${p.startsWith('• ') ? '-indent-3.5 pl-3.5' : ''}`}>
               {p}
