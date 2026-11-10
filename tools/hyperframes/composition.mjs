@@ -63,7 +63,11 @@ export function buildHtml({ format, vars }) {
   const { cards, closeAt, total } = timing(vars.teas.length);
 
   const pad = (n) => String(n).padStart(2, '0');
-  const offer = `${vars.count} видів · ${vars.totalGrams} г · ${vars.price} ₴`;
+  // The close states the same three facts the brief asks for — seven kinds,
+  // seventy grams, five hundred and seventy hryvnia — but the price is carried
+  // once, by the big number. Printing "570 ₴" again on the line directly under
+  // a 170px "570 ₴" reads as a mistake, not as emphasis.
+  const offer = `${vars.count} видів · ${vars.totalGrams} г`;
 
   const teaCards = vars.teas
     .map((name, i) => {
