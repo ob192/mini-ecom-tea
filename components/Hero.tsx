@@ -1,25 +1,30 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { HeroVideo } from './HeroVideo';
+
+import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/ui/eyebrow';
+import { HeroVideo } from './HeroVideo';
 
 /*
-  Hero — the `Hero` frame of the home screens in jintea.pen.
+  Hero — the home page's first screen.
 
-  A full-bleed photograph, a scrim that fades from transparent at the top to
-  green-deep at 69% opacity at the bottom, and a 460px content column: amber
-  eyebrow, 42px display headline, body sub, and a card-filled button. The
-  desktop frame sets the column against the right edge of the 1200px content
-  width; the mobile frame drops it to the bottom-left.
+  It is a **dark block**: `dark` on the section switches every semantic token
+  inside it, so the copy is `text-foreground`, the lead `text-muted-foreground`
+  and both scrims are `bg-background` at an opacity. Before that it carried
+  `var(--scrim-from)` / `var(--scrim-to)`, tokens the Pencil export used to
+  declare — once that file was deleted the gradient quietly became transparent
+  to transparent, which is a scrim that is not there. (The design-system audit
+  now reads `var()` out of inline styles for exactly this reason.)
 
-  The still is now the video's own first frame, with the looping clip
+  The still is the video's own first frame, with the looping clip
   (components/HeroVideo.tsx) fading in over it once it plays. Two reasons for
   that order rather than a bare <video>: the LCP element stays an image that
   next/image serves as AVIF/WebP at the right size, and every visitor who does
   not get the video — reduced motion, Save-Data, a 2g connection, refused
   autoplay — still sees a finished hero rather than a hole. Because the still is
-  frame 0, the fade has nothing to cut between.
+  frame 0, the fade has nothing to cut between. Do not replace the poster with a
+  different photograph.
 
   `public/banner.jpg` is deliberately NOT used — it is a promo graphic with its
   own baked-in headline, which would collide with this one.
@@ -32,58 +37,39 @@ const HERO_IMAGE = process.env.NEXT_PUBLIC_HERO_IMAGE || DEFAULT_HERO;
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-110 items-end overflow-hidden lg:min-h-150">
+    <section className="dark relative flex min-h-110 items-end overflow-hidden text-foreground lg:min-h-150">
       <Image src={HERO_IMAGE} alt="" fill priority sizes="100vw" className="object-cover" />
       <HeroVideo />
 
       {/*
-        Two scrims. The design's is vertical (--scrim-from -> --scrim-to); the
-        second darkens the right-hand side on desktop, where the text column
-        sits, so the headline keeps its contrast whatever photo is configured.
-
-        They are held at half strength by the wrapper. The stack was tuned for
-        a still photograph, and over moving footage it read as a green wash
-        laid over the video rather than light on it. Halving here rather than
-        in the gradients themselves keeps one number to turn, and keeps
-        `--scrim-from` / `--scrim-to` at the values the design file exports —
-        those are tokens, mirrored in three places and pinned by
-        tests/design-tokens.test.ts, so editing them to retune one section
-        would push the change onto every future consumer of the token.
+        Two scrims, both the page colour of the dark block. The vertical one
+        carries the copy on phones, where it sits at the bottom; the second
+        darkens the right-hand half from `lg`, where the column moves. Neither
+        is at full strength: the stack was tuned for a still photograph, and
+        over moving footage a solid wash reads as a sheet laid on the video
+        rather than as light in it.
       */}
-      <div className="absolute inset-0 opacity-50">
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(to bottom, var(--scrim-from), var(--scrim-to))' }}
-        />
-        <div
-          className="absolute inset-0 lg:hidden"
-          style={{ background: 'linear-gradient(to top, #233726E6 20%, #23372633 75%)' }}
-        />
-        <div
-          className="absolute inset-0 hidden lg:block"
-          style={{ background: 'linear-gradient(to left, #233726E6 28%, #23372600 70%)' }}
-        />
-      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/10" />
+      <div className="absolute inset-0 hidden bg-gradient-to-l from-background/90 via-background/35 to-transparent lg:block" />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-12 lg:px-8 lg:pb-24">
-        <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-md">
-          <Eyebrow className="text-primary-foreground/80">Сезон пуеру відкрито</Eyebrow>
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-12 sm:px-6 lg:px-8 lg:pb-24">
+        <div className="flex flex-col items-start gap-4 lg:ml-auto lg:max-w-md">
+          <Eyebrow className="text-muted-foreground">Сезон пуеру відкрито</Eyebrow>
 
-          <h1 className="m-0 text-3xl font-semibold text-primary-foreground lg:text-4xl sm:text-5xl">
+          <h1 className="text-3xl font-semibold text-balance sm:text-4xl lg:text-5xl">
             Прямо з гір Юньнані до вашої чашки
           </h1>
 
-          <p className="m-0 max-w-prose text-base text-primary-foreground/80">
+          <p className="max-w-prose text-base text-muted-foreground text-pretty">
             Витриманий шу та живий шен пуер, зібраний зі старих чайних дерев.
           </p>
 
-          <Link
-            href="/catalog"
-            className="inline-flex w-fit items-center gap-2 rounded-md bg-card px-7 py-3.5 text-xs uppercase text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Переглянути каталог
-            <ArrowRight className="size-4" aria-hidden />
-          </Link>
+          <Button asChild size="lg" className="mt-2">
+            <Link href="/catalog">
+              Переглянути каталог
+              <ArrowRight />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
