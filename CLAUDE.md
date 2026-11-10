@@ -237,6 +237,16 @@ is no longer upstream of anything.
   covered «Додати в кошик» outright on every first mobile visit, which is every ad
   click. Anything else pinned to the bottom of the viewport must join the handshake, not
   just pick a z-index. `tests/bottom-layers.test.ts` fails if either half goes missing.
+- **One bar is pinned to the top, and `scroll-padding-top` matches it.** The header
+  splits: the 56px bar is `sticky`, the «Назад» row scrolls away. Pinning both took
+  15% of a 375×812 screen before any content. `/catalog` adds its category row
+  (`sticky top-14`), which is the only second pinned strip on the site; keep the sum
+  under a quarter of the screen. `tests/anchor-scroll.test.ts` pins the offset.
+- **Touch gets its own states.** Preflight kills the tap highlight, so every control
+  carries an `active:` state next to its `hover:`, and interactive elements take
+  `touch-action: manipulation` from the base layer. Target sizes are guarded by
+  `pointer-coarse:`, never by a breakpoint — a tablet in landscape is wide *and*
+  touched.
 - Depth is the surface step (`background` → `subtle` → `card`) plus a hairline;
   a surface is set apart by its colour **or** a border, never both. Shadows are
   for overlays (`shadow-xl`) and for the mobile buy bar (`shadow-up`). Radii are

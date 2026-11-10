@@ -57,7 +57,14 @@ export function ProductGallery({
             }`}
           />
         ))}
-        <span className="absolute bottom-3 right-3 flex items-center justify-center size-9 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
+        {/*
+          Visible by default on a touch screen. Tailwind 4 only applies `hover:`
+          under `(hover: hover)`, so on a phone this hint never appeared at all
+          and nothing said the photograph could be opened. The photograph itself
+          is the button, so this was only ever an affordance — but an affordance
+          nobody sees is not one (design-mobile §6).
+        */}
+        <span className="absolute bottom-3 right-3 flex items-center justify-center size-9 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm transition opacity-100 pointer-fine:opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
           <ZoomIn className="size-5" strokeWidth={1.7} />
         </span>
       </button>
@@ -74,7 +81,7 @@ export function ProductGallery({
               className={`relative shrink-0 size-16 rounded-xl overflow-hidden transition ${
  i === active
  ?'ring-2 ring-ring ring-offset-0'
-                  : 'opacity-75 border border-border hover:opacity-100'
+                  : 'border border-border opacity-75 hover:opacity-100 active:opacity-100'
               }`}
             >
               <Image src={src} alt="" fill sizes="64px" className="object-cover" />
@@ -109,7 +116,7 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(-1)}
                   aria-label="Попереднє фото"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center size-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
+                  className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm transition hover:bg-inverse/60 active:bg-inverse/70"
                 >
                   <ChevronLeft className="size-5" strokeWidth={1.7} />
                 </button>
@@ -117,7 +124,7 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(1)}
                   aria-label="Наступне фото"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center size-10 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm hover:bg-inverse/60 transition"
+                  className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm transition hover:bg-inverse/60 active:bg-inverse/70"
                 >
                   <ChevronRight className="size-5" strokeWidth={1.7} />
                 </button>

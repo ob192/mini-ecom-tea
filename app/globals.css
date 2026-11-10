@@ -392,14 +392,15 @@
 		scroll-behavior: smooth;
 
 		/*
-		  The header is sticky, so an anchor and a focused element both have to land
-		  clear of it (WCAG 2.4.11, NV8). 6.5rem = 104px: the 56px bar (`h-14` in
-		  components/Header.tsx) plus the 44px «Назад» row the deeper pages carry,
-		  and some air. `scroll-padding-top` on `html` rather than `scroll-margin`
-		  on `[id]`, because it also keeps a *focused* element clear of the bar,
+		  The bar is sticky, so an anchor and a focused element both have to land
+		  clear of it (WCAG 2.4.11, NV8). 4.5rem = 72px: the 56px bar (`h-14` in
+		  components/Header.tsx) plus air. It used to be 104px, because the
+		  «Назад» row was pinned too — it is not any more, so the offset came down
+		  with it. `scroll-padding-top` on `html` rather than `scroll-margin` on
+		  `[id]`, because it also keeps a *focused* element clear of the bar,
 		  which scroll-margin does not. tests/anchor-scroll.test.ts pins the pair.
 		*/
-		scroll-padding-top: 6.5rem;
+		scroll-padding-top: 4.5rem;
 	}
 
 	/* Someone who asked for less motion asked for exactly this: a page that does not
@@ -433,6 +434,24 @@
 	button:not(:disabled),
 	[role="button"]:not(:disabled) {
 		cursor: pointer;
+	}
+
+	/*
+	 * Without this a second quick tap on the same control is a double-tap-zoom,
+	 * and the control never sees it: the quantity stepper, the weight chips and
+	 * the catalogue filters are all pressed in bursts. `manipulation` keeps
+	 * pinch-zoom and panning and drops only the double-tap gesture, so 1.4.4 is
+	 * untouched (design-mobile, §6).
+	 */
+	a,
+	button,
+	[role="button"],
+	label,
+	summary,
+	input,
+	select,
+	textarea {
+		touch-action: manipulation;
 	}
 }
 

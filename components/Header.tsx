@@ -56,70 +56,86 @@ export function Header({
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-md">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <button
-          type="button"
-          aria-label="Категорії"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((o) => !o)}
-          className="-ml-2 grid size-11 place-items-center rounded-md text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
-        >
-          <Menu className="size-5" />
-        </button>
+    <header>
+      {/*
+        Only the bar is sticky. With the «Назад» row pinned too the header held
+        375×125 — 15% of a 375×812 phone, permanently, and with the cookie
+        notice up on a first visit the pinned panels came to 46% of the screen.
+        The bar earns its place (it carries the cart and the menu); a back link
+        only has to be reachable, so it scrolls away with the page.
+      */}
+      <div className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-md">
+        <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+          <button
+            type="button"
+            aria-label="Категорії"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="-ml-2 grid size-11 place-items-center rounded-md text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+          >
+            <Menu className="size-5" />
+          </button>
 
-        <Link
-          href="/"
-          aria-label={`${BRAND_NAME} — на головну`}
-          className="-mx-2 flex min-h-11 items-center rounded-md px-2 transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:mr-auto"
-        >
-          <Logo />
-        </Link>
+          <Link
+            href="/"
+            aria-label={`${BRAND_NAME} — на головну`}
+            className="-mx-2 flex min-h-11 items-center rounded-md px-2 transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:mr-auto"
+          >
+            <Logo />
+          </Link>
 
-        <nav aria-label="Категорії" className="hidden items-center gap-8 lg:flex">
-          {navCategories.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/catalog?cat=${c.slug}`}
-              className="whitespace-nowrap text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {c.label}
-            </Link>
-          ))}
-        </nav>
+          <nav aria-label="Категорії" className="hidden items-center gap-8 lg:flex">
+            {navCategories.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/catalog?cat=${c.slug}`}
+                className="whitespace-nowrap text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {c.label}
+              </Link>
+            ))}
+          </nav>
 
-        <Link
-          href="/cart"
-          aria-label={`Кошик${ready && count > 0 ? `, ${count} товарів` : ''}`}
-          className="relative -mr-2 grid size-11 place-items-center rounded-md text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:ml-auto"
-        >
-          <ShoppingBag className="size-5" />
-          {ready && count > 0 ? (
-            <span className="absolute right-0 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-bold text-primary-foreground">
-              {count}
-            </span>
-          ) : null}
-        </Link>
+          <Link
+            href="/cart"
+            aria-label={`Кошик${ready && count > 0 ? `, ${count} товарів` : ''}`}
+            className="relative -mr-2 grid size-11 place-items-center rounded-md text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:ml-auto"
+          >
+            <ShoppingBag className="size-5" />
+            {ready && count > 0 ? (
+              <span className="absolute right-0 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-bold text-primary-foreground">
+                {count}
+              </span>
+            ) : null}
+          </Link>
+        </div>
+
+        {/* Mobile disclosure for the same categories the desktop nav shows. */}
+        {menuOpen ? (
+          <nav
+            aria-label="Категорії"
+            /*
+              Its own scroll, so eleven categories can never push the bar off
+              the screen; each row is a 44px target, not the 40px it was; and
+              the cap subtracts `--cookie-notice-h`, so the last categories
+              cannot end up under the notice on a first visit — the same
+              handshake the buy bar uses (DESIGN.md, «Bottom-anchored layers»).
+            */
+            className="max-h-[calc(100dvh-3.5rem-var(--cookie-notice-h,0px))] overflow-y-auto overscroll-contain border-t border-border bg-card px-4 pb-4 pt-1 sm:px-6 lg:hidden"
+          >
+            {categories.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/catalog?cat=${c.slug}`}
+                onClick={() => setMenuOpen(false)}
+                className="flex min-h-11 items-center rounded-md text-sm text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground active:bg-foreground/10"
+              >
+                {c.label}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
       </div>
-
-      {/* Mobile disclosure for the same categories the desktop nav shows. */}
-      {menuOpen ? (
-        <nav
-          aria-label="Категорії"
-          className="border-t border-border bg-card px-4 pb-4 pt-2 sm:px-6 lg:hidden"
-        >
-          {categories.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/catalog?cat=${c.slug}`}
-              onClick={() => setMenuOpen(false)}
-              className="block py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {c.label}
-            </Link>
-          ))}
-        </nav>
-      ) : null}
 
       {/*
         A `<nav>`, not a div: `aria-label` on a plain div with no role is
