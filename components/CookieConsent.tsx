@@ -129,24 +129,21 @@ export function CookieConsent() {
       aria-label="Повідомлення про файли cookie"
       className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[calc(18px+env(safe-area-inset-bottom,0px))] pt-2 pointer-events-none"
     >
-      <div className="pointer-events-auto mx-auto w-full max-w-xl rounded-xl bg-primary-strong text-primary-foreground shadow-xl p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <p className="m-0 flex-1 text-sm leading-relaxed text-primary-foreground/85">
+      {/* A notice is not an advert: it sits on the popover surface, not on a
+          panel of brand colour, and the brand is on its one button (C5, C7). */}
+      <div className="pointer-events-auto mx-auto flex w-full max-w-xl flex-col gap-3 rounded-xl bg-popover p-4 text-popover-foreground shadow-xl sm:flex-row sm:items-center sm:gap-4">
+        <p className="flex-1 text-sm text-muted-foreground text-pretty">
           Ми використовуємо файли cookie, щоб сайт працював коректно та щоб розуміти, які чаї вам
           цікаві. Деталі —{' '}
           <Link
             href="/privacy"
-            className="text-foreground underline underline-offset-2 hover:text-primary-foreground"
+            className="text-foreground underline underline-offset-2 hover:text-primary"
           >
             в Угоді користувача
           </Link>
           .
         </p>
-        <Button
-          onClick={accept}
-          
-          size="lg"
-          className="shrink-0 bg-primary text-foreground hover:bg-primary/90 sm:w-auto"
-        >
+        <Button onClick={accept} className="shrink-0 sm:w-auto">
           Добре
         </Button>
       </div>

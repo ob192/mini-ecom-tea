@@ -18,7 +18,13 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 /** Open explorations. Each one is deleted once the owner has chosen from it. */
-const EXPLORATIONS: [string, string][] = [['/playground/hero', 'Перший екран']];
+const EXPLORATIONS: [string, string][] = [
+  ['/playground/hero', 'Перший екран'],
+  ['/playground/card', 'Картка товару'],
+  ['/playground/buy', 'Блок покупки'],
+  ['/playground/checkout', 'Поля оформлення'],
+  ['/playground/offer', 'Стартовий набір'],
+];
 
 export const metadata: Metadata = {
   title: 'Playground',
