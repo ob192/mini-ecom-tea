@@ -130,8 +130,17 @@ GTM (`GTM-MKJP47L5`) + GA4 (`G-5PCX5S995S`). Full setup and the GTM container re
 
 ## Meta pixel
 
-Pixel `1480203177363951`. The **browser** half lives entirely in the GTM container
-(tag 39, container version 10, 2026-10-19) and reuses our GA4 ecommerce dataLayer — there is no pixel code in this repo and no public env var.
+Dataset `1842523230500897`, set in `META_PIXEL_ID` (Vercel, production and
+preview) — **the dataset moved from `1480203177363951` on 2026-11-10**, so a
+reference to the old number anywhere outside the dated records in `HANDOFF.md`
+and `docs/analytics.md` is stale. Nothing in this repo hardcodes it;
+`lib/meta-capi.ts` reads the variable. The **browser** half lives entirely in the
+GTM container (tag 39, container version 10, 2026-10-19) and reuses our GA4
+ecommerce dataLayer — there is no pixel code in this repo and no public env var.
+**The container was not checked when the dataset moved**: if tag 39 still names
+the old dataset, browser events and the server-side `Purchase` are landing in
+two different ones, `event_id` dedup means nothing, and `/privacy` §11.1 has to
+name both.
 `Purchase` is the exception and must be server-side: GTM maps a dataLayer `purchase` to
 Meta's `Purchase`, but this site never pushes one, so `lib/meta-capi.ts` posts it from
 the order route beside the GA4 call, keyed `event_id = orderId` for dedup. Hashed-phone

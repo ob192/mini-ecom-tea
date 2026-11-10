@@ -72,7 +72,7 @@ describe('sendMetaPurchase', () => {
 
   beforeEach(() => {
     sent = [];
-    process.env.META_PIXEL_ID = '1480203177363951';
+    process.env.META_PIXEL_ID = '1842523230500897';
     process.env.META_CAPI_ACCESS_TOKEN = 'test-token';
     delete process.env.META_CAPI_ADVANCED_MATCHING;
     delete process.env.META_CAPI_TEST_EVENT_CODE;
@@ -96,7 +96,7 @@ describe('sendMetaPurchase', () => {
   it('posts a Purchase to the pixel-scoped Graph endpoint', async () => {
     await sendMetaPurchase(purchase, ids);
     expect(sent).toHaveLength(1);
-    expect(sent[0].url).toContain('/1480203177363951/events');
+    expect(sent[0].url).toContain('/1842523230500897/events');
     expect(sent[0].body.data[0].event_name).toBe('Purchase');
     expect(sent[0].body.data[0].action_source).toBe('website');
   });
@@ -198,7 +198,7 @@ describe('the order endpoint sends the Meta Purchase', () => {
     sent = [];
     process.env.TELEGRAM_BOT_TOKEN = 'test-token';
     process.env.TELEGRAM_CHAT_ID = '-100123';
-    process.env.META_PIXEL_ID = '1480203177363951';
+    process.env.META_PIXEL_ID = '1842523230500897';
     process.env.META_CAPI_ACCESS_TOKEN = 'test-token';
     vi.stubGlobal('fetch', async (url: string, init?: RequestInit) => {
       sent.push({ url: String(url), body: init?.body ? JSON.parse(String(init.body)) : null });
