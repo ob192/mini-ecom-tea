@@ -48,13 +48,13 @@ export default function CatalogPage() {
       />
       <Header title="Каталог" back />
 
-      <main>
+      <main id="main">
         <h1 className="mx-auto max-w-6xl px-4 pt-4 sm:px-6 text-2xl text-foreground lg:px-8">
           Каталог
         </h1>
         <Suspense
           fallback={
-            <div className="mx-auto max-w-6xl px-5 py-16 text-sm text-muted-foreground lg:px-8">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 text-sm text-muted-foreground lg:px-8">
               Завантаження каталогу…
             </div>
           }

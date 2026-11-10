@@ -69,7 +69,7 @@ export default function ContactsPage() {
   return (
     <>
       <Header title="Контакти" back />
-      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+      <main id="main" className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
         <h1 className="font-semibold text-2xl text-foreground leading-tight mb-2.5">Контакти</h1>
         <p className="m-0 text-muted-foreground text-base leading-relaxed mb-6">
           Пишіть або телефонуйте — відповідаємо щодня й допоможемо обрати чай або посуд.

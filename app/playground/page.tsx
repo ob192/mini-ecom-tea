@@ -507,16 +507,31 @@ export default function PlaygroundReference() {
           </div>
         </DoDont>
 
-        <DoDont ok title="Бренд — на дії" note="Площину тонує -subtle, а не насичена заливка.">
-          <div className="rounded-xl bg-primary-subtle p-4">
-            <p className="text-sm text-primary-subtle-foreground">
-              Безкоштовна доставка від 500 ₴
+        <DoDont
+          ok
+          title="Бренд — заливка; як текст — лише темний крок"
+          note="Бурштин як текст на світлому — 2,4–2,8:1. Читабельний крок бренду — primary-subtle-foreground (8,6:1)."
+        >
+          <div className="flex flex-col gap-3">
+            <Button>Додати в кошик</Button>
+            <p className="text-sm">
+              Доставка{' '}
+              <span className="font-semibold text-primary-subtle-foreground">безкоштовна</span> від
+              500 ₴
             </p>
           </div>
         </DoDont>
-        <DoDont title="Бренд — на площину" note="Велика насичена заливка кричить і ламає ієрархію.">
-          <div className="rounded-xl bg-primary p-4">
-            <p className="text-sm text-primary-foreground">Безкоштовна доставка від 500 ₴</p>
+        <DoDont
+          title="Бренд як текст на світлому"
+          note="2,4:1 — нижче за будь-який поріг. І посилання, що на наведенні стає бурштиновим, стає менш читабельним, ніж було."
+        >
+          <div className="flex flex-col gap-3">
+            <p className="text-sm">
+              Доставка <span className="font-semibold text-primary">безкоштовна</span> від 500 ₴
+            </p>
+            <p className="text-sm">
+              <span className="text-primary underline underline-offset-4">Умови доставки</span>
+            </p>
           </div>
         </DoDont>
 

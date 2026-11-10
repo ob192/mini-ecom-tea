@@ -39,7 +39,7 @@ const linkCls =
 export function Footer() {
   return (
     <footer className="dark bg-background text-foreground">
-      <div className="mx-auto max-w-6xl px-5 pb-7 pt-14 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pb-7 pt-14 lg:px-8">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-8">
           <div className="flex max-w-xs flex-col gap-3.5">
             <Logo />

@@ -26,7 +26,7 @@ import { SectionHeading } from '@/components/ui/section-heading';
 */
 function FreeDeliveryBar() {
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-6 lg:px-8">
+    <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 lg:px-8">
       <p className="m-0 inline-flex items-center gap-2.5 rounded-md bg-secondary px-3.5 py-2 text-sm text-foreground border border-border">
         <span className="flex shrink-0 text-muted-foreground" aria-hidden>
           <Truck className="size-4" />
@@ -93,7 +93,7 @@ export function CatalogGrid({
       */}
       <div className="sticky top-14 z-20 border-b border-border bg-background/95 py-3 backdrop-blur-md">
         <div
-          className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:flex-wrap lg:overflow-x-visible lg:px-8"
+          className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 sm:px-6 [scrollbar-width:none] lg:flex-wrap lg:overflow-x-visible lg:px-8"
           role="tablist"
           aria-label="Фільтр за категорією"
         >
@@ -122,12 +122,12 @@ export function CatalogGrid({
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-5 pt-3 text-sm text-muted-foreground lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-3 text-sm text-muted-foreground lg:px-8">
         {filtered.length} {plural(filtered.length, 'позиція', 'позиції', 'позицій')}
       </div>
 
       {groups.length === 0 ? (
-        <div className="mx-auto max-w-6xl px-5 py-16 text-center text-base text-muted-foreground lg:px-8">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 text-center text-base text-muted-foreground lg:px-8">
           У цій категорії поки немає товарів.{' '}
           <Link href="/catalog" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
             Переглянути всі
@@ -137,7 +137,7 @@ export function CatalogGrid({
         groups.map((g) => (
           <section
             key={g.slug}
-            className="mx-auto max-w-6xl px-5 pb-10 pt-7 lg:px-8"
+            className="mx-auto max-w-6xl px-4 sm:px-6 pb-10 pt-7 lg:px-8"
             aria-labelledby={`cat-${g.slug}`}
           >
             <SectionHeading

@@ -1,17 +1,20 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Check, Leaf } from 'lucide-react';
-import { ContactLink } from '@/components/Analytics';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Check, Leaf } from "lucide-react";
+import { ContactLink } from "@/components/Analytics";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export function SuccessView() {
-  const id = useSearchParams().get('id');
+  const id = useSearchParams().get("id");
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center px-5 pb-8 pt-16 text-center lg:pt-24">
+    <main
+      id="main"
+      className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center px-4 pb-8 pt-16 text-center sm:px-6 lg:pt-24"
+    >
       <div className="mb-4 flex size-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
         <Check className="size-10" />
       </div>
@@ -23,19 +26,31 @@ export function SuccessView() {
       <p className="mt-2.5 text-muted-foreground text-base max-w-[32ch]">
         {id ? (
           <>
-            Замовлення <b className="text-foreground">№ {id}</b> оформлено.{' '}
+            Замовлення <b className="text-foreground">№ {id}</b> оформлено.{" "}
           </>
         ) : null}
-        Наш менеджер зателефонує вам найближчим часом для підтвердження деталей і доставки.
+        Наш менеджер зателефонує вам найближчим часом для підтвердження деталей
+        і доставки.
       </p>
 
       <Card className="w-full p-4 mt-5 text-left text-sm text-muted-foreground leading-relaxed">
-        Оплата — при отриманні або за реквізитами. Якщо у вас є запитання, зателефонуйте{' '}
-        <ContactLink channel="phone" location="order_success" href="tel:+380986575800" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
+        Оплата — при отриманні або за реквізитами. Якщо у вас є запитання,
+        зателефонуйте{" "}
+        <ContactLink
+          channel="phone"
+          location="order_success"
+          href="tel:+380986575800"
+          className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground"
+        >
           +38 (098) 657-58-00
-        </ContactLink>{' '}
-        або напишіть у{' '}
-        <ContactLink channel="telegram" location="order_success" href="https://t.me/Jin_tea" className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground">
+        </ContactLink>{" "}
+        або напишіть у{" "}
+        <ContactLink
+          channel="telegram"
+          location="order_success"
+          href="https://t.me/Jin_tea"
+          className="text-foreground underline underline-offset-4 hover:text-primary-subtle-foreground"
+        >
           Telegram
         </ContactLink>
         .
@@ -46,6 +61,6 @@ export function SuccessView() {
           <Leaf className="size-5" /> Повернутись до каталогу
         </Link>
       </Button>
-    </div>
+    </main>
   );
 }

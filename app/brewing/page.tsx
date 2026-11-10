@@ -47,7 +47,7 @@ export default function BrewingPage() {
   return (
     <>
       <Header title="Як заварювати" back />
-      <main className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
+      <main id="main" className="flex-1 px-4 md:px-8 pt-6 pb-14 lg:max-w-3xl lg:mx-auto">
         <h1 className="font-semibold text-2xl text-foreground leading-tight mb-2.5">
           Як правильно заварювати китайський чай
         </h1>

@@ -1,18 +1,18 @@
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
-import { Hero } from '@/components/Hero';
-import { ProductRail } from '@/components/ProductRail';
-import { DiscoverBanner } from '@/components/DiscoverBanner';
-import { StarterSetOffer } from '@/components/StarterSetOffer';
-import { ArticleCard } from '@/components/ArticleCard';
-import { JoinFamily } from '@/components/JoinFamily';
-import { SectionHeading } from '@/components/ui/section-heading';
-import { TextLink } from '@/components/ui/text-link';
-import { products, categories } from '@/lib/products';
-import { ADVERTISED_CATEGORIES } from '@/lib/merchant-feed';
-import { articlesByDate } from '@/lib/journal';
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { Hero } from "@/components/Hero";
+import { ProductRail } from "@/components/ProductRail";
+import { DiscoverBanner } from "@/components/DiscoverBanner";
+import { StarterSetOffer } from "@/components/StarterSetOffer";
+import { ArticleCard } from "@/components/ArticleCard";
+import { JoinFamily } from "@/components/JoinFamily";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { TextLink } from "@/components/ui/text-link";
+import { products, categories } from "@/lib/products";
+import { ADVERTISED_CATEGORIES } from "@/lib/merchant-feed";
+import { articlesByDate } from "@/lib/journal";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 /*
   Home, section for section:
@@ -51,7 +51,11 @@ const CATEGORY_RANK = new Map(categories.map((c, i) => [c.slug, i]));
 
 const featured = products
   .filter((p) => p.inStock && p.image && ADVERTISED_CATEGORIES.has(p.category))
-  .sort((a, b) => (CATEGORY_RANK.get(a.category) ?? 99) - (CATEGORY_RANK.get(b.category) ?? 99))
+  .sort(
+    (a, b) =>
+      (CATEGORY_RANK.get(a.category) ?? 99) -
+      (CATEGORY_RANK.get(b.category) ?? 99),
+  )
   .slice(0, 8);
 
 export default function HomePage() {
@@ -60,35 +64,42 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <Hero />
 
-      <ProductRail
-        title="Оберіть свій чай"
-        products={featured}
-        href="/catalog"
-        listId="home_featured"
-        listName="Головна · Оберіть свій чай"
-      />
+      <main id="main" className="flex-1 [&>*]:w-full">
+        <Hero />
 
-      <StarterSetOffer />
+        <ProductRail
+          title="Оберіть свій чай"
+          products={featured}
+          href="/catalog"
+          listId="home_featured"
+          listName="Головна · Оберіть свій чай"
+        />
 
-      <DiscoverBanner />
+        <StarterSetOffer />
 
-      <section
-        className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8"
-        aria-labelledby="journal"
-      >
-        <SectionHeading id="journal" action={<TextLink href="/journal">Усі статті</TextLink>}>
-          Журнал
-        </SectionHeading>
-        <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {articles.map((a) => (
-            <ArticleCard key={a.slug} article={a} />
-          ))}
-        </div>
-      </section>
+        <DiscoverBanner />
 
-      <JoinFamily />
+        <section
+          className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8"
+          aria-labelledby="journal"
+        >
+          <SectionHeading
+            id="journal"
+            action={<TextLink href="/journal">Усі статті</TextLink>}
+          >
+            Журнал
+          </SectionHeading>
+          <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {articles.map((a) => (
+              <ArticleCard key={a.slug} article={a} />
+            ))}
+          </div>
+        </section>
+
+        <JoinFamily />
+      </main>
+
       <Footer />
     </>
   );
