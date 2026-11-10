@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Tables
@@ -9,7 +9,7 @@ Tables and data lists, comparison tables included.
 
 ## Before writing
 
-- The table primitives in `src/shared/components/ui`, if any.
+- The table primitives in `components/ui`, if any.
 - List every table or tabular list in the target: what each row is, the columns, whether it sorts, filters, paginates or selects. Label–value rows inside cards (a price list in a card) count as tabular lists: TB3 applies to them, TB4–TB11 do not.
 - Decide the form first (TB1).
 

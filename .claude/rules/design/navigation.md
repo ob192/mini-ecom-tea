@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Navigation
@@ -9,8 +9,8 @@ How people move around the site: header, mobile menu, links and buttons, anchors
 
 ## Before writing
 
-- The navigation pieces: header, footer, mobile menu, and the primitives in `src/shared/components/ui` (`Sheet`, …).
-- DESIGN.md; the routes in `src/app` and which ones the navigation reaches.
+- The navigation pieces: header, footer, mobile menu, and the primitives in `components/ui` (`Sheet`, …).
+- DESIGN.md; the routes in `app/` and which ones the navigation reaches.
 - Navigation is shared: change it in its component, never per page.
 
 ## How to check

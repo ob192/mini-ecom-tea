@@ -5,7 +5,7 @@ Shared by every review against the design rules: `design-audit`, `design-mobile`
 ## Sources, in order
 
 1. **DESIGN.md** — decisions.
-2. **The project's primitives** (the `ui` alias in `components.json`, else `src/shared/components/ui`) — decisions made in code.
+2. **The project's primitives** (the `ui` alias in `components.json`, else `components/ui`) — decisions made in code.
 3. **Screens that already follow the system.**
 
 Code that DESIGN.md calls legacy is not practice. The file under review is not evidence for itself: when nothing but DESIGN.md and the primitives follows the system yet, those two are the whole practice. Values DESIGN.md marks as provisional still count; note when a finding rests on one.

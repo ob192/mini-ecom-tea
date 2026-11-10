@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: States
@@ -9,7 +9,7 @@ Every state a view or control can be in besides the happy one. Messages to the u
 
 ## Before writing
 
-- The primitives for states in `src/shared/components/ui` (`Skeleton`, `Spinner`, `Empty`, `Alert`, how `Button` shows pending). A missing one is built once as a primitive; propose it to the user first.
+- The primitives for states in `components/ui` (`Skeleton`, `Spinner`, `Empty`, `Alert`, how `Button` shows pending). A missing one is built once as a primitive; propose it to the user first.
 - List every async view (data fetched, form submitted, action run) and every control with states, each with the states it can reach: loading, empty, error, partial, slow; pending, error, success; hover, focus, pressed, disabled, selected or current. Each is rendered or explicitly out of scope.
 - Static marketing sections make the data rules `N/A (static)`.
 

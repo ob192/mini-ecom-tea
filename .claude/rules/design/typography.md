@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Typography
@@ -9,7 +9,7 @@ Setting text with the type scale. The scale itself (steps, values, fitting leadi
 
 ## Before writing
 
-- DESIGN.md: Typography (the role → step table, weights, case) and Colors (text tokens); the `--text-*` tokens in `src/app/globals.css`.
+- DESIGN.md: Typography (the role → step table, weights, case) and Colors (text tokens); the `--text-*` tokens in `app/globals.css`.
 - Know the step, weight and case for each role the target uses: page title, section heading, block and card title, body, meta, label. A role DESIGN.md does not map is a decision: take the nearest step and say so, or ask the user when it will repeat.
 - Controls (button, badge, input) set their own type; their instances are not reviewed one by one.
 

@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Colour
@@ -10,7 +10,7 @@ Applying colour. The tokens themselves (palette, roles, values) belong to the `d
 ## Before writing
 
 - DESIGN.md: Colors (the role → use table) and Do's and Don'ts.
-- The semantic layer in `src/app/globals.css` (`:root`, `.dark`, `@theme inline`): which tokens and pairs exist. The page is light; a block with the `dark` class gets the dark values of the same tokens.
+- The semantic layer in `app/globals.css` (`:root`, `.dark`, `@theme inline`): which tokens and pairs exist. The page is light; a block with the `dark` class gets the dark values of the same tokens.
 - Know the token for each role the target needs: page, card, main action, secondary action, muted text, borders, each status; and where the brand colour is allowed.
 
 A colour need no token covers is a `design-system` decision: say so (`[→ design-system]`) instead of reaching for a palette shade.

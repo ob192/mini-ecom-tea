@@ -1,8 +1,3 @@
----
-paths:
-  - "src/**/*.tsx"
----
-
 # Компоненты (entities / features / widgets)
 
 UI в папке **`ui/`** слайса. Файл **PascalCase**. Примитивы — только **`21-shared-components.md`**.

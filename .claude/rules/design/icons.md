@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Icons
@@ -9,9 +9,9 @@ Icons: library, size, meaning, names.
 
 ## Before writing
 
-- The library is a **set**, the import subpath: here `react-icons/lu` (Lucide). Pick icons by meaning; when no icon fits a concept clearly, use text.
-- react-icons does not render `aria-hidden` on its `<svg>` (lucide-react does): a decorative icon needs it set.
-- How the primitives in `src/shared/components/ui` size icons inside them (`[&_svg]:size-4`, `data-icon`).
+- The library is a **set**, the import subpath: here `lucide-react` (Lucide). Pick icons by meaning; when no icon fits a concept clearly, use text.
+- lucide-react renders `aria-hidden="true"` on its `<svg>` by default, so a decorative icon needs nothing; an icon that carries meaning on its own turns it off (`aria-hidden={false}`) and takes a label.
+- How the primitives in `components/ui` size icons inside them (`[&_svg]:size-4`, `data-icon`).
 - DESIGN.md: Icons. When it lacks a decision, write one `[doc]` line with the library and sizes the primitives use, instead of a finding per size.
 
 ## How to check
@@ -41,7 +41,7 @@ Every rule against every target file; on the rendered page, the accessible names
 
 **I7 · P0 — Icon-only controls have a name.** `aria-label` or `sr-only` text on the button or link, wherever it sits (toolbars, table rows, cards). Icon-only is for the universal actions in I10; anything else gets a visible label, or a tooltip when the project has a `Tooltip` primitive — a `title` attribute does not count.
 
-**I8 · P1 — Decorative icons are hidden.** An icon next to a text label is `aria-hidden` — set once for the whole library when it does not do so itself (react-icons: `IconContext.Provider value={{attr: {"aria-hidden": "true"}}}` at the root, imported from `react-icons/lib` — in Next.js the root `react-icons` entry is a different module instance and the setting silently does nothing; verify on the rendered `<svg>`); an icon that carries meaning on its own (a status icon without text) has `role="img"` and a label.
+**I8 · P1 — Decorative icons are hidden.** An icon next to a text label is `aria-hidden`; lucide-react sets it on every `<svg>` it renders, so nothing is needed at the use site — verify it on the rendered `<svg>` rather than trusting it. An icon that carries meaning on its own (a status icon without text) turns it off (`aria-hidden={false}`), takes `role="img"` and a label.
 
 **I9 · P1 — One icon, one meaning.** The same icon means the same thing across the site, and one action always uses the same icon. Use the conventional ones: × to close, chevron to expand, trash to delete, arrow-up-right for external links.
 

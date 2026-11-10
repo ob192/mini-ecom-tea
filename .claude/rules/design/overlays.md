@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Overlays
@@ -9,7 +9,7 @@ UI that opens above the page: dialog, alert dialog, sheet, drawer, popover, tool
 
 ## Before writing
 
-- The overlay primitives in `src/shared/components/ui` (`Sheet`, …) and the library under them. A missing one is added once as a primitive; propose it to the user first.
+- The overlay primitives in `components/ui` (`Sheet`, …) and the library under them. A missing one is added once as a primitive; propose it to the user first.
 - DESIGN.md: Elevation & Depth, Shapes.
 - Pick the overlay by O1, or none when the content belongs on the page.
 

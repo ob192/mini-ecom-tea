@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Feedback
@@ -9,7 +9,7 @@ Messages to the user: inline message, alert, toast, banner, confirmation. The st
 
 ## Before writing
 
-- The message primitives in `src/shared/components/ui` and `package.json`: `Alert`, a toast (`sonner`), `AlertDialog`, `Progress`, and where the toaster is mounted. A missing one is built once as a primitive; propose it to the user first.
+- The message primitives in `components/ui` and `package.json`: `Alert`, a toast (`sonner`), `AlertDialog`, `Progress`, and where the toaster is mounted. A missing one is built once as a primitive; propose it to the user first.
 - DESIGN.md: Voice, Do's and Don'ts.
 - List every event in the target that should tell the user something (success, failure, warning, destructive action, long operation), pick its channel by FB1, and write its copy in the site's language and voice. Every event has a channel and copy, or is deliberately silent.
 

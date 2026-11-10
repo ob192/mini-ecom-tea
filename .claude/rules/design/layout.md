@@ -1,6 +1,6 @@
 ---
 paths:
-  - "src/**/*.{tsx,jsx}"
+  - "{app,components,context}/**/*.{tsx,jsx}"
 ---
 
 # Design rules: Layout
@@ -9,7 +9,7 @@ How things sit on the page: spacing, containers, grids, nesting of surfaces, ali
 
 ## Before writing
 
-- DESIGN.md: Layout, Elevation & Depth, Shapes; the primitives in `src/shared/components/ui`; the sections in `src/widgets`.
+- DESIGN.md: Layout, Elevation & Depth, Shapes; the primitives in `components/ui`; the page sections in `components/`.
 - Know the container recipe, section spacing, card padding, the surface steps and the breakpoints, each from DESIGN.md, a primitive or a screen, or "not decided". A value they do not cover is a decision: pick the nearest existing step and say so, or ask the user when it will repeat.
 - When a section has real alternatives (two or three ways to arrange it), show them with the `design-playground` skill before choosing.
 - A change made for one width (a phone fix) is looked at across its whole range (L29).

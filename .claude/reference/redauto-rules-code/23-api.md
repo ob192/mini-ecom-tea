@@ -1,10 +1,3 @@
----
-paths:
-  - "src/**/api/**"
-  - "src/**/server.ts"
-  - "src/app/api/**"
----
-
 # Запросы и серверная часть
 
 На сайте один запрос — заявка из формы. Образец: `features/signup/signup-form/`.
