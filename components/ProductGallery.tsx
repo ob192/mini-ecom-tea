@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ZoomIn, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { tone } from '@/lib/products';
+import type { ProductVideo } from '@/lib/types';
 import { Leaf } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
@@ -11,6 +12,7 @@ export function ProductGallery({
   images,
   category,
   alt,
+  video = null,
   ratio = '4 / 5',
   radius = 22,
   sizes = '(max-width: 480px) 100vw, (max-width: 1024px) 720px, 520px',
@@ -18,22 +20,100 @@ export function ProductGallery({
   images: string[];
   category: string;
   alt: string;
+  /** Optional clip, shown as the last slide. See the comment above the stage. */
+  video?: ProductVideo | null;
   ratio?: string;
   radius?: number;
   sizes?: string;
 }) {
   const [active, setActive] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
+  /* The <video> element does not exist until this is true. See below. */
+  const [playing, setPlaying] = useState(false);
 
-  if (images.length === 0) {
+  /* The video is the LAST slide on purpose: the first slide stays a
+     photograph, so the LCP element, the OG image and the JSON-LD image are
+     what they were. */
+  const videoIndex = images.length;
+  const videoActive = video != null && active === videoIndex;
+
+  // Leaving the slide tears the player down, so going back shows the poster
+  // again rather than a paused frame with sound that already ran.
+  useEffect(() => {
+    if (!videoActive && playing) setPlaying(false);
+  }, [videoActive, playing]);
+
+  if (images.length === 0 && video == null) {
     return <PlaceholderImage category={category} alt={alt} ratio={ratio} radius={radius} />;
   }
 
+  /* Dialog-only: the lightbox pages through photographs, never the video. */
   const go = (delta: number) =>
     setActive((i) => (i + delta + images.length) % images.length);
 
   return (
     <div>
+      {videoActive && video ? (
+        /*
+          The clip follows components/HeroVideo.tsx's rule — no video URL in the
+          server-rendered HTML — but by a simpler route: the <video> element is
+          not rendered at all until `playing`, so nothing to fetch exists until
+          the visitor presses play. A `preload="none"` <video> would still ship
+          the URL in the markup and still let a browser open a connection.
+
+          Unlike the hero, this is NOT a muted autoplay loop: the footage has
+          sound. It plays on an explicit press, with real controls, and the
+          visitor can mute or scrub. Autoplaying audio on a product page is its
+          own conversion bug.
+
+          `object-cover`, like every other slide. The clip is 720x1280 vertical
+          and the stage is square, so `contain` letterboxed it into roughly half
+          dark bars on the page's primary image area; cover keeps the middle
+          square, which is where the open box and the pouches are. The backdrop
+          stays dark for the moment between the poster and the first frame.
+        */
+        <div
+          className="relative w-full overflow-hidden bg-inverse"
+          style={{ aspectRatio: ratio, borderRadius: radius }}
+        >
+          {playing ? (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video
+              src={video.src}
+              poster={video.poster}
+              controls
+              autoPlay
+              playsInline
+              preload="none"
+              aria-label={video.label}
+              className="absolute inset-0 size-full object-cover"
+            />
+          ) : (
+            <>
+              <Image
+                src={video.poster}
+                alt=""
+                fill
+                sizes={sizes}
+                className="object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => setPlaying(true)}
+                aria-label={`Відтворити відео: ${video.label}`}
+                className="absolute inset-0 grid place-items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              >
+                <span className="grid size-16 place-items-center rounded-full bg-inverse/55 text-inverse-foreground backdrop-blur-sm transition hover:bg-inverse/70 active:bg-inverse/80">
+                  <Play className="size-7 translate-x-0.5" strokeWidth={1.7} fill="currentColor" />
+                </span>
+              </button>
+              <span className="pointer-events-none absolute bottom-3 left-3 right-3 truncate rounded-full bg-inverse/60 px-3 py-1 text-xs text-inverse-foreground backdrop-blur-sm">
+                {video.label}
+              </span>
+            </>
+          )}
+        </div>
+      ) : (
       <button
         type="button"
         onClick={() => setZoomOpen(true)}
@@ -64,12 +144,26 @@ export function ProductGallery({
           is the button, so this was only ever an affordance — but an affordance
           nobody sees is not one (design-mobile §6).
         */}
-        <span className="absolute bottom-3 right-3 flex items-center justify-center size-9 rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm transition opacity-100 pointer-fine:opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+        {/*
+          `text-inverse-foreground`, never `text-primary-foreground`. These
+          chips sit on `bg-inverse/NN` over a photograph, and
+          `--primary-foreground` is **ink** (neutral-900) in this brand
+          direction — it was drawing dark glyphs on a dark scrim, which is the
+          trap CLAUDE.md names. `--inverse-foreground` is the token paired with
+          `inverse`: near-white, 16.9:1 on it.
+
+          The scrim strengths are measured, not picked: composited over the
+          brightest pixel of a real poster, /45 gave 2.84:1, which fails both
+          the 4.5:1 text bar and the 3:1 non-text one. Text pills are /60
+          (4.5:1 against any pixel in the image) and icon chips /55 (3.8:1).
+        */}
+        <span className="absolute bottom-3 right-3 flex items-center justify-center size-9 rounded-full bg-inverse/55 text-inverse-foreground backdrop-blur-sm transition opacity-100 pointer-fine:opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
           <ZoomIn className="size-5" strokeWidth={1.7} />
         </span>
       </button>
+      )}
 
-      {images.length > 1 ? (
+      {images.length + (video ? 1 : 0) > 1 ? (
         <div className="flex gap-2 mt-2.5 overflow-x-auto">
           {images.map((src, i) => (
             <button
@@ -87,6 +181,29 @@ export function ProductGallery({
               <Image src={src} alt="" fill sizes="64px" className="object-cover" />
             </button>
           ))}
+
+          {/* The clip's own thumbnail, marked with a play badge so the strip
+              says there is a video without anyone having to press it. */}
+          {video ? (
+            <button
+              type="button"
+              onClick={() => setActive(videoIndex)}
+              aria-pressed={videoActive}
+              aria-label={`Відео: ${video.label}`}
+              className={`relative shrink-0 size-16 overflow-hidden rounded-xl bg-inverse transition ${
+                videoActive
+                  ? 'ring-2 ring-ring ring-offset-0'
+                  : 'border border-border opacity-75 hover:opacity-100 active:opacity-100'
+              }`}
+            >
+              <Image src={video.poster} alt="" fill sizes="64px" className="object-cover" />
+              <span className="absolute inset-0 grid place-items-center">
+                <span className="grid size-7 place-items-center rounded-full bg-inverse/60 text-inverse-foreground backdrop-blur-sm">
+                  <Play className="size-3.5 translate-x-px" strokeWidth={2} fill="currentColor" />
+                </span>
+              </span>
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -116,7 +233,7 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(-1)}
                   aria-label="Попереднє фото"
-                  className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm transition hover:bg-inverse/60 active:bg-inverse/70"
+                  className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-inverse/55 text-inverse-foreground backdrop-blur-sm transition hover:bg-inverse/70 active:bg-inverse/80"
                 >
                   <ChevronLeft className="size-5" strokeWidth={1.7} />
                 </button>
@@ -124,11 +241,11 @@ export function ProductGallery({
                   type="button"
                   onClick={() => go(1)}
                   aria-label="Наступне фото"
-                  className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-inverse/45 text-primary-foreground backdrop-blur-sm transition hover:bg-inverse/60 active:bg-inverse/70"
+                  className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-inverse/55 text-inverse-foreground backdrop-blur-sm transition hover:bg-inverse/70 active:bg-inverse/80"
                 >
                   <ChevronRight className="size-5" strokeWidth={1.7} />
                 </button>
-                <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-inverse/45 px-3 py-1 text-xs tracking-wide text-primary-foreground backdrop-blur-sm">
+                <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-inverse/60 px-3 py-1 text-xs tracking-wide text-inverse-foreground backdrop-blur-sm">
                   {active + 1} / {images.length}
                 </div>
               </>

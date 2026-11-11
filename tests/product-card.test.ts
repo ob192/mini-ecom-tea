@@ -81,3 +81,29 @@ describe('what the card can show', () => {
     }
   });
 });
+
+/*
+  Cards in a row end on one line.
+
+  The card is a flex column: the middle section is `flex-1` and the price sits
+  on `mt-auto`, which is only able to push anything down if the card itself
+  fills its cell. It did not. In `ProductRail` the flex scroller stretches the
+  wrapper to the tallest card in the row while the `<article>` inside keeps its
+  content height — measured at 1440 on the home rail: wrappers all 442px,
+  articles 442 / 414 / 414 / 410 / 414, prices on three different lines. A card
+  whose chip row wrapped onto a second line simply grew.
+
+  `h-full` is the whole fix, and it fixes the rail and the catalogue grid
+  together, so it is asserted on the card rather than on either container.
+*/
+describe('cards fill their cell', () => {
+  it('the article is h-full', () => {
+    expect(card).toMatch(/<article className="flex h-full flex-col/);
+  });
+
+  it('and still distributes the slack the way the layout expects', () => {
+    // Without all three of these, h-full alone changes nothing visible.
+    expect(card).toMatch(/className="flex flex-1 flex-col/);
+    expect(card).toMatch(/className="mt-auto flex flex-wrap items-baseline/);
+  });
+});

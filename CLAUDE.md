@@ -53,6 +53,14 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
 - The fixed category list (order + Ukrainian labels) lives in `CATEGORY_ORDER` in `lib/products.ts`, and the allowed slugs are separately typed as `CategorySlug` in `lib/types.ts`. Adding a category means updating both, plus a `CAT_TONE` entry for the placeholder gradient. Teas are `puer`/`green`/`oolong`/`red`/`white`; the rest of the catalogue is `set`, `gaiwan`, `teapot`, `piala`, `accessory`, `figurine`.
 - Products can have a single `price`/`weight`, or a `priceTiers: {weight, price}[]` list (e.g. 25 г / 50 г / 100 г options). `priceFor(product, weight)` resolves the price for a chosen tier; with tiers present, only exact weight matches resolve — everything else is `null` ("unavailable").
 - `inStock` is derived (`price != null`), not an authored field.
+- A product **video** is a separate `video: {src, poster, label}` field, never an
+  entry in `files`. `files` is the photo list — it becomes `images`, `image`, the
+  OG and JSON-LD image and `g:image_link` in the Merchant Center feed, so a .mp4
+  in it would be handed to `next/image` and could become the feed's image link,
+  which Google rejects: a silent way to drop a product out of Shopping. Filenames
+  are bare, like `files`, and `lib/products.ts` resolves them to `/<slug>/<file>`.
+  `tests/product-video.test.ts` holds that line, including that the feed and
+  `components/JsonLd.tsx` never read `.video`.
 - `description` is **newline-separated**: one line per source paragraph or bullet (bullets start with `• `). Render it with `descriptionParagraphs()` from `lib/format.ts`; anything that needs one line (meta description, JSON-LD) uses `flattenDescription()`. `parse_docx.py` trims it to ~1100 characters on paragraph boundaries, so the copy never ends mid-thought.
 - Each product's images live under `public/<slug>/` (e.g. `public/green/longjing-cha/1.jpg`); `files: string[]` in the JSON lists filenames, and `lib/products.ts` resolves them to `/​<slug>/<file>` public paths.
 - `images/` at the repo root (untracked) holds the ingestion tooling (`parse_docx.py`, `reorg.sh`) used to turn supplier `.docx` product sheets + photos into `public/products.json` entries and `public/<slug>/` image folders. It's not part of the running app. To add a product: drop the supplier folder in `images/`, register it with `add <slug> <folder> <fallback title> [title override]` in `reorg.sh` (plus `sub <slug> <subtitle>` when the parsed subtitle is a bare section heading), run `bash images/reorg.sh`, then copy `images/.new/*` into `public/`. Regenerating rewrites the **whole** catalogue, so diff `images/.new/products.json` against `public/products.json` before copying.
@@ -223,6 +231,23 @@ is no longer upstream of anything.
   `public/video/` (720p for phones, 1080p above 768px, VP9 first with an H.264 twin);
   the 4K master is in `/media`, which is gitignored, because anything under `public/`
   ships to every deploy and is fetchable. The ffmpeg commands are in the component.
+- **A product-page clip is the opposite case: sound, and only on a press.**
+  `set/start-mini-7` carries a 13 s unboxing clip as the last gallery slide
+  (`components/ProductGallery.tsx`). It keeps the hero's rule — nothing is
+  fetched until the visitor asks — but by a simpler route: the `<video>` element
+  is not rendered at all until `playing`, so there is nothing to fetch. A
+  `preload="none"` element would still ship the URL and still let a browser open
+  a connection. It is **not** a muted autoplay loop: the footage has audio, so it
+  plays on an explicit press, with real controls, and the visitor can mute it.
+  Autoplaying sound on a product page is its own conversion bug. The clip is the
+  **last** slide so the first is still a photograph — the LCP element, the OG
+  image and the JSON-LD image all come off `images[0]`.
+  Renditions: H.264 only (`h264_nvenc`, cq 32, 720x1280, ~1.8 MB), with the
+  poster taken from the encoded file so it is genuinely frame 0. No VP9 twin
+  here — measured at matching quality it came out *larger* than the H.264, and
+  11% smaller only at visibly worse quality, which does not buy a second file
+  for a clip that downloads on a click. Masters stay in `telegram_media/`, which
+  is gitignored.
 - **`<Header back>` needs a `backHref`.** «Назад» is a real link to the page's parent,
   not `router.back()`: history-back dead-ended on any direct landing (a pasted URL, a new
   tab, an ad or search result pointing at a product) and, when there *was* a previous

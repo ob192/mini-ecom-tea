@@ -710,7 +710,12 @@
     "priceTiers": [],
     "files": [
       "1.jpg"
-    ]
+    ],
+    "video": {
+      "src": "unboxing-720.mp4",
+      "poster": "unboxing-poster.jpg",
+      "label": "Як набір приїжджає — 13 секунд"
+    }
   },
   {
     "slug": "set/travel-mountains-3in1",

@@ -66,7 +66,18 @@ export function ProductCard({
   const handleSelect = () => trackSelectItem(product, listId, listName, index);
 
   return (
-    <article className="flex flex-col gap-3 rounded-xl bg-card p-3">
+    /*
+      `h-full` is what puts the price and the button of every card in a row on
+      one line. The card is a flex column whose middle section is `flex-1` with
+      the price on `mt-auto`, which only has slack to distribute if the card
+      itself fills its cell — and it does not by default: in `ProductRail` the
+      flex scroller stretches the *wrapper* to the tallest card in the row while
+      the `<article>` inside keeps its own content height. Measured at 1440 on
+      the home rail before this: wrappers all 442px, articles 442 / 414 / 414 /
+      410 / 414, and the buttons landing at three different heights. A card with
+      four weight chips wraps the chip row onto a second line and simply grew.
+    */
+    <article className="flex h-full flex-col gap-3 rounded-xl bg-card p-3">
       <Link
         href={`/product/${product.slug}`}
         aria-label={product.title}
