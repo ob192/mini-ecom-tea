@@ -173,14 +173,24 @@ export function ProductCard({
         </p>
       </div>
 
+      {/*
+        Teaware, figurines and the sets have no weight: `defaultWeight` falls
+        through to `product.weight ?? 0` and this label announced «Додати
+        Гайвань бамбук 150 мл, 0 г, в кошик» on 27 of the 44 products — a
+        measurement nobody can act on, read out on every card a screen-reader
+        user passes. The price line above already guards the same value; the
+        button simply did not. With no weight to name, the name is the title.
+      */}
       <Button
         className="w-full"
         onClick={handleAdd}
         disabled={!product.inStock}
         aria-label={
-          product.inStock
-            ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
-            : `${product.title} — немає в наявності`
+          !product.inStock
+            ? `${product.title} — немає в наявності`
+            : weight
+              ? `Додати ${product.title}, ${weight} ${UNIT}, в кошик`
+              : `Додати ${product.title} в кошик`
         }
       >
         {added ? <Check /> : null}

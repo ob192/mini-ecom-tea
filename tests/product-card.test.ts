@@ -107,3 +107,41 @@ describe('cards fill their cell', () => {
     expect(card).toMatch(/className="mt-auto flex flex-wrap items-baseline/);
   });
 });
+
+/*
+  The add button's accessible name must not invent a weight.
+
+  `defaultWeight` ends in `product.weight ?? 0`, so every product without
+  tiers and without a weight — all the teaware, the figurines and both sets,
+  27 of 44 — resolved to 0, and the button announced «Додати Гайвань бамбук
+  150 мл, 0 г, в кошик». The visible price line beside it had always guarded
+  the same value with `{weight ? … : null}`; only the label went unguarded,
+  so nothing on screen ever showed the fault.
+*/
+describe('the add button says what it will add', () => {
+  it('names a weight only when there is one', () => {
+    expect(card).toMatch(/: weight\s*\n?\s*\? `Додати \$\{product\.title\}, \$\{weight\} \$\{UNIT\}, в кошик`/);
+    expect(card).toMatch(/: `Додати \$\{product\.title\} в кошик`/);
+  });
+
+  it('never interpolates the weight unconditionally', () => {
+    // The shape this replaced. Any label that reaches `${weight}` without a
+    // truthiness check in front of it is the bug coming back.
+    expect(card).not.toMatch(
+      /product\.inStock\s*\n?\s*\? `Додати \$\{product\.title\}, \$\{weight\}/,
+    );
+  });
+
+  it('still says so when the product is gone', () => {
+    expect(card).toMatch(/`\$\{product\.title\} — немає в наявності`/);
+  });
+
+  it('and the catalogue really does hold products with no weight', () => {
+    // If this ever becomes empty the guard above is dead code, and the test
+    // above it is pinning a branch nothing takes.
+    const weightless = products.filter(
+      (p) => p.inStock && p.priceTiers.length === 0 && defaultWeight(p) === 0,
+    );
+    expect(weightless.length, 'no weightless product left to guard').toBeGreaterThan(0);
+  });
+});
