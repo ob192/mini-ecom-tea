@@ -709,7 +709,8 @@
     "weight": null,
     "priceTiers": [],
     "files": [
-      "1.jpg"
+      "1.jpg",
+      "2.jpg"
     ],
     "video": {
       "src": "unboxing-720.mp4",
