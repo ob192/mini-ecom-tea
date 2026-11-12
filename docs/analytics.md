@@ -151,9 +151,21 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
 
 ## Meta pixel / Conversions API
 
-Pixel (dataset) `1480203177363951` — "JinTea", business `757878937371527`
-(Oleksandr Bunin FOP). Connected **2026-10-19** from Events Manager's GTM
-integration, which published **container version 9** by itself.
+Dataset `1842523230500897`, business `757878937371527` (Oleksandr Bunin FOP).
+
+> **The dataset moved on 2026-11-10.** `META_PIXEL_ID` in Vercel (production and
+> preview) now points at `1842523230500897` and the CAPI access token was
+> rotated with it, so the server-side `Purchase` goes to the new dataset.
+> **The GTM container was not checked at the time.** Everything below this line
+> describes the setup as it was built on `1480203177363951`: where it names that
+> dataset it is a record of what happened on those dates, not current
+> configuration. Before trusting any Meta number, confirm which dataset tag 39
+> fires into — if it is still the old one, the browser events and the server
+> `Purchase` are in two different datasets and neither tells the whole story.
+
+The original dataset `1480203177363951` — "JinTea" — was connected
+**2026-10-19** from Events Manager's GTM integration, which published
+**container version 9** by itself.
 
 ### Where it lives: GTM, not this repo
 

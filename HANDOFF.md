@@ -16,7 +16,11 @@ Google fetches is the fixed one.
 
 **Meta is fully wired as of 2026-10-20** — pixel `1480203177363951`, GTM container
 version 10, and a server-side `Purchase`. Confirmed end to end against Meta's own stats;
-see "Meta pixel" below.
+see "Meta pixel" below. **Superseded on 2026-11-10:** `META_PIXEL_ID` was moved to
+dataset `1842523230500897` and the CAPI token rotated. The GTM container was not
+checked at the time, so the browser half may still be on the old dataset — verify
+tag 39 before reading any Meta report. The id in this section and the next is the
+record of the 2026-10 setup, not the current one.
 
 **The shop still has no real orders.** That has not changed since 2026-09-07 and is the
 only thing that matters. On 2026-10-20, a full day with the pixel live, Meta recorded
