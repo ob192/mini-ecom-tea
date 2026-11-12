@@ -103,7 +103,7 @@ export function PlaygroundInteractive() {
           </Accordion>
           <Accordion title="Доставка і оплата">
             <p className="text-base text-muted-foreground text-pretty">
-              Новою поштою по Україні. Від 500 ₴ — безкоштовно, нижче — 100 ₴. Оплата при отриманні.
+              Новою поштою по Україні. Від 2000 ₴ — безкоштовно, нижче — 100 ₴. Оплата при отриманні.
             </p>
           </Accordion>
         </div>

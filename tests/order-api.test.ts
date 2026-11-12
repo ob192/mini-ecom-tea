@@ -13,7 +13,7 @@ const item = products.find((p) => p.priceTiers.length > 0)!;
 const itemWeight = item.priceTiers[0].weight;
 const itemPrice = priceFor(item, itemWeight)!;
 
-const FREE_DELIVERY_THRESHOLD = 500;
+const FREE_DELIVERY_THRESHOLD = 2000;
 const DELIVERY_FEE = 100;
 
 /** A submission that should always be accepted. */

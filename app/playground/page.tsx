@@ -225,7 +225,7 @@ export default function PlaygroundReference() {
           <TypeRow step="text-xl" role="Заголовок картки, заголовок діалогу" sample="Шу пуер Цзінмай Цяому" />
           <TypeRow step="text-lg" role="Назва пункту, підсумок акордеона" sample="Приготування" />
           <TypeRow step="text-base" role="Основний текст і ліди" sample="Сім сортів по 10 г, разом 70 г — дві повні церемонії з кожного." />
-          <TypeRow step="text-sm" role="Мета: підписи, підказки, підписи кнопок" sample="Безкоштовна доставка від 500 ₴" />
+          <TypeRow step="text-sm" role="Мета: підписи, підказки, підписи кнопок" sample="Безкоштовна доставка від 2000 ₴" />
           <TypeRow step="text-xs" role="Мітки: бейджі, надрядкові мітки, юридичні рядки" sample="Пуер · Шу · № 12" />
         </div>
 
@@ -517,7 +517,7 @@ export default function PlaygroundReference() {
             <p className="text-sm">
               Доставка{' '}
               <span className="font-semibold text-primary-subtle-foreground">безкоштовна</span> від
-              500 ₴
+              2000 ₴
             </p>
           </div>
         </DoDont>
@@ -527,7 +527,7 @@ export default function PlaygroundReference() {
         >
           <div className="flex flex-col gap-3">
             <p className="text-sm">
-              Доставка <span className="font-semibold text-primary">безкоштовна</span> від 500 ₴
+              Доставка <span className="font-semibold text-primary">безкоштовна</span> від 2000 ₴
             </p>
             <p className="text-sm">
               <span className="text-primary underline underline-offset-4">Умови доставки</span>
@@ -584,7 +584,7 @@ export default function PlaygroundReference() {
               <p className="text-2xl font-semibold tabular-nums">570 ₴</p>
               <Button className="w-full">Додати в кошик</Button>
               <InfoRows>
-                <InfoRow icon={<Truck />}>Безкоштовна доставка від 500 ₴</InfoRow>
+                <InfoRow icon={<Truck />}>Безкоштовна доставка від 2000 ₴</InfoRow>
                 <InfoRow icon={<Check />}>Оплата при отриманні</InfoRow>
               </InfoRows>
               <Accordion title="Що всередині">

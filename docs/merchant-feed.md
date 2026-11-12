@@ -109,7 +109,7 @@ settings. Registered as `en` while the copy is Ukrainian, Google reads the shop
 as English-language and matches the ads to the wrong queries.
 
 **Shipping.** `g:shipping` quotes what an order containing only that item would
-actually cost: `0.00 UAH` at or above the 500 ₴ free-delivery threshold, else
+actually cost: `0.00 UAH` at or above the 2000 ₴ free-delivery threshold, else
 `100.00 UAH`. `FREE_DELIVERY_THRESHOLD` / `DELIVERY_FEE` come from
 `lib/shipping.ts`, which `context/CartContext.tsx` and `app/api/order/route.ts`
 also import, so the feed, the cart and the authoritative server-side total can

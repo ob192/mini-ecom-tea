@@ -237,7 +237,7 @@ describe('categories and shipping', () => {
   it('charges delivery only below the free-delivery threshold', () => {
     for (const item of items) {
       const price = Number.parseFloat(item.price);
-      expect(item.shippingPrice, item.id).toBe(price >= 500 ? '0.00 UAH' : '100.00 UAH');
+      expect(item.shippingPrice, item.id).toBe(price >= 2000 ? '0.00 UAH' : '100.00 UAH');
     }
   });
 });

@@ -10,11 +10,11 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Оплата і доставка',
   description:
-    'Доставка чаю по всій Україні Новою Поштою — 100 грн, безкоштовно від 500 грн. Оплата накладеним платежем при отриманні. Доставка до 3 днів.',
+    'Доставка чаю по всій Україні Новою Поштою — 100 грн, безкоштовно від 2000 грн. Оплата накладеним платежем при отриманні. Доставка до 3 днів.',
   alternates: { canonical: '/delivery' },
 };
 
-// 100 / 500 mirror DELIVERY_FEE and FREE_DELIVERY_THRESHOLD in
+// 100 / 2000 mirror DELIVERY_FEE and FREE_DELIVERY_THRESHOLD in
 // context/CartContext.tsx, app/api/order/route.ts and lib/merchant-feed.ts.
 // Merchant Center compares the feed's g:shipping against what this page says,
 // so the prose and the constants move together.
@@ -22,12 +22,12 @@ const delivery = [
   {
     icon: Truck,
     title: 'Відділення або поштомат Нової Пошти',
-    text: 'Доставляємо у будь-яке відділення чи поштомат по всій Україні. Вартість доставки — 100 грн, безкоштовно при замовленні від 500 грн.',
+    text: 'Доставляємо у будь-яке відділення чи поштомат по всій Україні. Вартість доставки — 100 грн, безкоштовно при замовленні від 2000 грн.',
   },
   {
     icon: Package,
     title: 'Адресна доставка кур’єром',
-    text: 'Нова Пошта може привезти замовлення просто до дверей. Вартість така сама — 100 грн, безкоштовно від 500 грн.',
+    text: 'Нова Пошта може привезти замовлення просто до дверей. Вартість така сама — 100 грн, безкоштовно від 2000 грн.',
   },
   {
     icon: Clock,

@@ -31,7 +31,7 @@ function FreeDeliveryBar() {
         <span className="flex shrink-0 text-muted-foreground" aria-hidden>
           <Truck className="size-4" />
         </span>
-        Безкоштовна доставка від 500 ₴ по Україні
+        Безкоштовна доставка від 2000 ₴ по Україні
       </p>
     </div>
   );

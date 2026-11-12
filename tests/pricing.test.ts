@@ -129,15 +129,15 @@ describe('shipping terms are single-sourced', () => {
   // feed, and are written out as prose on /delivery and in the catalogue
   // banner. Merchant Center compares the feed against the page, so a half-done
   // change is a disapproval — lib/shipping.ts is now the one place they live.
-  it('quotes 100 UAH, free from 500 UAH', () => {
-    expect(FREE_DELIVERY_THRESHOLD).toBe(500);
+  it('quotes 100 UAH, free from 2000 UAH', () => {
+    expect(FREE_DELIVERY_THRESHOLD).toBe(2000);
     expect(DELIVERY_FEE).toBe(100);
   });
 
   it('charges delivery below the threshold and nothing at or above it', () => {
-    expect(deliveryFeeFor(499)).toBe(DELIVERY_FEE);
+    expect(deliveryFeeFor(1999)).toBe(DELIVERY_FEE);
     expect(deliveryFeeFor(FREE_DELIVERY_THRESHOLD)).toBe(0);
-    expect(deliveryFeeFor(1200)).toBe(0);
+    expect(deliveryFeeFor(2500)).toBe(0);
   });
 
   it('agrees with the feed shipping the Merchant Center feed publishes', () => {

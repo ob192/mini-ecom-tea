@@ -16,7 +16,7 @@
  */
 
 /** Order subtotal (UAH) at or above which delivery is free. */
-export const FREE_DELIVERY_THRESHOLD = 500;
+export const FREE_DELIVERY_THRESHOLD = 2000;
 
 /** Flat delivery charge (UAH) below the threshold. */
 export const DELIVERY_FEE = 100;
