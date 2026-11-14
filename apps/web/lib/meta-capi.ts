@@ -135,7 +135,7 @@ export async function sendMetaPurchase(
   // (GA4_MP_DEBUG is "0" in production), and a truthiness check would read that
   // as a live test code — which routes every Purchase to the Test Events tab,
   // where it is validated and never recorded. That is the silent-revenue-loss
-  // failure HANDOFF.md warns about for GA4_MP_DEBUG; same trap, same shape.
+  // failure docs/HANDOFF.md warns about for GA4_MP_DEBUG; same trap, same shape.
   const testCode = (process.env.META_CAPI_TEST_EVENT_CODE ?? '').trim();
   const testEventCode = testCode && testCode !== '0' ? testCode : null;
 

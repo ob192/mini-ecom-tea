@@ -9,9 +9,9 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 
-const ROOT = resolve(import.meta.dirname, "../..");
+const ROOT = resolve(import.meta.dirname, "../../apps/web");
 const CSS = join(ROOT, "app/globals.css");
-// This repo is root-level App Router: no `src/`, UI lives in app/, components/ and context/.
+// The app lives in apps/web (no `src/`); UI is in its app/, components/ and context/. Paths below are relative to it.
 const UI_ROOTS = ["app", "components", "context"];
 // Code that is not held to the rules yet.
 const LEGACY = [];

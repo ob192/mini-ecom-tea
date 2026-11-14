@@ -34,8 +34,8 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
-OUT="$REPO/public/set/start-mini-7/1.jpg"
-BAND="$REPO/public/set/start-mini-7/2.jpg"   # the original photograph
+OUT="$REPO/apps/web/public/set/start-mini-7/1.jpg"
+BAND="$REPO/apps/web/public/set/start-mini-7/2.jpg"   # the original photograph
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
@@ -60,7 +60,7 @@ i=0
 for spec in "${TILES[@]}"; do
   i=$((i + 1))
   slug="${spec%%:*}"
-  src="$REPO/public/${slug}/1.jpg"
+  src="$REPO/apps/web/public/${slug}/1.jpg"
   [ -f "$src" ] || { echo "missing tile source: $src" >&2; exit 1; }
   convert "$src" -auto-orient -gravity center \
     -resize "${TILE}^" -extent "$TILE" \

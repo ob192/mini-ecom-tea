@@ -12,8 +12,8 @@
     "audio": false
   },
   "_frameImages": [
-    { "image": "../../media/hero-motion/gen/still-ref2.jpg", "frame": "first" },
-    { "image": "../../media/hero-motion/gen/still-ref2.jpg", "frame": "last" }
+    { "image": "../../assets/media/hero-motion/gen/still-ref2.jpg", "frame": "first" },
+    { "image": "../../assets/media/hero-motion/gen/still-ref2.jpg", "frame": "last" }
   ],
   "positivePrompt": "One continuous, unbroken, silent overhead shot of this tea table. The camera moves very slowly and smoothly: it drifts a little to the right and sinks closer to the cups over the first half of the shot, then eases back along the same path and settles in exactly its starting position by the end, so the final frame matches the opening frame precisely. Throughout, thin ribbons of steam rise from the seven cups and curl away; the surface of each tea shimmers and ripples faintly; the warm light shifts a fraction across the carved wood and the glossy foil pouches. The arrangement itself never changes: the same seven cups hold the same seven liquor colours from pale jade green through gold, amber and copper to near black, in the same order and the same places, and the white porcelain dish of dry leaves stays where it is. Nothing is poured, nothing is added, nothing is taken away, no cup moves or tips, no liquid spills, and no hand, arm or person ever enters the frame. Photographic, cinematic, shallow depth of field, low warm directional light, deep shadows. Steady and calm, no cuts, no camera shake, no zoom snap, no text or graphics of any kind."
 }

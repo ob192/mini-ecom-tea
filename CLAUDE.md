@@ -4,14 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-> `HANDOFF.md` carries the current session-to-session state: what is committed but not
+> `docs/HANDOFF.md` carries the current session-to-session state: what is committed but not
 > yet deployed, what only a human can do in the Google consoles, and decisions that were
 > reverted once and should not be reverted again. Check its date — the live-state facts
 > in it go stale; this file does not.
 
 jintea.restreto-labs.com — a mobile-first, SEO-optimized Ukrainian leaf-tea storefront. Next.js 15 (App Router) + TypeScript + Tailwind. No database, no online payment: orders are validated and priced server-side, then pushed to a Telegram chat via the Bot API; the customer pays on delivery. All UI copy is Ukrainian.
 
+## Repository layout
+
+```
+apps/web/      the Next.js storefront — the only thing Vercel builds (Root Directory = apps/web)
+               app/ components/ context/ lib/ public/ tests/, its configs, DESIGN.md, .env*
+docs/          HANDOFF.md, analytics.md, merchant-feed.md
+tools/         catalogue/, catalogue-ingest/, hero-motion/, hyperframes/, runware/
+assets/        gitignored: supplier/ (supplier .docx + photos), media/ (video masters, ads),
+               telegram/ (raw phone HEIC/MOV), creatives/ (ad work in progress)
+credentials/   gitignored: google_console_service_account.json
+.claude/       rules, skills, the design linter
+```
+
+**Every app path in this file (`app/…`, `components/…`, `lib/…`, `public/…`, `tests/…`,
+`DESIGN.md`) is relative to `apps/web/`.** Repo-level paths are spelled out from the root.
+The root `package.json` only forwards scripts to `apps/web`; dependencies, lockfiles and
+`node_modules` live there.
+
 ## Commands
+
+Run from the repo root (forwarded) or from `apps/web/`. `test:watch` is `apps/web` only.
 
 ```bash
 npm run dev        # dev server (http://localhost:3000)
@@ -63,8 +83,8 @@ This is the single source of truth for the catalog. `lib/products.ts` reads it a
   `components/JsonLd.tsx` never read `.video`.
 - `description` is **newline-separated**: one line per source paragraph or bullet (bullets start with `• `). Render it with `descriptionParagraphs()` from `lib/format.ts`; anything that needs one line (meta description, JSON-LD) uses `flattenDescription()`. `parse_docx.py` trims it to ~1100 characters on paragraph boundaries, so the copy never ends mid-thought.
 - Each product's images live under `public/<slug>/` (e.g. `public/green/longjing-cha/1.jpg`); `files: string[]` in the JSON lists filenames, and `lib/products.ts` resolves them to `/​<slug>/<file>` public paths.
-- `images/` at the repo root (untracked) holds the ingestion tooling (`parse_docx.py`, `reorg.sh`) used to turn supplier `.docx` product sheets + photos into `public/products.json` entries and `public/<slug>/` image folders. It's not part of the running app. To add a product: drop the supplier folder in `images/`, register it with `add <slug> <folder> <fallback title> [title override]` in `reorg.sh` (plus `sub <slug> <subtitle>` when the parsed subtitle is a bare section heading), run `bash images/reorg.sh`, then copy `images/.new/*` into `public/`. Regenerating rewrites the **whole** catalogue, so diff `images/.new/products.json` against `public/products.json` before copying.
-- **`description` and `subtitle` are hand-written and no longer come from the parser.** Every description was rewritten to be short and factual — origin, cultivar, processing, tasting notes, materials — instead of the parser's long philosophical copy, which also arrived with commas stripped and "китійський" misspelled throughout. A full regeneration will hand back the original supplier prose and silently undo all 44. When regenerating, take the new products/images from `images/.new/` but keep the existing `description` and `subtitle` for products that already have one.
+- The ingestion tooling (`tools/catalogue-ingest/parse_docx.py`, `reorg.sh`) turns supplier `.docx` product sheets + photos in `assets/supplier/` (untracked) into `public/products.json` entries and `public/<slug>/` image folders. It's not part of the running app. To add a product: drop the supplier folder in `assets/supplier/`, register it with `add <slug> <folder> <fallback title> [title override]` in `reorg.sh` (plus `sub <slug> <subtitle>` when the parsed subtitle is a bare section heading), run `bash tools/catalogue-ingest/reorg.sh`, then copy `assets/supplier/.new/*` into `apps/web/public/`. Regenerating rewrites the **whole** catalogue, so diff `assets/supplier/.new/products.json` against `apps/web/public/products.json` before copying.
+- **`description` and `subtitle` are hand-written and no longer come from the parser.** Every description was rewritten to be short and factual — origin, cultivar, processing, tasting notes, materials — instead of the parser's long philosophical copy, which also arrived with commas stripped and "китійський" misspelled throughout. A full regeneration will hand back the original supplier prose and silently undo all 44. When regenerating, take the new products/images from `assets/supplier/.new/` but keep the existing `description` and `subtitle` for products that already have one.
 
 ## Routing
 
@@ -182,7 +202,7 @@ statically prerendered RSS 2.0 feed. Full reference: `docs/merchant-feed.md`.
 
 ## UI / design system
 
-**`DESIGN.md` at the root is the reference — read it before restyling anything.**
+**`apps/web/DESIGN.md` is the reference — read it before restyling anything.**
 The Pencil export is gone: `design/`, `tailwind.config.ts`, `app/styles/*` and
 `tests/design-tokens.test.ts` were deleted with the rebuild, and the `.pen` file
 is no longer upstream of anything.
@@ -192,7 +212,7 @@ is no longer upstream of anything.
   (semantic roles as palette references), `@theme inline` (the roles turned into
   utilities). There is no `tailwind.config.*` — v4 reads the CSS. Adding or
   changing a token goes through the `design-system` skill and through all three
-  layers in one edit, and `node .claude/skills/design-system/scripts/audit.mjs .`
+  layers in one edit, and `node .claude/skills/design-system/scripts/audit.mjs apps/web`
   has to come back clean.
 - **The brand is amber** (`honey-*`), chosen by the owner on 2026-11-10 over the
   shop's old tea green and a terracotta; both of those palettes are deleted. It
@@ -229,7 +249,7 @@ is no longer upstream of anything.
   with JS off, or refused autoplay — downloads zero video bytes and still sees a
   finished hero, and the LCP element stays the next/image poster. Renditions live in
   `public/video/` (720p for phones, 1080p above 768px, VP9 first with an H.264 twin);
-  the 4K master is in `/media`, which is gitignored, because anything under `public/`
+  the 4K master is in `assets/media/`, which is gitignored, because anything under `public/`
   ships to every deploy and is fetchable. The ffmpeg commands are in the component.
 - **A product-page clip is the opposite case: sound, and only on a press.**
   `set/start-mini-7` carries a 13 s unboxing clip as the last gallery slide
@@ -246,7 +266,7 @@ is no longer upstream of anything.
   poster taken from the encoded file so it is genuinely frame 0. No VP9 twin
   here — measured at matching quality it came out *larger* than the H.264, and
   11% smaller only at visibly worse quality, which does not buy a second file
-  for a clip that downloads on a click. Masters stay in `telegram_media/`, which
+  for a clip that downloads on a click. Masters stay in `assets/telegram/`, which
   is gitignored.
 - **`<Header back>` needs a `backHref`.** «Назад» is a real link to the page's parent,
   not `router.back()`: history-back dead-ended on any direct landing (a pasted URL, a new
@@ -297,7 +317,7 @@ is no longer upstream of anything.
   landscape and desktop. The shell is full width: the previous design's 1440px
   canvas cap with a deeper band either side is gone.
 - **Mobile is the point.** Over the 90 days to 2026-09-07 the site took zero
-  orders from 93 mobile sessions against 72 paid mobile clicks (`HANDOFF.md` has
+  orders from 93 mobile sessions against 72 paid mobile clicks (`docs/HANDOFF.md` has
   the funnel). 375px is checked first, and `design-mobile`'s measurements at 375
   are what a UI change is judged by.
 - SEO: per-page `generateMetadata`, JSON-LD via `components/JsonLd.tsx` (Product, BreadcrumbList, Organization), `app/sitemap.ts`, `app/robots.ts`.

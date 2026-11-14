@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Turn the shop's raw phone media into the ad's image assets.
 #
-# telegram_media/ is untracked HEIC straight off a phone (see root .gitignore)
+# assets/telegram/ is untracked HEIC straight off a phone (see root .gitignore)
 # and nothing in it may be committed, so this script is the bridge: it reads
 # from there and writes JPEGs into assets/, which is git-ignored too. Re-run it
 # on a fresh checkout before rendering; it is idempotent.
@@ -21,7 +21,7 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
-RAW="$REPO/telegram_media"
+RAW="$REPO/assets/telegram"
 OUT="$HERE/assets"
 
 command -v convert >/dev/null || { echo "ImageMagick 'convert' is required" >&2; exit 1; }

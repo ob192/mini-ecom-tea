@@ -319,7 +319,7 @@ Across all of 2026-10-20 the dataset contains **no** unmapped custom events — 
 
 ## Not needed here
 
-`svc_credentials/google_console_service_account.json` (`jinteat@jintea.iam.gserviceaccount.com`)
+`credentials/google_console_service_account.json` (`jinteat@jintea.iam.gserviceaccount.com`)
 is a Google Cloud service account — Search Console / Admin API territory. GA4
 Measurement Protocol authenticates with the API secret, and GTM/GA4 client tagging needs
 no credentials at all, so nothing in this setup uses it. It is now gitignored.

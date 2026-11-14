@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Rebuild the reference crops the hero still is generated from.
 #
-# hero-still.json points at media/hero-motion/ref/, which is git-ignored, and
-# the originals are untracked phone HEIC in telegram_media/ — so without this
+# hero-still.json points at assets/media/hero-motion/ref/, which is git-ignored, and
+# the originals are untracked phone HEIC in assets/telegram/ — so without this
 # script a fresh checkout has the prompt but not the pictures it refers to, and
 # the still comes back looking like generic stock tea instead of this shop's
 # own tray, pouches and porcelain.
@@ -12,8 +12,8 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
-RAW="$REPO/telegram_media"
-OUT="$REPO/media/hero-motion/ref"
+RAW="$REPO/assets/telegram"
+OUT="$REPO/assets/media/hero-motion/ref"
 
 command -v convert >/dev/null || { echo "ImageMagick 'convert' is required" >&2; exit 1; }
 [ -d "$RAW" ] || { echo "missing $RAW (untracked raw phone media)" >&2; exit 1; }

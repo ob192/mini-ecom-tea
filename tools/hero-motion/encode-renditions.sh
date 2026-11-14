@@ -49,7 +49,7 @@ SEAM="${2:-0}"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
-OUT="$REPO/public/video"
+OUT="$REPO/apps/web/public/video"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 

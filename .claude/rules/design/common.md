@@ -9,7 +9,7 @@ The files in this folder are the project's design rules for UI code, one per top
 
 ## Sources, in order
 
-1. **DESIGN.md** (repo root) — the decisions: colour roles, type steps, layout recipe, motion, voice. It wins over a default in these rules; when the two disagree, ask the user which is right (`[conflict]`).
+1. **DESIGN.md** (`apps/web/DESIGN.md`, beside the app) — the decisions: colour roles, type steps, layout recipe, motion, voice. It wins over a default in these rules; when the two disagree, ask the user which is right (`[conflict]`).
 2. **Primitives** in `components/ui`.
 3. **Screens that follow the system**: the page sections and interactive pieces in `components/` (structure: `CLAUDE.md`).
 

@@ -143,7 +143,7 @@ where the merchant issues the part number.
 Tag 18 (`GA4 — Ecommerce`) gained `getEcommerceDataFrom: "dataLayer"`. Built in a fresh
 workspace off live version 7 so the Default Workspace's stray tag-17 pause was not
 shipped; tags 16, 17 and 19 are byte-identical to version 7. Rollback is republishing
-version 7 from the GTM UI. The service account in `svc_credentials/` is an account admin
+version 7 from the GTM UI. The service account in `credentials/` is an account admin
 with `publish` on this container, so this is reachable over the Tag Manager API — that
 also means an accidental publish is one API call away. Treat it accordingly.
 
@@ -255,7 +255,7 @@ Events tab, where Meta validates it and never records it.
 
 ## Credentials
 
-`svc_credentials/google_console_service_account.json` (gitignored) —
+`credentials/google_console_service_account.json` (gitignored) —
 `jinteat@jintea.iam.gserviceaccount.com`, project `jintea`. **Nothing in this stack uses
 it**: GA4 Measurement Protocol authenticates with `GA4_API_SECRET`, GTM/GA4 client tagging
 needs no credentials, and the feed is fetched as a public URL. It would only matter for

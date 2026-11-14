@@ -5,8 +5,8 @@
     ".next",
     "node_modules",
     ".git",
-    "public",
-    "images"
+    "assets",
+    "credentials"
   ],
   "ignore_files": [
     "pnpm-lock.yaml",

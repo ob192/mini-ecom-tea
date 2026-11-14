@@ -79,7 +79,7 @@ const nextConfig = {
         for the Sales_Search campaign and was the landing page for 77 of 85
         paid sessions in the 90 days to 2026-09-07.
 
-        Fix the Ads final URL too (see HANDOFF.md) — a redirect on every paid
+        Fix the Ads final URL too (see docs/HANDOFF.md) — a redirect on every paid
         click is a wasted round trip. This exists for the links already out in
         the world: the ads, whatever Google has indexed, bookmarks.
       */

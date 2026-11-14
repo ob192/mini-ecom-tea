@@ -1,6 +1,6 @@
 # DESIGN.md
 
-The project's design decisions in one file at the project root. The CSS file holds the values; DESIGN.md names the tokens, says what each is for, and records the practice that is not a token. Values are not copied into it: a table of token names and roles stays true when a value changes.
+The project's design decisions in one file at the app root (here `apps/web/`). The CSS file holds the values; DESIGN.md names the tokens, says what each is for, and records the practice that is not a token. Values are not copied into it: a table of token names and roles stays true when a value changes.
 
 Section order follows Google's DESIGN.md (other agent tools read it). Leave a section out when it has nothing to say.
 

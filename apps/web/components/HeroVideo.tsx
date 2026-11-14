@@ -43,12 +43,12 @@ import { cn } from '@/lib/utils';
 
   The master (1280x720, 24fps, 12.0s, no audio — it is decorative, so audio was
   never generated and `muted` is not a compromise) lives in
-  media/hero-motion/gen/, which is git-ignored, because anything under public/
+  assets/media/hero-motion/gen/ at the repo root, which is git-ignored, because anything under public/
   ships to every deploy and is fetchable.
 
   Regenerate the renditions with:
 
-    tools/hero-motion/encode-renditions.sh media/hero-motion/gen/hero-loop-v1.mp4
+    tools/hero-motion/encode-renditions.sh assets/media/hero-motion/gen/hero-loop-v1.mp4
 
   which comes down to these, after a grade pass and a scale_cuda upscale from
   the 720p master (720p is $0.23/s to generate and 1080p is $0.614/s; the hero

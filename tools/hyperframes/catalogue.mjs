@@ -38,7 +38,7 @@ function fail(message) {
 
 /** The raw product entry for the advertised set. */
 export function readSet() {
-  const path = resolve(REPO, 'public/products.json');
+  const path = resolve(REPO, 'apps/web/public/products.json');
   const products = JSON.parse(readFileSync(path, 'utf8'));
   const set = products.find((p) => p.slug === SET_SLUG);
   if (!set) fail(`no product with slug "${SET_SLUG}" in ${path}`);
@@ -66,7 +66,7 @@ export function readTeaNames(set) {
 
 /** Free-delivery threshold, read from the constant the order API enforces. */
 export function readFreeDeliveryThreshold() {
-  const path = resolve(REPO, 'lib/shipping.ts');
+  const path = resolve(REPO, 'apps/web/lib/shipping.ts');
   const source = readFileSync(path, 'utf8');
   const match = source.match(/export const FREE_DELIVERY_THRESHOLD\s*=\s*(\d+)/);
   if (!match) fail(`FREE_DELIVERY_THRESHOLD not found in ${path}`);
@@ -75,7 +75,7 @@ export function readFreeDeliveryThreshold() {
 
 /** The wordmark, read from the constant every page title already uses. */
 export function readBrandName() {
-  const path = resolve(REPO, 'lib/contacts.ts');
+  const path = resolve(REPO, 'apps/web/lib/contacts.ts');
   const source = readFileSync(path, 'utf8');
   const match = source.match(/export const BRAND_NAME\s*=\s*['"]([^'"]+)['"]/);
   if (!match) fail(`BRAND_NAME not found in ${path}`);

@@ -8,9 +8,9 @@ Two deliverables, two pipelines:
 | | what | made with | lands in |
 |---|---|---|---|
 | **A. Hero loop** | the silent 10–12 s loop behind the home hero | Runware (Seedream 5.0 Pro → Seedance 2.5), then ffmpeg on the local GPU | `public/video/` |
-| **B. Ad cuts** | the 9:16 / 4:5 / 1:1 Start-Set ad | HyperFrames, from the shop's own photographs | `media/ads/` |
+| **B. Ad cuts** | the 9:16 / 4:5 / 1:1 Start-Set ad | HyperFrames, from the shop's own photographs | `assets/media/ads/` |
 
-`media/` is git-ignored. The ad cuts are creative to upload, not files the site
+`assets/media/` is git-ignored. The ad cuts are creative to upload, not files the site
 serves — nothing under `public/` should ever hold a master, because everything
 under `public/` ships to every deploy and is fetchable by a visitor.
 
@@ -23,7 +23,7 @@ under `public/` ships to every deploy and is fetchable by a visitor.
 - An NVIDIA GPU for `encode-renditions.sh`. Without one, drop `-hwaccel cuda`,
   swap `scale_cuda` for `scale` and `hevc_nvenc` for `libx265`; nothing else
   changes.
-- `telegram_media/` — the shop's untracked raw phone photos and the unboxing
+- `assets/telegram/` — the shop's untracked raw phone photos and the unboxing
   clip. Both pipelines read from it and neither commits anything out of it.
 - A Runware API key in `../runware/.env` (git-ignored), only for deliverable A.
   **B costs nothing**: it is the shop's own photography and locally rendered
@@ -39,13 +39,13 @@ cd tools/hyperframes && npm install
 
 ```bash
 cd tools/hyperframes
-./prepare-assets.sh          # telegram_media/*.HEIC -> assets/  (idempotent)
-node render.mjs              # all three formats -> media/ads/
+./prepare-assets.sh          # assets/telegram/*.HEIC -> assets/  (idempotent)
+node render.mjs              # all three formats -> assets/media/ads/
 node render.mjs 9x16         # or just one
 node render.mjs --snapshot   # PNG stills instead of video, for a quick look
 ```
 
-Output: `media/ads/jintea-start-set-{9x16,4x5,1x1}.mp4`, 1080 wide, 30 fps,
+Output: `assets/media/ads/jintea-start-set-{9x16,4x5,1x1}.mp4`, 1080 wide, 30 fps,
 ~14.9 s, H.264, about 17 MB each. Deliberately large — Meta re-encodes on
 upload, so the job is to hand it a clean master, not a small file.
 
@@ -118,10 +118,10 @@ printf '[{"taskType":"accountManagement","taskUUID":"'$(uuidgen)'","operation":"
 
 ```bash
 cd tools/hero-motion
-./prepare-references.sh                                  # HEIC -> media/hero-motion/ref/
+./prepare-references.sh                                  # HEIC -> assets/media/hero-motion/ref/
 python3 build-request.py hero-still.json > /tmp/still.json
 python3 ../runware/scripts/run-task.py /tmp/still.json \
-  --out ../../media/hero-motion/gen --name still
+  --out ../../assets/media/hero-motion/gen --name still
 ```
 
 `build-request.py` inlines the local photographs as `data:` URIs, so the shop's
@@ -138,7 +138,7 @@ URL for it and there does not need to be.
 ```bash
 python3 build-request.py hero-loop.json > /tmp/loop.json
 python3 ../runware/scripts/run-task.py /tmp/loop.json \
-  --out ../../media/hero-motion/gen --name hero-loop --timeout 1500
+  --out ../../assets/media/hero-motion/gen --name hero-loop --timeout 1500
 ```
 
 12 s at 720p is about **$2.76**, so budget per take, not per experiment.
@@ -157,12 +157,12 @@ Keep `settings.audio: false`. The hero is silent and `muted` in the component.
 ### 3. The renditions — local GPU
 
 ```bash
-./encode-renditions.sh ../../media/hero-motion/gen/hero-loop.mp4        # loop already closes
-./encode-renditions.sh ../../media/hero-motion/gen/hero-loop.mp4 12     # dissolve 12 frames into frame 0
+./encode-renditions.sh ../../assets/media/hero-motion/gen/hero-loop.mp4        # loop already closes
+./encode-renditions.sh ../../assets/media/hero-motion/gen/hero-loop.mp4 12     # dissolve 12 frames into frame 0
 ```
 
 Writes `public/video/hero-{720,1080}.{mp4,webm}` and `hero-poster.jpg`, then
-runs the verifier. The master stays in `media/`.
+runs the verifier. The master stays in `assets/media/`.
 
 `verify-renditions.sh` checks the four things that fail silently:
 
@@ -203,7 +203,7 @@ saving them. Check this again if the footage ever changes character:
 
 ```bash
 cd tools/hero-motion
-python3 compare-encoders.py ../../media/hero-motion/gen/hero-loop-v1.mp4 --width 1280 --height 720
+python3 compare-encoders.py ../../assets/media/hero-motion/gen/hero-loop-v1.mp4 --width 1280 --height 720
 ```
 
 Two traps that tool exists to avoid, both of which caught this work first:

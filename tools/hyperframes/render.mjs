@@ -8,10 +8,10 @@
   Each format gets a generated project directory under build/, holding an
   index.html written by composition.mjs and a symlink to the shared assets, and
   is rendered with the project-local HyperFrames CLI. The MP4s land in
-  media/ads/, which is git-ignored: these are creative the owner uploads to
+  assets/media/ads/, which is git-ignored: these are creative the owner uploads to
   Meta, not files the site serves.
 
-  The price and the seven names are read from public/products.json on every
+  The price and the seven names are read from apps/web/public/products.json on every
   run, so a cut cannot outlive the catalogue it quotes.
 */
 
@@ -26,7 +26,7 @@ import { buildHtml, FORMATS, TOTAL_SECONDS } from './composition.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ASSETS = resolve(HERE, 'assets');
 const BUILD = resolve(HERE, 'build');
-const OUT = resolve(REPO, 'media/ads');
+const OUT = resolve(REPO, 'assets/media/ads');
 
 const args = process.argv.slice(2);
 const snapshot = args.includes('--snapshot');

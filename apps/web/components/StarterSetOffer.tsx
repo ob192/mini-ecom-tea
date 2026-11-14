@@ -19,7 +19,7 @@ import { FREE_DELIVERY_THRESHOLD } from '@/lib/shipping';
   line are read from `public/products.json` and `lib/shipping.ts` rather than
   written out, so the band cannot promise a price the cart will not honour.
 
-  Two things from the promo graphic in media/reference are deliberately not
+  Two things from the promo graphic in assets/media/reference are deliberately not
   here, both decided by the owner on 2026-11-10:
 
   1. Its free-delivery-for-an-Instagram-follow offer is gone. The set is 570 ₴

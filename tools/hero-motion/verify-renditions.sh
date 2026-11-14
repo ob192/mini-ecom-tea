@@ -12,7 +12,7 @@
 # Exit code is non-zero if any of them has.
 set -uo pipefail
 
-DIR="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/public/video}"
+DIR="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/apps/web/public/video}"
 FAIL=0
 note () { printf '  %-5s %s\n' "$1" "$2"; [ "$1" = "FAIL" ] && FAIL=1; return 0; }
 
