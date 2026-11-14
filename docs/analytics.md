@@ -151,7 +151,7 @@ GA4 → Admin → Data Streams → Configure tag settings → Define internal tr
 
 ## Meta pixel / Conversions API
 
-Pixel (dataset) `1480203177363951` — "JinTea", business `757878937371527`
+Pixel (dataset) `1842523230500897` — "JINTEA", business `755239984063599` (switched 2026-11-14 in GTM version 11; the old `1480203177363951` "JinTea" is retired)
 (Oleksandr Bunin FOP). Connected **2026-10-19** from Events Manager's GTM
 integration, which published **container version 9** by itself.
 

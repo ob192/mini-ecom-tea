@@ -138,8 +138,8 @@ GTM (`GTM-MKJP47L5`) + GA4 (`G-5PCX5S995S`). Full setup and the GTM container re
 
 ## Meta pixel
 
-Pixel `1480203177363951`. The **browser** half lives entirely in the GTM container
-(tag 39, container version 10, 2026-10-19) and reuses our GA4 ecommerce dataLayer — there is no pixel code in this repo and no public env var.
+Pixel `1842523230500897` ("JINTEA"; the earlier `1480203177363951` is retired). The **browser** half lives entirely in the GTM container
+(tag 39, its ID in variable 32; container version 11, 2026-11-14) and reuses our GA4 ecommerce dataLayer — there is no pixel code in this repo and no public env var.
 `Purchase` is the exception and must be server-side: GTM maps a dataLayer `purchase` to
 Meta's `Purchase`, but this site never pushes one, so `lib/meta-capi.ts` posts it from
 the order route beside the GA4 call, keyed `event_id = orderId` for dedup. Hashed-phone
